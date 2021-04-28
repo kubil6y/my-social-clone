@@ -6,6 +6,7 @@ import {
   AiOutlineUpload,
   AiOutlineCheck,
   AiOutlineClose,
+  AiOutlineClear,
 } from 'react-icons/ai';
 
 function generateDownload(canvas, crop) {
@@ -37,18 +38,36 @@ export const ImageCropper = () => {
   const [crop, setCrop] = useState({ unit: '%', width: 30, aspect: 1 / 1 });
   const [completedCrop, setCompletedCrop] = useState(null);
 
+  const [clear, setClear] = useState(false);
   const [done, setDone] = useState(false);
+  const [doneTwice, setDoneTwice] = useState(false);
+
+  console.log({
+    upImg,
+    imgRef: imgRef.current,
+    prevRef: previewCanvasRef.current,
+    crop,
+    completedCrop,
+  });
 
   const uploadIconClick = () => {
     setDone(false);
+    setDoneTwice(false);
     inputRef.current.click();
+  };
+
+  const clearHandler = () => {
+    //...
+    console.log('clear handler');
   };
 
   const cancelHandler = () => {
     setDone(false);
+    setDoneTwice(false);
   };
 
   const doneHandler = () => {
+    if (done) setDoneTwice(true);
     setDone(true);
   };
 
@@ -117,13 +136,8 @@ export const ImageCropper = () => {
           onClick={uploadIconClick}
         />
       </Flex>
-      {upImg && (
-        <Text color="gray.400" fontSize="sm" my="2px" fontStyle="italic">
-          You can see preview below
-        </Text>
-      )}
-      {!done && (
-        <Box>
+      <Box>
+        {!done && (
           <ReactCrop
             src={upImg}
             onImageLoaded={onLoad}
@@ -131,8 +145,9 @@ export const ImageCropper = () => {
             onChange={(c) => setCrop(c)}
             onComplete={(c) => setCompletedCrop(c)}
           />
-        </Box>
-      )}
+        )}
+      </Box>
+
       <Box>
         <canvas
           ref={previewCanvasRef}
@@ -145,17 +160,29 @@ export const ImageCropper = () => {
       </Box>
       {/* controls */}
 
-      {upImg && (
+      {upImg && !doneTwice && (
         <HStack spacing="10px" my="1rem">
-          <Button
-            rightIcon={<AiOutlineClose />}
-            colorScheme="red"
-            variant="solid"
-            size="sm"
-            onClick={cancelHandler}
-          >
-            Cancel
-          </Button>
+          {!done ? (
+            <Button
+              rightIcon={<AiOutlineClear />}
+              colorScheme="green"
+              variant="solid"
+              size="sm"
+              onClick={clearHandler}
+            >
+              Clear
+            </Button>
+          ) : (
+            <Button
+              rightIcon={<AiOutlineClose />}
+              colorScheme="red"
+              variant="solid"
+              size="sm"
+              onClick={cancelHandler}
+            >
+              Cancel
+            </Button>
+          )}
 
           <Button
             rightIcon={<AiOutlineCheck />}
