@@ -51,14 +51,18 @@ export const ImageCropper = () => {
   });
 
   const uploadIconClick = () => {
+    inputRef.current.click();
     setDone(false);
     setDoneTwice(false);
-    inputRef.current.click();
+    setClear(false);
   };
 
   const clearHandler = () => {
     //...
     console.log('clear handler');
+    setCompletedCrop(undefined);
+    setDone(true);
+    setClear(true);
   };
 
   const cancelHandler = () => {
@@ -160,7 +164,7 @@ export const ImageCropper = () => {
       </Box>
       {/* controls */}
 
-      {upImg && !doneTwice && (
+      {upImg && !doneTwice && !clear && (
         <HStack spacing="10px" my="1rem">
           {!done ? (
             <Button
