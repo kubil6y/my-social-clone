@@ -9,6 +9,24 @@ import {
   AiOutlineClear,
 } from 'react-icons/ai';
 
+function generateImage(canvas, crop, setMedia) {
+  if (!crop || !canvas) {
+    return;
+  }
+  // this is somehow useful? maybe?
+  //return canvas.toDataURL('image/jpeg', 1.0);
+
+  canvas.toBlob(
+    (blob) => {
+      const previewUrl = window.URL.createObjectURL(blob);
+
+      setMedia(previewUrl);
+    },
+    'image/png',
+    1
+  );
+}
+
 function generateDownload(canvas, crop) {
   if (!crop || !canvas) {
     return;
@@ -30,7 +48,11 @@ function generateDownload(canvas, crop) {
   );
 }
 
-export const ImageCropper = () => {
+interface ImageCropperProps {
+  setMedia: Function;
+}
+
+export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
   const [upImg, setUpImg] = useState();
   const imgRef = useRef(null);
   const inputRef = useRef(null);
@@ -41,14 +63,6 @@ export const ImageCropper = () => {
   const [clear, setClear] = useState(false);
   const [done, setDone] = useState(false);
   const [doneTwice, setDoneTwice] = useState(false);
-
-  console.log({
-    upImg,
-    imgRef: imgRef.current,
-    prevRef: previewCanvasRef.current,
-    crop,
-    completedCrop,
-  });
 
   const uploadIconClick = () => {
     inputRef.current.click();
@@ -71,7 +85,12 @@ export const ImageCropper = () => {
   };
 
   const doneHandler = () => {
-    if (done) setDoneTwice(true);
+    if (done) {
+      setDoneTwice(true);
+      setMedia(
+        generateImage(previewCanvasRef.current, completedCrop, setMedia)
+      );
+    }
     setDone(true);
   };
 

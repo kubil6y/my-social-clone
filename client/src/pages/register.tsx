@@ -74,26 +74,7 @@ const register: React.FC<registerProps> = () => {
   };
 
   const [media, setMedia] = useState(null);
-  const [mediaPreview, setMediaPreview] = useState(null);
-  const [highlighted, setHighlighted] = useState(false);
   const inputRef = useRef();
-
-  // testing...
-  const [isDropped, setIsDropped] = useState(false);
-  //const [croppedImage, setCroppedImage] = useState(null);
-  //const [isCropped, setIsCropped] = useState(false);
-
-  const toast = useToast();
-  useEffect(() => {
-    toast({
-      title: 'Oops',
-      description: 'Something went wrong :(',
-      status: 'error',
-      duration: 5000,
-      position: 'top-right',
-      isClosable: true,
-    });
-  }, []);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -123,7 +104,8 @@ const register: React.FC<registerProps> = () => {
       <HeaderMessage />
 
       <input type="file" style={{ display: 'none' }} ref={inputRef} />
-      <ImageCropper />
+      <ImageCropper setMedia={setMedia} />
+
       <form onSubmit={handleSubmit}>
         <VStack spacing="1rem">
           <InputWithIcon
@@ -226,24 +208,3 @@ const register: React.FC<registerProps> = () => {
 };
 
 export default register;
-
-/*
-
-<ImageDropDiv
-  handleChange={handleChange}
-  inputRef={inputRef}
-  highlighted={highlighted}
-  setHighlighted={setHighlighted}
-  mediaPreview={mediaPreview}
-  media={media}
-  setMedia={setMedia}
-  setMediaPreview={setMediaPreview}
-  //croppedImage={croppedImage}
-  //setCroppedImage={setCroppedImage}
-  isDropped={isDropped}
-  setIsDropped={setIsDropped}
-  //isCropped={isCropped}
-  //setIsCropped={setIsCropped}
-/>
-
- */
