@@ -1,24 +1,39 @@
+import 'reflect-metadata';
 require('dotenv').config();
 import colors from 'colors';
 import morgan from 'morgan';
+import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import express, { Request, Response } from 'express';
-import { __prod__, PORT, publicDir } from './constants';
+import express from 'express';
+import { __prod__, PORT, publicDir, ORIGIN } from './constants';
 import { connectDb } from './utils';
 import { trimBody } from './middlewares';
+import { authRouter, registerRouter } from './routes';
 
 colors.enable();
 const app = express();
 
 app.use(express.static(publicDir));
 app.use(express.json());
-app.use(trimBody);
 app.use(cookieParser());
+app.use(trimBody);
 if (!__prod__) app.use(morgan('dev'));
+app.use(
+  cors({
+    credentials: true,
+    origin: ORIGIN,
+    optionsSuccessStatus: 200,
+  })
+);
 
-app.get('/', (_: Request, res: Response) => {
-  res.send('hello');
+app.use('/api/auth', authRouter);
+app.use('/api/register', registerRouter);
+
+const aloRouter = express.Router();
+aloRouter.post('/', (req, res) => {
+  res.send(req.body);
 });
+app.use('/api/alo', aloRouter);
 
 app.listen(PORT, async () => {
   try {

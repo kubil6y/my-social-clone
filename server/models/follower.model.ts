@@ -14,13 +14,13 @@ import { IUser } from './user.model';
 })
 export class IFollower {
   @prop({ ref: () => IUser })
-  user: Ref<IUser>;
+  user!: Ref<IUser>;
 
   @prop({ ref: () => IUser })
-  follower: Ref<IUser>[];
+  follower!: Ref<IUser>[];
 
   @prop({ ref: () => IUser })
-  following: Ref<IUser>[];
+  following!: Ref<IUser>[];
 }
 
 export const Follower = getModelForClass(IFollower);

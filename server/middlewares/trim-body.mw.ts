@@ -1,13 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
 
+function trimObj(obj) {
+  if (!Array.isArray(obj) && typeof obj != 'object') return obj;
+  return Object.keys(obj).reduce(
+    function (acc, key) {
+      acc[key.trim()] =
+        key !== 'password' && typeof obj[key] == 'string'
+          ? obj[key].trim()
+          : trimObj(obj[key]);
+      return acc;
+    },
+    Array.isArray(obj) ? [] : {}
+  );
+}
+
 export const trimBody = (req: Request, _: Response, next: NextFunction) => {
-  const exceptions = ['password'];
   if (req.body) {
-    Object.keys(req.body).forEach((key: string) => {
-      if (typeof req.body[key] === 'string' && !exceptions.includes(key)) {
-        req.body[key] = req.body[key].trim();
-      }
-    });
+    req.body = trimObj(req.body);
   }
+
   return next();
 };

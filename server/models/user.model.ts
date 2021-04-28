@@ -1,10 +1,22 @@
-import { getModelForClass, modelOptions, prop } from '@typegoose/typegoose';
+import {
+  getModelForClass,
+  modelOptions,
+  prop,
+  pre,
+} from '@typegoose/typegoose';
+import argon2 from 'argon2';
 
 export enum UserRoles {
   root = 'root',
   user = 'user',
 }
 
+@pre<IUser>('save', async function (next) {
+  if (this.isModified('password') || this.isNew) {
+    this.password = await argon2.hash(this.password);
+  }
+  return next();
+})
 @modelOptions({
   schemaOptions: {
     collection: 'users',
@@ -13,13 +25,26 @@ export enum UserRoles {
 })
 export class IUser {
   @prop({ required: true })
-  public name: string;
+  public name!: string;
 
-  @prop({ required: true, unique: true })
-  public email: string;
+  @prop({
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    validate: {
+      validator: (email) => {
+        const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return emailRegExp.test(email);
+      },
+      message: 'Email is invalid.',
+    },
+  })
+  public email!: string;
 
+  // @ts-ignore
   @prop({ required: true, select: false })
-  public password: string;
+  public password!: string;
 
   @prop({ required: true, unique: true, trim: true })
   public username!: string;

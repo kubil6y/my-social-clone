@@ -28,13 +28,13 @@ export class ISocial {
 })
 export class IProfile {
   @prop({ ref: () => IUser })
-  user: Ref<IUser>;
+  user!: Ref<IUser>;
 
   @prop({ required: true })
-  bio: string;
+  bio!: string;
 
   @prop({ type: () => ISocial })
-  social: ISocial;
+  social?: ISocial;
 }
 
 export const Profile = getModelForClass(IProfile);

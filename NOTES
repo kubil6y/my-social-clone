@@ -1,0 +1,8 @@
+### Some notes from the project ###
+
+# with typegoose, adding this comment above prop({select: false}) makes it work, otherwise it doesnt.
+# select.('+fieldName') still works fine when fetching user 
+// @ts-ignore
+
+
+
