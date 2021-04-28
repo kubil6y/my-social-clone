@@ -76,6 +76,9 @@ const register: React.FC<registerProps> = () => {
   const [media, setMedia] = useState(null);
   const inputRef = useRef();
 
+  // TODO
+  console.log({ media });
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log({ user });

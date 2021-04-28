@@ -9,24 +9,7 @@ import {
   AiOutlineClear,
 } from 'react-icons/ai';
 
-function generateImage(canvas, crop, setMedia) {
-  if (!crop || !canvas) {
-    return;
-  }
-  // this is somehow useful? maybe?
-  //return canvas.toDataURL('image/jpeg', 1.0);
-
-  canvas.toBlob(
-    (blob) => {
-      const previewUrl = window.URL.createObjectURL(blob);
-
-      setMedia(previewUrl);
-    },
-    'image/png',
-    1
-  );
-}
-
+/*
 function generateDownload(canvas, crop) {
   if (!crop || !canvas) {
     return;
@@ -46,6 +29,25 @@ function generateDownload(canvas, crop) {
     'image/png',
     1
   );
+}
+ */
+
+function generateImage(canvas, crop) {
+  if (!crop || !canvas) {
+    return;
+  }
+  // this is somehow useful? maybe?
+  return canvas.toDataURL('image/jpeg', 1.0);
+
+  //canvas.toBlob(
+  //(blob) => {
+  //const previewUrl = window.URL.createObjectURL(blob);
+
+  //setMedia(previewUrl);
+  //},
+  //'image/png',
+  //1
+  //);
 }
 
 interface ImageCropperProps {
@@ -72,8 +74,8 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
   };
 
   const clearHandler = () => {
-    //...
     console.log('clear handler');
+    setMedia(null);
     setCompletedCrop(undefined);
     setDone(true);
     setClear(true);
@@ -87,9 +89,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
   const doneHandler = () => {
     if (done) {
       setDoneTwice(true);
-      setMedia(
-        generateImage(previewCanvasRef.current, completedCrop, setMedia)
-      );
+      setMedia(generateImage(previewCanvasRef.current, completedCrop));
     }
     setDone(true);
   };
@@ -171,7 +171,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
         )}
       </Box>
 
-      <Box>
+      <Box my="10px">
         <canvas
           ref={previewCanvasRef}
           // Rounding is important so the canvas width and height matches/is a multiple for sharpness.
