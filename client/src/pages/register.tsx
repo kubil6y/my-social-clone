@@ -30,7 +30,7 @@ import {
   //ImageDropDiv,
   ImageCropper,
 } from '../components';
-import { baseUrl, catchErrors } from '../utils';
+import { baseUrl, catchErrors, uploadPic } from '../utils';
 
 const initialState = {
   name: '',
@@ -81,8 +81,13 @@ const register: React.FC<registerProps> = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    let profilePicUrl: string;
+
     try {
-      await axios.post(`${baseUrl}/register/`, { user });
+      if (media) {
+        profilePicUrl = await uploadPic(media);
+      }
+      await axios.post(`${baseUrl}/register/`, { user, profilePicUrl });
       router.push('/');
     } catch (error) {
       setErrors(catchErrors(error));

@@ -21,8 +21,8 @@ app.use(trimBody);
 if (!__prod__) app.use(morgan('dev'));
 app.use(
   cors({
-    credentials: true,
     origin: ORIGIN,
+    credentials: true,
     optionsSuccessStatus: 200,
   })
 );

@@ -9,45 +9,11 @@ import {
   AiOutlineClear,
 } from 'react-icons/ai';
 
-/*
-function generateDownload(canvas, crop) {
+function generateImage(canvas: any, crop: any) {
   if (!crop || !canvas) {
     return;
   }
-
-  canvas.toBlob(
-    (blob) => {
-      const previewUrl = window.URL.createObjectURL(blob);
-
-      const anchor = document.createElement('a');
-      anchor.download = 'cropPreview.png';
-      anchor.href = URL.createObjectURL(blob);
-      anchor.click();
-
-      window.URL.revokeObjectURL(previewUrl);
-    },
-    'image/png',
-    1
-  );
-}
- */
-
-function generateImage(canvas, crop) {
-  if (!crop || !canvas) {
-    return;
-  }
-  // this is somehow useful? maybe?
   return canvas.toDataURL('image/jpeg', 1.0);
-
-  //canvas.toBlob(
-  //(blob) => {
-  //const previewUrl = window.URL.createObjectURL(blob);
-
-  //setMedia(previewUrl);
-  //},
-  //'image/png',
-  //1
-  //);
 }
 
 interface ImageCropperProps {
@@ -182,8 +148,8 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
           }}
         />
       </Box>
-      {/* controls */}
 
+      {/* controls */}
       {upImg && !doneTwice && !clear && (
         <HStack spacing="10px" my="1rem">
           {!done ? (
@@ -222,16 +188,3 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
     </Box>
   );
 };
-
-/*
-
-      <button
-        type="button"
-        disabled={!completedCrop?.width || !completedCrop?.height}
-        onClick={() =>
-          generateDownload(previewCanvasRef.current, completedCrop)
-        }
-      >
-        Download cropped image
-      </button>
- */

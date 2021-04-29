@@ -39,13 +39,13 @@ export const registerUser = async (req: Request, res: Response) => {
     email,
     password,
     username,
-    profilePicUrl,
     bio,
     facebook,
     youtube,
     twitter,
     instagram,
   } = req.body.user;
+  const { profilePicUrl } = req.body;
   try {
     let errors: any = {};
 
