@@ -48,7 +48,7 @@ export const FooterMessage: React.FC<FooterMessageProps> = ({
   href,
 }) => {
   return (
-    <Alert status="info" mt="1rem">
+    <Alert status="info" mt="1rem" mb="6rem">
       <AlertIcon />
       <Text fontSize="xs">
         {text}{' '}

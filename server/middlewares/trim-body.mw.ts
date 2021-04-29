@@ -1,11 +1,14 @@
 import { NextFunction, Request, Response } from 'express';
 
-function trimObj(obj) {
+const exceptionFields = ['password'];
+
+// recursive trim body function with exception fields
+function trimObj(obj: any) {
   if (!Array.isArray(obj) && typeof obj != 'object') return obj;
   return Object.keys(obj).reduce(
     function (acc, key) {
       acc[key.trim()] =
-        key !== 'password' && typeof obj[key] == 'string'
+        !exceptionFields.includes(key) && typeof obj[key] == 'string'
           ? obj[key].trim()
           : trimObj(obj[key]);
       return acc;

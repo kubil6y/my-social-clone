@@ -1,3 +1,5 @@
+import axios from 'axios';
+import { useRouter } from 'next/router';
 import React, {
   useState,
   useRef,
@@ -13,10 +15,7 @@ import {
   AiOutlineEye,
 } from 'react-icons/ai';
 import {
-  Alert,
-  AlertIcon,
   Container,
-  useToast,
   Button,
   VStack,
   Textarea,
@@ -31,6 +30,7 @@ import {
   //ImageDropDiv,
   ImageCropper,
 } from '../components';
+import { baseUrl, catchErrors } from '../utils';
 
 const initialState = {
   name: '',
@@ -59,8 +59,10 @@ const register: React.FC<registerProps> = () => {
     twitter,
     instagram,
   } = user;
+  const router = useRouter();
+  const [errors, setErrors] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [error, setError] = useState(null);
   const [showSocialLinks, setShowSocialLinks] = useState(false);
   const [disabled, setDisabled] = useState(true);
 
@@ -76,12 +78,17 @@ const register: React.FC<registerProps> = () => {
   const [media, setMedia] = useState(null);
   const inputRef = useRef();
 
-  // TODO
-  console.log({ media });
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ user });
+    setIsLoading(true);
+    try {
+      await axios.post(`${baseUrl}/register/`, { user });
+      router.push('/');
+    } catch (error) {
+      setErrors(catchErrors(error));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (
@@ -121,6 +128,7 @@ const register: React.FC<registerProps> = () => {
             type="text"
             onChange={handleChange}
             required={true}
+            error={errors?.name}
           />
 
           <InputWithIcon
@@ -133,6 +141,7 @@ const register: React.FC<registerProps> = () => {
             type="email"
             onChange={handleChange}
             required={true}
+            error={errors?.email}
           />
 
           <InputWithIcon
@@ -146,6 +155,7 @@ const register: React.FC<registerProps> = () => {
             onChange={handleChange}
             handleIconClick={handleIconClick}
             required={true}
+            error={errors?.password}
           />
 
           <InputWithIcon
@@ -157,6 +167,7 @@ const register: React.FC<registerProps> = () => {
             value={username}
             type="text"
             onChange={handleChange}
+            error={errors?.username}
           />
 
           <FormControl>
@@ -188,18 +199,12 @@ const register: React.FC<registerProps> = () => {
             _active={{ bg: 'blue.700' }}
             rounded="none"
             disabled={disabled}
+            isLoading={isLoading}
           >
             Register
           </Button>
         </VStack>
       </form>
-
-      {error && (
-        <Alert status="error" mt="1rem">
-          <AlertIcon />
-          {error}
-        </Alert>
-      )}
 
       <FooterMessage
         text="Already Member?"

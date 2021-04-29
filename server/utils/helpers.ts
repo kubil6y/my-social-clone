@@ -1,8 +1,8 @@
 import { Response } from 'express';
 
 // MESSAGES
-export const msg500 = (e: any, res: Response) => {
-  console.log(e);
+export const msg500 = (error: any, res: Response) => {
+  console.log(error);
   return res.status(500).send('Something went wrong');
 };
 

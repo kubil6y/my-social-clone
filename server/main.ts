@@ -13,6 +13,7 @@ import { authRouter, registerRouter } from './routes';
 colors.enable();
 const app = express();
 
+// MIDDLEWARES
 app.use(express.static(publicDir));
 app.use(express.json());
 app.use(cookieParser());
@@ -26,6 +27,7 @@ app.use(
   })
 );
 
+// ROUTES
 app.use('/api/auth', authRouter);
 app.use('/api/register', registerRouter);
 

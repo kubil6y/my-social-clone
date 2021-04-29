@@ -7,6 +7,7 @@ import {
   FormHelperText,
   InputGroup,
   InputLeftElement,
+  FormErrorMessage,
 } from '@chakra-ui/react';
 
 interface InputWithIconProps {
@@ -21,6 +22,7 @@ interface InputWithIconProps {
   onChange: any;
   handleIconClick?: () => void;
   required?: boolean;
+  error: string;
 }
 
 export const InputWithIcon: React.FC<InputWithIconProps> = ({
@@ -35,10 +37,11 @@ export const InputWithIcon: React.FC<InputWithIconProps> = ({
   onChange,
   handleIconClick,
   required,
+  error,
   ...rest
 }) => {
   return (
-    <FormControl id={id} {...rest}>
+    <FormControl id={id} {...rest} isInvalid={error?.length > 0}>
       <FormLabel mb="5px">{label}</FormLabel>
       <InputGroup>
         <InputLeftElement
@@ -56,7 +59,8 @@ export const InputWithIcon: React.FC<InputWithIconProps> = ({
           required={required}
         />
       </InputGroup>
-      {helperText && (
+      <FormErrorMessage>{error && error}</FormErrorMessage>
+      {helperText && !error && (
         <FormHelperText fontSize="xs">{helperText}</FormHelperText>
       )}
     </FormControl>

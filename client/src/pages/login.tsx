@@ -1,5 +1,6 @@
 import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
 import Link from 'next/link';
+import axios from 'axios';
 import { FooterMessage, HeaderMessage, InputWithIcon } from '../components';
 import { Text, Icon, Container, VStack, Button, Alert } from '@chakra-ui/react';
 import {
@@ -8,6 +9,8 @@ import {
   AiOutlineEyeInvisible,
   AiOutlineUnlock,
 } from 'react-icons/ai';
+import { baseUrl, catchErrors } from '../utils';
+import { useRouter } from 'next/router';
 
 const initialState = {
   credentials: '',
@@ -19,8 +22,14 @@ interface loginProps {}
 const login: React.FC<loginProps> = () => {
   const [state, setState] = useState(initialState);
   const { credentials, password } = state;
+  const [errors, setErrors] = useState<any>(null);
+
+  // ui states
   const [passwordType, setPasswordType] = useState('password');
   const [disabled, setDisabled] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter();
 
   // important note,
   // name and value must be the same for onChange function to work
@@ -32,9 +41,20 @@ const login: React.FC<loginProps> = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    console.log(state);
+    try {
+      setIsLoading(true);
+      await axios.post(`${baseUrl}/auth`, {
+        credentials,
+        password,
+      });
+      router.push('/');
+    } catch (error) {
+      setErrors(catchErrors(error));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const passwordIcon =
@@ -68,6 +88,7 @@ const login: React.FC<loginProps> = () => {
             name="credentials"
             value={credentials}
             onChange={handleChange}
+            error={errors?.credentials}
           />
 
           <InputWithIcon
@@ -80,6 +101,7 @@ const login: React.FC<loginProps> = () => {
             name="password"
             onChange={handleChange}
             handleIconClick={handleIconClick}
+            error={errors?.password}
           />
 
           <Button
@@ -91,6 +113,7 @@ const login: React.FC<loginProps> = () => {
             _active={{ bg: 'blue.700' }}
             rounded="none"
             disabled={disabled}
+            isLoading={isLoading}
           >
             Login
           </Button>

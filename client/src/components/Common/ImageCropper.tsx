@@ -178,6 +178,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
           style={{
             width: Math.round(completedCrop?.width ?? 0),
             height: Math.round(completedCrop?.height ?? 0),
+            borderRadius: '10px',
           }}
         />
       </Box>

@@ -1,8 +1,11 @@
 import isEmail from 'validator/lib/isEmail';
+import argon2 from 'argon2';
+import cookie from 'cookie';
+import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
-import { IUser, User } from '../models';
-import { msg500 } from '../utils';
-import { DocumentType } from '@typegoose/typegoose';
+import { User } from '../models';
+import { IJwtPayload, msg500 } from '../utils';
+import { JWT_SECRET, __prod__ } from '../constants';
 
 export const getUser = async (req: Request, res: Response) => {
   try {
@@ -10,7 +13,7 @@ export const getUser = async (req: Request, res: Response) => {
     const user = await User.findOne({
       username: username.toLowerCase(),
     });
-    if (!user) return res.status(400).send('User is not found');
+    if (!user) return res.status(400).send('User is not found.');
     return res.json(user);
   } catch (error) {
     return msg500(error, res);
@@ -18,11 +21,50 @@ export const getUser = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
+  const { credentials, password } = req.body;
+  let errors: any = {};
   try {
-    const { credentials, password } = req.body;
-    let user: DocumentType<IUser>;
-    if (isEmail) {
-      user = await User.findOne({ email: credentials.toLowerCase() });
+    let user: any = undefined;
+
+    if (isEmail(credentials)) {
+      user = await User.findOne({ email: credentials.toLowerCase() }).select(
+        '+password'
+      );
+    } else {
+      user = await User.findOne({ username: credentials.toLowerCase() }).select(
+        '+password'
+      );
     }
-  } catch (error) {}
+
+    if (!user)
+      return res.status(404).json({ credentials: 'Invalid Credentials.' });
+
+    const isPwValid = await argon2.verify(user.password, password);
+    if (!isPwValid) errors.password = 'Invalid password.';
+
+    if (Object.values(errors).length > 0) {
+      return res.status(401).json(errors);
+    }
+
+    // issue token here
+    const payload: IJwtPayload = { userId: user._id };
+    const token = jwt.sign(payload, JWT_SECRET);
+
+    res.set(
+      'Set-Cookie',
+      cookie.serialize('token', token, {
+        path: '/',
+        httpOnly: true,
+        sameSite: 'strict',
+        secure: !__prod__,
+        maxAge: 3600,
+      })
+    );
+
+    //omitting password
+    const { password: userPassword, ...restUser } = user.toJSON();
+    return res.json(restUser);
+  } catch (error) {
+    return msg500(error, res);
+  }
 };
