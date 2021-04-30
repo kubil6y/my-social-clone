@@ -7,7 +7,11 @@ export const Navbar: React.FC = () => {
   const router = useRouter();
   const isActive = (path: string) => router.pathname === path;
 
-  return (
+  const isNormal = !['/register', '/login'].includes(router.pathname);
+
+  return isNormal ? (
+    <p>normal navbar</p>
+  ) : (
     <Container maxW="container.md" p="0">
       <Flex>
         <Link href="login">
@@ -20,6 +24,7 @@ export const Navbar: React.FC = () => {
             alignItems="center"
             justifyContent="center"
             bg={isActive('/login') ? 'blue.100' : 'white'}
+            borderBottom={isActive('/login') && '2px solid #3182CE'}
             p="1rem"
           >
             <Icon as={AiOutlineLogin} h={6} w={6} />
@@ -44,6 +49,7 @@ export const Navbar: React.FC = () => {
             justifyContent="center"
             p="1rem"
             bg={isActive('/register') ? 'blue.100' : 'white'}
+            borderBottom={isActive('/register') && '2px solid #3182CE'}
           >
             <Icon as={AiOutlineSave} h={6} w={6} />
             <Text

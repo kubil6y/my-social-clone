@@ -12,8 +12,10 @@ export default function Home() {
       <div>
         <h1>next app</h1>
         <Button colorScheme="blue">Button</Button>
-        <Link href="/random">random</Link>
-        <Link href="/another">another</Link>
+        <br />
+        <Link href="/login">login</Link>
+        <br />
+        <Link href="/register">register</Link>
       </div>
     </div>
   );

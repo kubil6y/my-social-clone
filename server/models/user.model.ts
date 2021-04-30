@@ -1,10 +1,10 @@
+import argon2 from 'argon2';
 import {
   getModelForClass,
   modelOptions,
   prop,
   pre,
 } from '@typegoose/typegoose';
-import argon2 from 'argon2';
 
 export enum UserRoles {
   root = 'root',

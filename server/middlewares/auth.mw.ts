@@ -7,6 +7,7 @@ import { User } from '../models';
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.cookies.token;
+    console.log(req.cookies);
     if (!token) {
       return msg401(res);
     }

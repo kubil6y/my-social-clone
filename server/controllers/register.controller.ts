@@ -112,8 +112,8 @@ export const registerUser = async (req: Request, res: Response) => {
       cookie.serialize('token', token, {
         path: '/',
         httpOnly: true,
-        sameSite: 'strict',
-        secure: !__prod__,
+        //sameSite: 'strict',
+        //secure: __prod__,
         maxAge: 3600,
       })
     );

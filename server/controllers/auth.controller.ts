@@ -3,9 +3,9 @@ import argon2 from 'argon2';
 import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
-import { User } from '../models';
 import { IJwtPayload, msg500 } from '../utils';
 import { JWT_SECRET, __prod__ } from '../constants';
+import { Follower, User } from '../models';
 
 export const getUser = async (req: Request, res: Response) => {
   try {
@@ -55,8 +55,8 @@ export const login = async (req: Request, res: Response) => {
       cookie.serialize('token', token, {
         path: '/',
         httpOnly: true,
-        sameSite: 'strict',
-        secure: !__prod__,
+        //sameSite: 'strict',
+        //secure: _prod__,
         maxAge: 3600,
       })
     );
@@ -64,6 +64,20 @@ export const login = async (req: Request, res: Response) => {
     //omitting password
     const { password: userPassword, ...restUser } = user.toJSON();
     return res.json(restUser);
+  } catch (error) {
+    return msg500(error, res);
+  }
+};
+
+export const getUserDetails = async (req: Request, res: Response) => {
+  try {
+    const { user } = req;
+
+    const userFollowStats = await Follower.findOne({
+      user: user._id.toString(),
+    });
+
+    return res.json({ user, userFollowStats });
   } catch (error) {
     return msg500(error, res);
   }

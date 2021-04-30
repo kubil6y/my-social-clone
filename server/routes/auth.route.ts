@@ -1,5 +1,6 @@
 import { Router } from 'express';
-import { getUser, login } from '../controllers';
+import { getUser, login, getUserDetails } from '../controllers';
+import { auth } from '../middlewares';
 
 export const router = Router();
 
@@ -7,3 +8,4 @@ export const router = Router();
 router.get('/:username', getUser);
 
 router.post('/', login);
+router.get('/', auth, getUserDetails);

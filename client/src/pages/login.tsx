@@ -45,7 +45,7 @@ const login: React.FC<loginProps> = () => {
     e.preventDefault();
     try {
       setIsLoading(true);
-      await axios.post(`${baseUrl}/auth`, {
+      await axios.post(`${baseUrl}/api/auth`, {
         credentials,
         password,
       });

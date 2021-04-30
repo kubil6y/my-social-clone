@@ -87,7 +87,7 @@ const register: React.FC<registerProps> = () => {
       if (media) {
         profilePicUrl = await uploadPic(media);
       }
-      await axios.post(`${baseUrl}/register/`, { user, profilePicUrl });
+      await axios.post(`${baseUrl}/api/register/`, { user, profilePicUrl });
       router.push('/');
     } catch (error) {
       setErrors(catchErrors(error));

@@ -31,12 +31,6 @@ app.use(
 app.use('/api/auth', authRouter);
 app.use('/api/register', registerRouter);
 
-const aloRouter = express.Router();
-aloRouter.post('/', (req, res) => {
-  res.send(req.body);
-});
-app.use('/api/alo', aloRouter);
-
 app.listen(PORT, async () => {
   try {
     await connectDb();
