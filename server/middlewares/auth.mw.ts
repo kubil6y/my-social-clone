@@ -6,8 +6,8 @@ import { User } from '../models';
 
 export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const token = req.cookies.token;
-    console.log(req.cookies);
+    const token = req.headers.authorization;
+
     if (!token) {
       return msg401(res);
     }

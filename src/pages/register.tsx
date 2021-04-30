@@ -1,12 +1,4 @@
-import axios from 'axios';
-import { useRouter } from 'next/router';
-import React, {
-  useState,
-  useRef,
-  useEffect,
-  FormEvent,
-  ChangeEvent,
-} from 'react';
+import React, { useState, useRef, useEffect, FormEvent } from 'react';
 import {
   AiOutlineUser,
   AiOutlineMail,
@@ -30,7 +22,8 @@ import {
   //ImageDropDiv,
   ImageCropper,
 } from '../components';
-import { baseUrl, catchErrors, uploadPic } from '../utils';
+import { catchErrors, uploadPic } from '../utils';
+import { registerUser } from '../actions';
 
 const initialState = {
   name: '',
@@ -59,7 +52,6 @@ const register: React.FC<registerProps> = () => {
     twitter,
     instagram,
   } = user;
-  const router = useRouter();
   const [errors, setErrors] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -87,18 +79,13 @@ const register: React.FC<registerProps> = () => {
       if (media) {
         profilePicUrl = await uploadPic(media);
       }
-      await axios.post(`${baseUrl}/api/register/`, { user, profilePicUrl });
-      router.push('/');
+      await registerUser(user, profilePicUrl, setIsLoading, setErrors);
     } catch (error) {
       setErrors(catchErrors(error));
-    } finally {
-      setIsLoading(false);
     }
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setUser((prev) => ({ ...prev, [name]: value }));
   };

@@ -11,7 +11,7 @@ const options = {
 export const connectDb = async () => {
   try {
     await mongoose.connect(MONGO_URI, options);
-    const msg = '[database] MongoDB connected'.yellow.bold;
+    const msg = '[database] MongoDB connected';
     console.log(msg);
   } catch (error) {
     console.log(error);

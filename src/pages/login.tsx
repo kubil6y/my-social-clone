@@ -1,6 +1,5 @@
-import React, { ChangeEvent, FormEvent, useState, useEffect } from 'react';
+import React, { FormEvent, useState, useEffect } from 'react';
 import Link from 'next/link';
-import axios from 'axios';
 import { FooterMessage, HeaderMessage, InputWithIcon } from '../components';
 import { Text, Icon, Container, VStack, Button, Alert } from '@chakra-ui/react';
 import {
@@ -9,8 +8,7 @@ import {
   AiOutlineEyeInvisible,
   AiOutlineUnlock,
 } from 'react-icons/ai';
-import { baseUrl, catchErrors } from '../utils';
-import { useRouter } from 'next/router';
+import { loginUser } from '../actions';
 
 const initialState = {
   credentials: '',
@@ -29,11 +27,9 @@ const login: React.FC<loginProps> = () => {
   const [disabled, setDisabled] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
-  const router = useRouter();
-
   // important note,
   // name and value must be the same for onChange function to work
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setState((prev) => ({
       ...prev,
@@ -43,18 +39,7 @@ const login: React.FC<loginProps> = () => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    try {
-      setIsLoading(true);
-      await axios.post(`${baseUrl}/api/auth`, {
-        credentials,
-        password,
-      });
-      router.push('/');
-    } catch (error) {
-      setErrors(catchErrors(error));
-    } finally {
-      setIsLoading(false);
-    }
+    await loginUser(credentials, password, setIsLoading, setErrors);
   };
 
   const passwordIcon =

@@ -1,5 +1,6 @@
-# Env files
-/**/.env
+# dist build
+dist
+build
 
 # Logs
 logs

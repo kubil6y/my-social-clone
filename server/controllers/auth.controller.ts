@@ -1,6 +1,5 @@
 import isEmail from 'validator/lib/isEmail';
 import argon2 from 'argon2';
-import cookie from 'cookie';
 import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 import { IJwtPayload, msg500 } from '../utils';
@@ -50,20 +49,7 @@ export const login = async (req: Request, res: Response) => {
     const payload: IJwtPayload = { userId: user._id };
     const token = jwt.sign(payload, JWT_SECRET);
 
-    res.set(
-      'Set-Cookie',
-      cookie.serialize('token', token, {
-        path: '/',
-        httpOnly: true,
-        //sameSite: 'strict',
-        //secure: _prod__,
-        maxAge: 3600,
-      })
-    );
-
-    //omitting password
-    const { password: userPassword, ...restUser } = user.toJSON();
-    return res.json(restUser);
+    return res.json(token);
   } catch (error) {
     return msg500(error, res);
   }

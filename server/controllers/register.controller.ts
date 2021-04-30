@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken';
-import cookie from 'cookie';
 import isEmail from 'validator/lib/isEmail';
 import { Request, Response } from 'express';
 import { msg500, regexUserName, userPng } from '../utils';
@@ -107,17 +106,6 @@ export const registerUser = async (req: Request, res: Response) => {
     const payload: IJwtPayload = { userId: user._id };
     const token = jwt.sign(payload, JWT_SECRET);
 
-    res.set(
-      'Set-Cookie',
-      cookie.serialize('token', token, {
-        path: '/',
-        httpOnly: true,
-        //sameSite: 'strict',
-        //secure: __prod__,
-        maxAge: 3600,
-      })
-    );
-
-    return res.json(user);
+    return res.json(token);
   } catch (error) {}
 };

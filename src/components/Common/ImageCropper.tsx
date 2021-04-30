@@ -40,7 +40,6 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
   };
 
   const clearHandler = () => {
-    console.log('clear handler');
     setMedia(null);
     setCompletedCrop(undefined);
     setDone(true);
