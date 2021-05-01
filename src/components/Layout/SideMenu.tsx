@@ -10,10 +10,10 @@ import {
   AiFillHome,
   AiFillBell,
   AiOutlineBell,
-  AiOutlineUser,
   AiOutlineLogout,
 } from 'react-icons/ai';
-import { Box, Flex, Icon, Text, VStack } from '@chakra-ui/react';
+import { RiUserFill, RiUserLine } from 'react-icons/ri';
+import { Box, Icon, Text } from '@chakra-ui/react';
 import { logoutUser } from '../../actions';
 
 interface SideMenuItemProps {
@@ -22,6 +22,7 @@ interface SideMenuItemProps {
   text?: string;
   href: string;
   defaultColor?: string;
+  pathname: string;
   [key: string]: {};
 }
 
@@ -35,6 +36,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
   text,
   href,
   defaultColor,
+  pathname,
   ...restProps
 }) => {
   const router = useRouter();
@@ -49,16 +51,22 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
           borderRadius="9999px"
           cursor="pointer"
           _hover={{ color: 'blue.500', bg: 'gray.100' }}
-          color={isActive(href) ? 'blue.500' : defaultColor}
           alignItems="center"
           p="12px"
         >
           <Icon
-            as={activeIcon && isActive(href) ? activeIcon : icon}
+            as={activeIcon && isActive(pathname) ? activeIcon : icon}
+            color={isActive(pathname) ? 'blue.500' : defaultColor}
             h={7}
             w={7}
           />
-          <Text fontSize="xl" fontWeight="bold" p={0} mx={5}>
+          <Text
+            fontSize="xl"
+            fontWeight="bold"
+            p={0}
+            mx={5}
+            color={isActive(pathname) && 'blue.500'}
+          >
             {text}
           </Text>
         </Box>
@@ -68,7 +76,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
   );
 };
 
-export const SideMenu: React.FC<SideMenuProps> = ({ children, user }) => {
+export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
   const { username, unreadNotification, unreadMessage, email } = user;
 
   const messagesColor = unreadMessage && 'orange.500';
@@ -91,6 +99,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ children, user }) => {
       <SideMenuItem
         text="Home"
         href="/"
+        pathname="/"
         icon={AiOutlineHome}
         activeIcon={AiFillHome}
       />
@@ -98,6 +107,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ children, user }) => {
       <SideMenuItem
         text="Messages"
         href="/messages"
+        pathname="/messages"
         icon={AiOutlineMail}
         activeIcon={AiFillMail}
         defaultColor={messagesColor}
@@ -106,15 +116,18 @@ export const SideMenu: React.FC<SideMenuProps> = ({ children, user }) => {
       <SideMenuItem
         text="Notifications"
         href="/notifications"
+        pathname="/notifications"
         icon={AiOutlineBell}
         activeIcon={AiFillBell}
         defaultColor={notificationsColor}
       />
 
       <SideMenuItem
-        text="Home"
+        text="Account"
         href={`/${username.toLowerCase()}`}
-        icon={AiOutlineUser}
+        pathname="/[username]"
+        icon={RiUserLine}
+        activeIcon={RiUserFill}
       />
 
       <Box
