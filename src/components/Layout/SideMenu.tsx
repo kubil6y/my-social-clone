@@ -11,8 +11,10 @@ import {
   AiFillBell,
   AiOutlineBell,
   AiOutlineUser,
+  AiOutlineLogout,
 } from 'react-icons/ai';
 import { Box, Flex, Icon, Text, VStack } from '@chakra-ui/react';
+import { logoutUser } from '../../actions';
 
 interface SideMenuItemProps {
   icon: any;
@@ -67,13 +69,13 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
 };
 
 export const SideMenu: React.FC<SideMenuProps> = ({ children, user }) => {
-  const { username, unreadNotification, unreadMessage } = user;
+  const { username, unreadNotification, unreadMessage, email } = user;
 
   const messagesColor = unreadMessage && 'orange.500';
   const notificationsColor = unreadNotification && 'orange.500';
 
   return (
-    <Box p="12px">
+    <Box>
       <Box
         display="inline-flex"
         borderRadius="9999px"
@@ -115,12 +117,20 @@ export const SideMenu: React.FC<SideMenuProps> = ({ children, user }) => {
         icon={AiOutlineUser}
       />
 
-      <SideMenuItem
-        text="Home"
-        href="/"
-        icon={AiOutlineHome}
-        activeIcon={AiFillHome}
-      />
+      <Box
+        onClick={() => logoutUser(email)}
+        display="inline-flex"
+        borderRadius="9999px"
+        cursor="pointer"
+        _hover={{ color: 'blue.500', bg: 'gray.100' }}
+        alignItems="center"
+        p="12px"
+      >
+        <Icon as={AiOutlineLogout} h={7} w={7} />
+        <Text fontSize="xl" fontWeight="bold" p={0} mx={5}>
+          Logout
+        </Text>
+      </Box>
     </Box>
   );
 };

@@ -63,3 +63,9 @@ export const loginUser = async (
     setIsLoading(false);
   }
 };
+
+export const logoutUser = (email: string) => {
+  cookie.set('email', email);
+  cookie.remove('token');
+  window.location.reload();
+};

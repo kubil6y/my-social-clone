@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import cookie from 'js-cookie';
 import React, { FormEvent, useState, useEffect } from 'react';
 import { FooterMessage, HeaderMessage, InputWithIcon } from '../components';
 import { Text, Icon, Container, VStack, Button, Alert } from '@chakra-ui/react';
@@ -10,8 +11,10 @@ import {
 } from 'react-icons/ai';
 import { loginUser } from '../actions';
 
+const emailAtCookie = cookie.get('email');
+
 const initialState = {
-  credentials: '',
+  credentials: emailAtCookie ? emailAtCookie : '',
   password: '',
 };
 
