@@ -1,3 +1,6 @@
+#conf_env
+config.env
+
 # dist build
 dist
 build
