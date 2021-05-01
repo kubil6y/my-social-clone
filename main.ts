@@ -3,11 +3,11 @@ require('dotenv').config({ path: './config.env' });
 import express, { Request, Response } from 'express';
 import next from 'next';
 import { authRouter, registerRouter } from './server/routes';
-import { NODE_ENV, __prod__, PORT } from './server/constants';
+import { NODE_ENV, __prod__, PORT, __dev__ } from './server/constants';
 import { connectDb } from './server/utils';
 import { trimBody } from './server/middlewares';
 
-const dev = !__prod__;
+const dev = __dev__;
 const app = next({ dev });
 const handle = app.getRequestHandler();
 

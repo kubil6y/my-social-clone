@@ -22,7 +22,7 @@ interface InputWithIconProps {
   onChange: any;
   handleIconClick?: () => void;
   required?: boolean;
-  error: string;
+  error?: string;
 }
 
 export const InputWithIcon: React.FC<InputWithIconProps> = ({

@@ -72,7 +72,7 @@ const register: React.FC<registerProps> = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+
     let profilePicUrl: string;
 
     try {

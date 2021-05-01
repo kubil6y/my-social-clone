@@ -7,7 +7,7 @@ import {
   AiOutlineYoutube,
   AiOutlineUsergroupAdd,
 } from 'react-icons/ai';
-import { VStack, Button } from '@chakra-ui/react';
+import { VStack, Button, Collapse, Box } from '@chakra-ui/react';
 
 interface SocialSectionProps {
   facebook: string;
@@ -44,49 +44,51 @@ export const SocialSection: React.FC<SocialSectionProps> = ({
         Add Social Links
       </Button>
 
-      {showSocialLinks && (
-        <VStack spacing="1rem" w="100%">
-          <InputWithIcon
-            icon={AiOutlineFacebook}
-            id="facebook"
-            placeholder="Facebook"
-            type="text"
-            name="facebook"
-            value={facebook}
-            onChange={handleChange}
-          />
+      <Box w="100%">
+        <Collapse in={showSocialLinks} animateOpacity>
+          <VStack spacing="1rem">
+            <InputWithIcon
+              icon={AiOutlineFacebook}
+              id="facebook"
+              placeholder="Facebook"
+              type="text"
+              name="facebook"
+              value={facebook}
+              onChange={handleChange}
+            />
 
-          <InputWithIcon
-            icon={AiOutlineTwitter}
-            id="twitter"
-            placeholder="Twitter"
-            type="text"
-            name="twitter"
-            value={twitter}
-            onChange={handleChange}
-          />
+            <InputWithIcon
+              icon={AiOutlineTwitter}
+              id="twitter"
+              placeholder="Twitter"
+              type="text"
+              name="twitter"
+              value={twitter}
+              onChange={handleChange}
+            />
 
-          <InputWithIcon
-            icon={AiOutlineYoutube}
-            id="youtube"
-            placeholder="Youtube"
-            type="text"
-            name="youtube"
-            value={youtube}
-            onChange={handleChange}
-          />
+            <InputWithIcon
+              icon={AiOutlineYoutube}
+              id="youtube"
+              placeholder="Youtube"
+              type="text"
+              name="youtube"
+              value={youtube}
+              onChange={handleChange}
+            />
 
-          <InputWithIcon
-            icon={AiOutlineInstagram}
-            id="instagram"
-            placeholder="Instagram"
-            type="text"
-            name="instagram"
-            value={instagram}
-            onChange={handleChange}
-          />
-        </VStack>
-      )}
+            <InputWithIcon
+              icon={AiOutlineInstagram}
+              id="instagram"
+              placeholder="Instagram"
+              type="text"
+              name="instagram"
+              value={instagram}
+              onChange={handleChange}
+            />
+          </VStack>
+        </Collapse>
+      </Box>
     </>
   );
 };

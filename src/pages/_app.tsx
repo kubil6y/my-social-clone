@@ -25,22 +25,27 @@ class MyApp extends App {
     const isProtectedRoute = protectedRoutes.includes(ctx.pathname);
 
     if (!token) {
+      // user is not logged in
       destroyCookie(ctx, 'token');
       isProtectedRoute && redirectUser(ctx, '/login');
     } else {
+      // user logged in
       if (Component.getInitialProps) {
+        // we will only wait for this, if there is a user.
+        // pageProps will only be available in protectedRoutes.
         pageProps = await Component.getInitialProps(ctx);
       }
 
       try {
         const { data } = await axios.get(`${baseUrl}/api/auth`, {
-          headers: {
-            Authorization: token,
-          },
+          headers: { Authorization: token },
         });
 
         const { user, userFollowStats } = data;
 
+        // if there is user (logged in)
+        // and user tries to hit /login or /register (unprotected routes)
+        // redirect to main '/'
         if (user) !isProtectedRoute && redirectUser(ctx, '/');
 
         pageProps.user = user;

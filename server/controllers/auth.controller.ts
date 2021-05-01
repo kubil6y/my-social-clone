@@ -60,7 +60,7 @@ export const getUserDetails = async (req: Request, res: Response) => {
     const { user } = req;
 
     const userFollowStats = await Follower.findOne({
-      user: user._id.toString(),
+      user: user._id,
     });
 
     return res.json({ user, userFollowStats });

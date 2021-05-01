@@ -25,6 +25,8 @@ export const registerUser = async (
   setErrors: Function
 ) => {
   try {
+    setIsLoading(true);
+
     const { data } = await axios.post(`${baseUrl}/api/register/`, {
       user,
       profilePicUrl,
@@ -34,8 +36,9 @@ export const registerUser = async (
     Router.push('/');
   } catch (error) {
     setErrors(catchErrors(error));
+  } finally {
+    setIsLoading(false);
   }
-  setIsLoading(false);
 };
 
 export const loginUser = async (
@@ -45,6 +48,8 @@ export const loginUser = async (
   setErrors: Function
 ) => {
   try {
+    setIsLoading(true);
+
     const { data } = await axios.post(`${baseUrl}/api/auth`, {
       credentials,
       password,
@@ -54,6 +59,7 @@ export const loginUser = async (
     Router.push('/');
   } catch (error) {
     setErrors(catchErrors(error));
+  } finally {
+    setIsLoading(false);
   }
-  setIsLoading(false);
 };

@@ -1,5 +1,5 @@
-import React, { FormEvent, useState, useEffect } from 'react';
 import Link from 'next/link';
+import React, { FormEvent, useState, useEffect } from 'react';
 import { FooterMessage, HeaderMessage, InputWithIcon } from '../components';
 import { Text, Icon, Container, VStack, Button, Alert } from '@chakra-ui/react';
 import {

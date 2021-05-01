@@ -8,9 +8,7 @@ export const auth = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const token = req.headers.authorization;
 
-    if (!token) {
-      return msg401(res);
-    }
+    if (!token) return msg401(res);
 
     const { userId }: any = jwt.verify(token, JWT_SECRET);
 

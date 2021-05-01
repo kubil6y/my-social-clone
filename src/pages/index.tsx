@@ -1,12 +1,9 @@
 import Head from 'next/head';
 import { Button } from '@chakra-ui/react';
 import Link from 'next/link';
+import { PageProps } from '../types';
 
-export default function Home(pageProps) {
-  console.log({
-    from: 'home',
-    pageProps,
-  });
+export default function Home({ user, userFollowStats }: PageProps) {
   return (
     <div>
       <Head>
