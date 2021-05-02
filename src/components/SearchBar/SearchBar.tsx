@@ -46,9 +46,9 @@ export const SearchBar = () => {
   const handleBlur = () => {
     setIsInputFocused(false);
 
-    if (results.length > 0) {
-      setResults([]);
-    }
+    //if (results.length > 0) {
+    //setResults([]);
+    //}
   };
 
   const handleFocus = () => {
@@ -83,6 +83,14 @@ export const SearchBar = () => {
     };
     searchUser();
   }, [debouncedValue]);
+
+  // TODO
+  console.log({
+    results,
+    resultsLoading,
+    pastResults,
+    isInputFocused,
+  });
 
   return (
     <Box w="100%" py="5px" px="10px">
@@ -144,6 +152,8 @@ export const SearchBar = () => {
               isLoading={resultsLoading}
               data={results}
               pastResults={pastResults}
+              setVal={setVal}
+              setResults={setResults}
             />
           )}
         </Box>

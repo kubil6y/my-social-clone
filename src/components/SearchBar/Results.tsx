@@ -18,6 +18,8 @@ import { RiUserFill } from 'react-icons/ri';
 
 interface ResultsItemProps {
   item: User;
+  setResults: Function;
+  setVal: Function;
 }
 
 interface ResultsProps {
@@ -25,20 +27,29 @@ interface ResultsProps {
   data: User[];
   children?: React.ReactNode;
   pastResults: any;
+
+  setResults: Function;
+  setVal: Function;
 }
 
-export const ResultsItem: React.FC<ResultsItemProps> = ({ item }) => {
+export const ResultsItem: React.FC<ResultsItemProps> = ({
+  item,
+  setResults,
+  setVal,
+}) => {
   // TODO add following or not here
   const router = useRouter();
 
   const handleClick = () => {
-    router.push(`/${item.username}`);
+    //router.push(`/${item.username}`);
+    //setVal('');
+    //setResults([]);
     // TODO
     console.log('push this to cookies');
   };
 
   return (
-    <>
+    <Box w="100%" overflow="hidden">
       <Flex
         alignItems="center"
         py="16px"
@@ -46,6 +57,7 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({ item }) => {
         _hover={{ bg: 'gray.50' }}
         cursor="pointer"
         onClick={handleClick}
+        overflow="hidden"
       >
         <Center rounded="full" w="40px" h="40px" overflow="hidden">
           <Image src={item.profilePicUrl} width="40px" height="40px" />
@@ -64,7 +76,7 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({ item }) => {
         </Box>
       </Flex>
       <Divider orientation="horizontal" />
-    </>
+    </Box>
   );
 };
 
@@ -74,6 +86,8 @@ export const Results: React.FC<ResultsProps> = ({
   isLoading,
   data,
   pastResults,
+  setResults,
+  setVal,
 }) => {
   return (
     <Box mt="2.45px" minH="100px" overflow="hidden">
@@ -84,7 +98,14 @@ export const Results: React.FC<ResultsProps> = ({
       )}
       {data &&
         Array.isArray(data) &&
-        data.map((el) => <ResultsItem key={el._id} item={el} />)}
+        data.map((el) => (
+          <ResultsItem
+            key={el._id}
+            item={el}
+            setResults={setResults}
+            setVal={setVal}
+          />
+        ))}
 
       {data && Array.isArray(data) && data.length === 0 && !isLoading && (
         <>
