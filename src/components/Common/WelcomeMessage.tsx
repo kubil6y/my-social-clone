@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { AiOutlineKey, AiFillSetting } from 'react-icons/ai';
+import { GiDonkey } from 'react-icons/gi';
 import {
   Box,
   Flex,
@@ -10,6 +11,7 @@ import {
   Alert,
   AlertIcon,
   Icon,
+  Center,
 } from '@chakra-ui/react';
 
 export const HeaderMessage = () => {
@@ -24,15 +26,35 @@ export const HeaderMessage = () => {
   const icon = registerRoute ? AiFillSetting : AiOutlineKey;
 
   return (
-    <Flex alignItems="center" p="1rem" mb="2rem" bg="blue.50">
-      <Icon as={icon} h={16} w={16} color="blue.700" />
-      <Box ml="1rem">
-        <Heading size="lg">{heading}</Heading>
-        <Text fontSize="sm" color="gray.600">
-          {text}
-        </Text>
-      </Box>
-    </Flex>
+    <>
+      <Flex
+        alignItems="center"
+        justifyContent="space-between"
+        bg="blue.50"
+        p=".5rem"
+        mb="2rem"
+      >
+        <Flex alignItems="center" p="1rem">
+          <Icon as={icon} h={16} w={16} color="blue.700" />
+          <Box ml="1rem">
+            <Heading size="lg">{heading}</Heading>
+            <Text fontSize="sm" color="gray.600">
+              {text}
+            </Text>
+          </Box>
+        </Flex>
+        <Link href="/">
+          <Center
+            _hover={{ bg: 'gray.200', cursor: 'pointer' }}
+            minH={20}
+            minW={20}
+            rounded="full"
+          >
+            <Icon as={GiDonkey} h={12} w={12} color="blue.700" />
+          </Center>
+        </Link>
+      </Flex>
+    </>
   );
 };
 

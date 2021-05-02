@@ -4,4 +4,4 @@ import { auth } from '../middlewares';
 
 export const router = Router();
 
-router.get('/:term', auth, searchUser);
+router.get('/:searchText', auth, searchUser);

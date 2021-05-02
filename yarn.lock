@@ -137,7 +137,7 @@
     "@chakra-ui/utils" "1.7.0"
     "@chakra-ui/visually-hidden" "1.0.11"
 
-"@chakra-ui/clickable@1.1.4":
+"@chakra-ui/clickable@1.1.4", "@chakra-ui/clickable@^1.1.4":
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/@chakra-ui/clickable/-/clickable-1.1.4.tgz#ff813fdfc5a31a2eb2dc27f39221a9922b71a04a"
   integrity sha512-ETpjwr50u7baOujex4Og1om2P/nfGss8f6YYvsewGqI81OUUmOpz2sr87I+gvoZwqwMHQkOksOY1L2BK1MrO9A==

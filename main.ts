@@ -17,9 +17,11 @@ const handle = app.getRequestHandler();
     const server = express();
     await connectDb();
 
+    // middlewares
     server.use(express.json());
     server.use(trimBody);
 
+    // routes
     server.use('/api/auth', authRouter);
     server.use('/api/register', registerRouter);
     server.use('/api/search', searchRouter);

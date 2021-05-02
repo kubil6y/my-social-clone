@@ -1,52 +1,55 @@
 import React from 'react';
-import { Box, Center, Divider, Flex, Icon, Text } from '@chakra-ui/react';
 import { BsSearch } from 'react-icons/bs';
 import { AiOutlineClose } from 'react-icons/ai';
+import { Box, Center, Divider, Flex, Icon, Text } from '@chakra-ui/react';
 
 interface PastResultsProps {}
 
-interface PastResultsItemProps {
-  setPastResults: Function;
-}
+interface PastResultsItemProps {}
 
-export const PastResultsItem: React.FC<PastResultsItemProps> = ({
-  setPastResults,
-}) => {
+export const PastResultsItem: React.FC<PastResultsItemProps> = () => {
   // search term on click
-  //const handleTermClick = (term: string) => {
-  //console.log('clicked on', term);
-  //setPastResults((prev) => [term, ...prev]);
-  //};
+  const handleTermClick = (term: string) => {
+    console.log('clicked on', term);
+    //setPastResults((prev) => [term, ...prev]);
+  };
 
   return (
     <Box w="100%" overflow="hidden">
-      <>
-        <Flex
-          justifyContent="space-between"
-          w="100%"
-          py="16px"
-          px="20px"
-          cursor="pointer"
-          _hover={{ bg: 'gray.100' }}
-          //onClick={() => handleTermClick(text)}
-        >
-          <Icon h="24px" w="24px" as={BsSearch} color="gray.400" />
-          <Text ml="12px" mr="auto" fontWeight="bold">
+      <Flex
+        justifyContent="space-between"
+        alignItems="center"
+        w="100%"
+        py="16px"
+        px="20px"
+        cursor="pointer"
+        _hover={{ bg: 'gray.50' }}
+      >
+        <Flex alignItems="center" onClick={() => handleTermClick('a')}>
+          <Center p="8px" rounded="full" bg="gray.200" h="40px" w="40px">
+            <Icon h="25px" w="25px" as={BsSearch} color="gray.500" />
+          </Center>
+          <Text ml="12px" mr="auto">
             some name
           </Text>
-          <Icon
-            h="25px"
-            w="25px"
-            as={AiOutlineClose}
-            color="gray.400"
-            p="3px"
-            overflow="hidden"
-            rounded="full"
-            _hover={{ bg: 'gray.200' }}
-          />
         </Flex>
-        <Divider orientation="horizontal" />
-      </>
+        <Center
+          overflow="hidden"
+          rounded="full"
+          _hover={{ bg: 'gray.200' }}
+          minH="32px"
+          minW="32px"
+        >
+          <Icon
+            h="1.3em"
+            w="1.3em"
+            as={AiOutlineClose}
+            color="blue.500"
+            onClick={() => console.log('x pastitem clicked')}
+          />
+        </Center>
+      </Flex>
+      <Divider orientation="horizontal" />
     </Box>
   );
 };
@@ -66,7 +69,8 @@ export const PastResults: React.FC<PastResultsProps> = () => {
             color="blue.500"
             px="1em"
             py=".5em"
-            _hover={{ bg: 'gray.200' }}
+            cursor="pointer"
+            _hover={{ bg: 'gray.100' }}
           >
             Clear all
           </Text>

@@ -3,11 +3,11 @@ import { User } from '../models';
 import { msg500 } from '../utils';
 
 export const searchUser = async (req: Request, res: Response) => {
-  const { term } = req.params;
+  const { searchText } = req.params;
   try {
-    if (term.length === 0) return res.status(400).send('Invalid Request');
+    if (searchText.length === 0) return res.status(400).send('Invalid Request');
 
-    const userPattern = new RegExp(`^${term}`);
+    const userPattern = new RegExp(`^${searchText}`);
 
     const results = await User.find({
       name: { $regex: userPattern, $options: 'i' },

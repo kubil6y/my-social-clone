@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { User } from '../../types';
 import {
   AiOutlineHome,
-  AiOutlineSmile,
   AiOutlineMail,
   AiFillMail,
   AiFillHome,
@@ -12,6 +11,7 @@ import {
   AiOutlineBell,
   AiOutlineLogout,
 } from 'react-icons/ai';
+import { GiDonkey } from 'react-icons/gi';
 import { RiUserFill, RiUserLine } from 'react-icons/ri';
 import { Box, Icon, Text } from '@chakra-ui/react';
 import { logoutUser } from '../../actions';
@@ -77,6 +77,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
 };
 
 export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
+  const router = useRouter();
   const { username, unreadNotification, unreadMessage, email } = user;
 
   const messagesColor = unreadMessage && 'orange.500';
@@ -89,11 +90,13 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
         borderRadius="9999px"
         cursor="pointer"
         color="pink.500"
-        _hover={{ color: 'pink.600', bg: 'gray.100' }}
+        _hover={{ color: 'blue.600', bg: 'gray.100' }}
         alignItems="center"
         p="12px"
+        ml="2px"
+        onClick={() => router.push('/')}
       >
-        <Icon as={AiOutlineSmile} h={7} w={7} />
+        <Icon as={GiDonkey} h={7} w={7} color="blue.500" />
       </Box>
       <Box></Box>
       <SideMenuItem

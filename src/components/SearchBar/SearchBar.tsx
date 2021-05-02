@@ -1,77 +1,128 @@
-import React, { ChangeEvent, useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import Router from 'next/router';
 import axios from 'axios';
 import cookie from 'js-cookie';
 import { baseUrl } from '../../utils';
-import { AiOutlineSearch } from 'react-icons/ai';
+import { NoResults } from './NoResults';
+import { Results } from './Results';
+import { PastResults } from './PastResults';
+import { useDebounce } from 'react-use';
+import { AiOutlineSearch, AiOutlineClose } from 'react-icons/ai';
 import {
   Box,
   InputGroup,
   InputLeftElement,
   Input,
-  Flex,
-  Icon,
-  Text,
+  InputRightElement,
+  Center,
 } from '@chakra-ui/react';
-import { NoResults } from './NoResults';
-import { Results } from './Results';
-import { PastResults } from './PastResults';
 
-// TODO
-// save last 5 search terms to cookies.
-// give an option to delete them
-// give an option to research them
-
-// connect search input to database
-// render dropdown conditionally
-// logic is at the bottom
+// axios canceler
+let cancel: any;
 
 export const SearchBar = () => {
-  const [text, setText] = useState('');
-  const [resultsLoading, setResultsLoading] = useState(false);
-  const [results, setResults] = useState(['asdf']);
-
-  const [pastResults, setPastResults] = useState(['asfd']);
-
   const [isInputFocused, setIsInputFocused] = useState(false);
 
-  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
-    console.log(text);
+  const [val, setVal] = React.useState('');
+  const [debouncedValue, setDebouncedValue] = React.useState('');
+  useDebounce(
+    () => {
+      setDebouncedValue(val);
+    },
+    300,
+    [val]
+  );
+
+  const [resultsLoading, setResultsLoading] = useState(false);
+  const [results, setResults] = useState([]);
+
+  const [pastResults, setPastResults] = useState(['asdf']);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setVal(value);
+  };
+
+  const handleBlur = () => {
+    setIsInputFocused(false);
+
+    if (results.length > 0) {
+      setResults([]);
+    }
+  };
+
+  const handleFocus = () => {
+    setIsInputFocused(true);
   };
 
   useEffect(() => {
-    if (isInputFocused) {
-      console.log('yes its focused!!');
-    } else {
-      console.log('nooo its not focused!!');
-    }
-  }, [isInputFocused]);
+    const searchUser = async () => {
+      setResultsLoading(true);
+      try {
+        cancel && cancel();
 
-  useEffect(() => {
-    //setPastResults(JSON.stringify(pastResults));
-    return;
-  }, [pastResults]);
+        const CancelToken = axios.CancelToken;
+        const token = cookie.get('token');
+
+        const { data } = await axios.get(
+          `${baseUrl}/api/search/${debouncedValue}`,
+          {
+            headers: { Authorization: token },
+            cancelToken: new CancelToken((canceler) => {
+              cancel = canceler;
+            }),
+          }
+        );
+
+        setResults(data);
+      } catch (error) {
+        console.log('error searching');
+      } finally {
+        setResultsLoading(false);
+      }
+    };
+    searchUser();
+  }, [debouncedValue]);
 
   return (
     <Box w="100%" py="5px" px="10px">
-      <InputGroup>
-        <InputLeftElement
-          pointerEvents="none"
-          children={<AiOutlineSearch color="gray.500" />}
-        />
-        <Input
-          type="text"
-          placeholder="Search MySocial"
-          rounded="full"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(false)}
-          bg={isInputFocused ? 'white' : 'gray.200'}
-        />
-      </InputGroup>
+      <form>
+        <InputGroup>
+          <InputLeftElement
+            pointerEvents="none"
+            children={<AiOutlineSearch color="gray.500" />}
+          />
+          <Input
+            type="text"
+            placeholder="Search MySocial"
+            rounded="full"
+            value={val}
+            onChange={handleChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            bg={isInputFocused ? 'white' : 'gray.100'}
+          />
 
-      {isInputFocused && (
+          {val.length > 0 && (
+            <InputRightElement
+              cursor="pointer"
+              children={
+                <Center
+                  p="4px"
+                  bg="blue.500"
+                  rounded="full"
+                  overflow="hidden"
+                  onClick={() => setVal('')}
+                >
+                  <AiOutlineClose color="white" />
+                </Center>
+              }
+            />
+          )}
+        </InputGroup>
+      </form>
+
+      {true && (
         <Box
           mt="2.45px"
           minH="100px"
@@ -82,14 +133,18 @@ export const SearchBar = () => {
               'rgb(101 119 134 / 20%) 0px 0px 15px, rgb(101 119 134 / 15%) 0px 0px 3px 1px',
           }}
         >
-          {text.length === 0 ? (
+          {debouncedValue.length === 0 ? (
             pastResults.length > 0 ? (
-              <PastResults setPastResults={setPastResults} />
+              <PastResults />
             ) : (
               <NoResults />
             )
           ) : (
-            <Results isLoading={true} />
+            <Results
+              isLoading={resultsLoading}
+              data={results}
+              pastResults={pastResults}
+            />
           )}
         </Box>
       )}
