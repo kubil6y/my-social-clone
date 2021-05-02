@@ -46,8 +46,7 @@ export const Layout = ({ children, user }: PageProps) => {
               <Sticky>
                 <SideMenu user={user} />
               </Sticky>
-              <Box w="100%" bg="green.500" h="2000px">
-                <SearchBar />
+              <Box w="100%" bg="green.500" h="2000px" py="5px" px="10px">
                 MAIN FEED
               </Box>
               <Sticky>

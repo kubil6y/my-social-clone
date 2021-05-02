@@ -11,10 +11,8 @@ import {
 } from 'react-icons/ai';
 import { loginUser } from '../actions';
 
-const emailAtCookie = cookie.get('email');
-
 const initialState = {
-  credentials: emailAtCookie ? emailAtCookie : '',
+  credentials: '',
   password: '',
 };
 
@@ -51,6 +49,17 @@ const login: React.FC<loginProps> = () => {
     if (passwordType === 'password') setPasswordType('text');
     else setPasswordType('password');
   };
+
+  useEffect(() => {
+    document.title = 'Welcome Back';
+    const emailAtCookie = cookie.get('email');
+    if (emailAtCookie) {
+      setState((prev) => ({
+        ...prev,
+        credentials: emailAtCookie ? emailAtCookie : '',
+      }));
+    }
+  }, []);
 
   useEffect(() => {
     const isValid = Object.values({

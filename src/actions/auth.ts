@@ -65,7 +65,9 @@ export const loginUser = async (
 };
 
 export const logoutUser = (email: string) => {
-  cookie.set('email', email);
+  cookie.set('email', email, {
+    expires: 7,
+  });
   cookie.remove('token');
   window.location.reload();
 };
