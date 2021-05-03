@@ -1,5 +1,4 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import Router from 'next/router';
+import React, { useState, useEffect, ChangeEvent, useRef } from 'react';
 import axios from 'axios';
 import cookie from 'js-cookie';
 import { baseUrl } from '../../utils';
@@ -7,6 +6,7 @@ import { NoResults } from './NoResults';
 import { Results } from './Results';
 import { PastResults } from './PastResults';
 import { useDebounce } from 'react-use';
+import { useClickOutside } from '../../hooks';
 import { AiOutlineSearch, AiOutlineClose } from 'react-icons/ai';
 import {
   Box,
@@ -21,7 +21,15 @@ import {
 let cancel: any;
 
 export const SearchBar = () => {
+  const dropboxRef = useRef();
+  const [isDropdown, setIsDropdown] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
+
+  const handleClickOutside = () => {
+    setIsDropdown(false);
+    console.log('dropbox outside clicked');
+  };
+  useClickOutside(dropboxRef, handleClickOutside);
 
   const [val, setVal] = React.useState('');
   const [debouncedValue, setDebouncedValue] = React.useState('');
@@ -43,20 +51,19 @@ export const SearchBar = () => {
     setVal(value);
   };
 
+  const handleFocus = () => {
+    setIsDropdown(true);
+    setIsInputFocused(true);
+  };
   const handleBlur = () => {
     setIsInputFocused(false);
-
-    //if (results.length > 0) {
-    //setResults([]);
-    //}
-  };
-
-  const handleFocus = () => {
-    setIsInputFocused(true);
   };
 
   useEffect(() => {
     const searchUser = async () => {
+      // no input value
+      if (debouncedValue.length === 0) return;
+
       setResultsLoading(true);
       try {
         cancel && cancel();
@@ -83,14 +90,6 @@ export const SearchBar = () => {
     };
     searchUser();
   }, [debouncedValue]);
-
-  // TODO
-  console.log({
-    results,
-    resultsLoading,
-    pastResults,
-    isInputFocused,
-  });
 
   return (
     <Box w="100%" py="5px" px="10px">
@@ -130,8 +129,9 @@ export const SearchBar = () => {
         </InputGroup>
       </form>
 
-      {true && (
+      {isDropdown && (
         <Box
+          ref={dropboxRef}
           mt="2.45px"
           minH="100px"
           borderRadius="4px"
@@ -161,36 +161,3 @@ export const SearchBar = () => {
     </Box>
   );
 };
-
-/*
-// trying to replicate twitter search bar
-// render logic
-
-if(isInputFocused) 
-
-  {results.length > 0 ? (
-    <>
-      <div>REAL SEARCH RESULTS</div>
-    </>
-  ) : pastResults.length > 0 ? (
-    <>
-      <div>user searched before</div>
-    </>
-  ) : (
-    <>
-      <div>no search history</div>
-    </>
-  )}
-
-else null
-
-input clicked
-no text 
-  show past results : noposts
-yes text then load it.
-
-add loading screens to all of them.
-
- */
-
-//<Progress size="xs" isIndeterminate color="blue.500" />
