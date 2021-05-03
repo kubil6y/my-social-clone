@@ -1,7 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BsSearch } from 'react-icons/bs';
 import { AiOutlineClose } from 'react-icons/ai';
-import { Box, Center, Divider, Flex, Icon, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Center,
+  Divider,
+  Flex,
+  Icon,
+  Text,
+  Button,
+} from '@chakra-ui/react';
 
 interface PastResultsProps {}
 
@@ -55,7 +63,51 @@ export const PastResultsItem: React.FC<PastResultsItemProps> = () => {
 };
 
 export const PastResults: React.FC<PastResultsProps> = () => {
-  return (
+  const [isClearAll, setIsClearAll] = useState(false);
+
+  // todo clicking outside should cancel.
+
+  const handleClear = () => {
+    console.log('clear clicked');
+  };
+
+  const handleCancel = () => {
+    setIsClearAll(false);
+    console.log('cancel clicked');
+  };
+
+  return isClearAll ? (
+    <Box maxW="100%" p="1rem">
+      <Text textAlign="center" fontSize="20px" fontWeight="bold">
+        Clear all recent searches?
+      </Text>
+      <Text textAlign="center" color="gray.600" fontSize="12" my="10px">
+        This can't be undone and you'll remove all your recent searches.
+      </Text>
+      <Flex alignItems="center" justifyContent="center">
+        <Button
+          onClick={handleCancel}
+          colorScheme="gray"
+          cursor="pointer"
+          bg="gray.200"
+          rounded="full"
+          fontSize="sm"
+        >
+          Cancel
+        </Button>
+        <Button
+          onClick={handleClear}
+          cursor="pointer"
+          colorScheme="red"
+          rounded="full"
+          fontSize="sm"
+          ml="10px"
+        >
+          Clear
+        </Button>
+      </Flex>
+    </Box>
+  ) : (
     <>
       <Box px="16px" py="10px">
         <Flex justifyContent="space-between" alignItems="center">
@@ -71,6 +123,7 @@ export const PastResults: React.FC<PastResultsProps> = () => {
             py=".5em"
             cursor="pointer"
             _hover={{ bg: 'gray.100' }}
+            onClick={() => setIsClearAll(true)}
           >
             Clear all
           </Text>
