@@ -12,6 +12,7 @@ import {
   AlertIcon,
   Icon,
   Center,
+  Tooltip,
 } from '@chakra-ui/react';
 
 export const HeaderMessage = () => {
@@ -24,6 +25,9 @@ export const HeaderMessage = () => {
     ? 'Create a new acccount'
     : 'Login with Email and Password';
   const icon = registerRoute ? AiFillSetting : AiOutlineKey;
+  const tooltipMessage = registerRoute
+    ? 'Sign up and waste your valuable time with MySocial!'
+    : 'Welcome back, keep wasting your time in MySocial. Scientists say it has great effect on your mental health!';
 
   return (
     <>
@@ -43,7 +47,7 @@ export const HeaderMessage = () => {
             </Text>
           </Box>
         </Flex>
-        <Link href="/">
+        <Tooltip label={tooltipMessage} aria-label={tooltipMessage}>
           <Center
             _hover={{ bg: 'gray.200', cursor: 'pointer' }}
             minH={20}
@@ -52,7 +56,7 @@ export const HeaderMessage = () => {
           >
             <Icon as={GiDonkey} h={12} w={12} color="blue.700" />
           </Center>
-        </Link>
+        </Tooltip>
       </Flex>
     </>
   );

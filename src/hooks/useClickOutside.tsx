@@ -3,12 +3,15 @@
 
 import { useEffect } from 'react';
 
-export const useClickOutside = (ref, closeFunction) => {
+export const useClickOutside = (ref, exceptionRef, closeFunction) => {
   useEffect(() => {
     /**
      * call function if clicked on outside of element
      */
     function handleClickOutside(event) {
+      if (exceptionRef.current && exceptionRef.current.contains(event.target)) {
+        return;
+      }
       if (ref.current && !ref.current.contains(event.target)) {
         closeFunction();
       }

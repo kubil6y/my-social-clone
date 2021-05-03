@@ -6,7 +6,7 @@ import { NoResults } from './NoResults';
 import { Results } from './Results';
 import { PastResults } from './PastResults';
 import { useDebounce } from 'react-use';
-import { useClickOutside } from '../../hooks';
+import { useClickOutside, useLocalStorage } from '../../hooks';
 import { AiOutlineSearch, AiOutlineClose } from 'react-icons/ai';
 import {
   Box,
@@ -22,14 +22,15 @@ let cancel: any;
 
 export const SearchBar = () => {
   const dropboxRef = useRef();
+  const inputRef = useRef();
+
   const [isDropdown, setIsDropdown] = useState(false);
   const [isInputFocused, setIsInputFocused] = useState(false);
 
   const handleClickOutside = () => {
     setIsDropdown(false);
-    console.log('dropbox outside clicked');
   };
-  useClickOutside(dropboxRef, handleClickOutside);
+  useClickOutside(dropboxRef, inputRef, handleClickOutside);
 
   const [val, setVal] = React.useState('');
   const [debouncedValue, setDebouncedValue] = React.useState('');
@@ -44,7 +45,7 @@ export const SearchBar = () => {
   const [resultsLoading, setResultsLoading] = useState(false);
   const [results, setResults] = useState([]);
 
-  const [pastResults, setPastResults] = useState(['asdf']);
+  const [pastResults, setPastResults] = useLocalStorage('pastResults', []);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
@@ -59,6 +60,7 @@ export const SearchBar = () => {
     setIsInputFocused(false);
   };
 
+  // SEARCHING USER WITH DEBOUNCED VALUE
   useEffect(() => {
     const searchUser = async () => {
       // no input value
@@ -92,42 +94,41 @@ export const SearchBar = () => {
   }, [debouncedValue]);
 
   return (
-    <Box w="100%" py="5px" px="10px">
-      <form>
-        <InputGroup>
-          <InputLeftElement
-            pointerEvents="none"
-            children={<AiOutlineSearch color="gray.500" />}
-          />
-          <Input
-            type="text"
-            placeholder="Search MySocial"
-            rounded="full"
-            value={val}
-            onChange={handleChange}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            bg={isInputFocused ? 'white' : 'gray.100'}
-          />
+    <Box w="100%" py="5px" px="10px" bg="white">
+      <Box></Box>
+      <InputGroup ref={inputRef}>
+        <InputLeftElement
+          pointerEvents="none"
+          children={<AiOutlineSearch color="gray.500" />}
+        />
+        <Input
+          type="text"
+          placeholder="Search MySocial"
+          rounded="full"
+          value={val}
+          onChange={handleChange}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          bg={isInputFocused ? 'white' : 'gray.100'}
+        />
 
-          {val.length > 0 && (
-            <InputRightElement
-              cursor="pointer"
-              children={
-                <Center
-                  p="4px"
-                  bg="blue.500"
-                  rounded="full"
-                  overflow="hidden"
-                  onClick={() => setVal('')}
-                >
-                  <AiOutlineClose color="white" />
-                </Center>
-              }
-            />
-          )}
-        </InputGroup>
-      </form>
+        {val.length > 0 && (
+          <InputRightElement
+            cursor="pointer"
+            children={
+              <Center
+                p="4px"
+                bg="blue.500"
+                rounded="full"
+                overflow="hidden"
+                onClick={() => setVal('')}
+              >
+                <AiOutlineClose color="white" />
+              </Center>
+            }
+          />
+        )}
+      </InputGroup>
 
       {isDropdown && (
         <Box
@@ -143,7 +144,11 @@ export const SearchBar = () => {
         >
           {debouncedValue.length === 0 ? (
             pastResults.length > 0 ? (
-              <PastResults />
+              <PastResults
+                setVal={setVal}
+                pastResults={pastResults}
+                setPastResults={setPastResults}
+              />
             ) : (
               <NoResults />
             )
@@ -152,6 +157,7 @@ export const SearchBar = () => {
               isLoading={resultsLoading}
               data={results}
               pastResults={pastResults}
+              setPastResults={setPastResults}
               setVal={setVal}
               setResults={setResults}
             />

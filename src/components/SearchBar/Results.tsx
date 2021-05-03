@@ -1,6 +1,6 @@
 import React from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
+import Image from 'next/image';
 import {
   Box,
   Progress,
@@ -19,6 +19,8 @@ import { RiUserFill } from 'react-icons/ri';
 interface ResultsItemProps {
   item: User;
   setResults: Function;
+  pastResults: string[];
+  setPastResults: Function;
   setVal: Function;
 }
 
@@ -27,6 +29,7 @@ interface ResultsProps {
   data: User[];
   children?: React.ReactNode;
   pastResults: any;
+  setPastResults: Function;
 
   setResults: Function;
   setVal: Function;
@@ -36,16 +39,22 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({
   item,
   setResults,
   setVal,
+  pastResults,
+  setPastResults,
 }) => {
-  // TODO add following or not here
   const router = useRouter();
 
-  const handleClick = () => {
-    //router.push(`/${item.username}`);
-    //setVal('');
-    //setResults([]);
-    // TODO
-    console.log('push this to cookies');
+  const handleClick = (username: string) => {
+    if (!pastResults.includes(username)) {
+      setPastResults([item.username, ...pastResults.slice(0, 4)]);
+    } else {
+      const newPastResults = pastResults.filter((el) => el !== username);
+      setPastResults([username, ...newPastResults]);
+    }
+
+    router.push(`/${username}`);
+    setResults([]);
+    setVal('');
   };
 
   return (
@@ -56,7 +65,7 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({
         px="20px"
         _hover={{ bg: 'gray.50' }}
         cursor="pointer"
-        onClick={handleClick}
+        onClick={() => handleClick(item.username)}
         overflow="hidden"
       >
         <Center rounded="full" w="40px" h="40px" overflow="hidden">
@@ -65,12 +74,16 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({
         <Box ml="10px">
           <Flex alignItems="center">
             <Text fontWeight="bold">{capitalize(item.name)}</Text>
-            <Flex alignItems="center" ml="20px">
-              <Icon as={RiUserFill} h={3} w={3} color="gray.500" />
-              <Text color="gray.500" fontWeight="bold" ml="3px" fontSize="xs">
-                Following
-              </Text>
-            </Flex>
+
+            {/* TODO */}
+            {item.username !== item.username && (
+              <Flex alignItems="center" ml="20px">
+                <Icon as={RiUserFill} h={3} w={3} color="gray.500" />
+                <Text color="gray.500" fontWeight="bold" ml="3px" fontSize="xs">
+                  Following
+                </Text>
+              </Flex>
+            )}
           </Flex>
           <Text color="gray.600">@{item.username}</Text>
         </Box>
@@ -88,6 +101,7 @@ export const Results: React.FC<ResultsProps> = ({
   pastResults,
   setResults,
   setVal,
+  setPastResults,
 }) => {
   return (
     <Box mt="2.45px" minH="100px" overflow="hidden">
@@ -104,6 +118,8 @@ export const Results: React.FC<ResultsProps> = ({
             item={el}
             setResults={setResults}
             setVal={setVal}
+            pastResults={pastResults}
+            setPastResults={setPastResults}
           />
         ))}
 
@@ -118,7 +134,11 @@ export const Results: React.FC<ResultsProps> = ({
           {pastResults && pastResults.length > 0 && (
             <>
               <Divider orientation="horizontal" mt="2.45px" />
-              <PastResults />
+              <PastResults
+                setVal={setVal}
+                setPastResults={setPastResults}
+                pastResults={pastResults}
+              />
             </>
           )}
         </>

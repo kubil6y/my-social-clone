@@ -11,15 +11,35 @@ import {
   Button,
 } from '@chakra-ui/react';
 
-interface PastResultsProps {}
+interface PastResultsProps {
+  pastResults: string[];
+  setPastResults: Function;
+  setVal: Function;
+}
 
-interface PastResultsItemProps {}
+interface PastResultsItemProps {
+  pastResults: string[];
+  item: string;
+  setPastResults: Function;
+  setVal: Function;
+}
 
-export const PastResultsItem: React.FC<PastResultsItemProps> = () => {
+export const PastResultsItem: React.FC<PastResultsItemProps> = ({
+  item,
+  pastResults,
+  setPastResults,
+  setVal,
+}) => {
   // search term on click
   const handleTermClick = (term: string) => {
     console.log('clicked on', term);
+    setVal(term);
     //setPastResults((prev) => [term, ...prev]);
+  };
+
+  const handleDeleteItem = (target: string) => {
+    const newPastResults = pastResults.filter((el) => el !== target);
+    setPastResults(newPastResults);
   };
 
   return (
@@ -33,12 +53,12 @@ export const PastResultsItem: React.FC<PastResultsItemProps> = () => {
         cursor="pointer"
         _hover={{ bg: 'gray.50' }}
       >
-        <Flex alignItems="center" onClick={() => handleTermClick('a')}>
+        <Flex alignItems="center" onClick={() => handleTermClick(item)}>
           <Center p="8px" rounded="full" bg="gray.200" h="40px" w="40px">
             <Icon h="25px" w="25px" as={BsSearch} color="gray.500" />
           </Center>
           <Text ml="12px" mr="auto">
-            some name
+            {item}
           </Text>
         </Flex>
         <Center
@@ -53,7 +73,7 @@ export const PastResultsItem: React.FC<PastResultsItemProps> = () => {
             w="1.3em"
             as={AiOutlineClose}
             color="blue.500"
-            onClick={() => console.log('x pastitem clicked')}
+            onClick={() => handleDeleteItem(item)}
           />
         </Center>
       </Flex>
@@ -62,18 +82,19 @@ export const PastResultsItem: React.FC<PastResultsItemProps> = () => {
   );
 };
 
-export const PastResults: React.FC<PastResultsProps> = () => {
+export const PastResults: React.FC<PastResultsProps> = ({
+  setVal,
+  pastResults,
+  setPastResults,
+}) => {
   const [isClearAll, setIsClearAll] = useState(false);
 
-  // todo clicking outside should cancel.
-
   const handleClear = () => {
-    console.log('clear clicked');
+    setPastResults([]);
   };
 
   const handleCancel = () => {
     setIsClearAll(false);
-    console.log('cancel clicked');
   };
 
   return isClearAll ? (
@@ -130,7 +151,16 @@ export const PastResults: React.FC<PastResultsProps> = () => {
         </Flex>
       </Box>
       <Divider orientation="horizontal" />
-      <PastResultsItem />
+      {pastResults &&
+        pastResults.map((item, idx) => (
+          <PastResultsItem
+            key={idx}
+            item={item}
+            pastResults={pastResults}
+            setPastResults={setPastResults}
+            setVal={setVal}
+          />
+        ))}
     </>
   );
 };
