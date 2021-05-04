@@ -5,7 +5,12 @@ import next from 'next';
 import { NODE_ENV, __prod__, PORT, __dev__ } from './server/constants';
 import { connectDb } from './server/utils';
 import { trimBody } from './server/middlewares';
-import { authRouter, registerRouter, searchRouter } from './server/routes';
+import {
+  authRouter,
+  registerRouter,
+  searchRouter,
+  postRouter,
+} from './server/routes';
 
 const dev = __dev__;
 const app = next({ dev });
@@ -25,6 +30,7 @@ const handle = app.getRequestHandler();
     server.use('/api/auth', authRouter);
     server.use('/api/register', registerRouter);
     server.use('/api/search', searchRouter);
+    server.use('/api/posts', postRouter);
 
     server.all('*', (req: Request, res: Response) => {
       return handle(req, res);

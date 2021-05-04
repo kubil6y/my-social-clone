@@ -4,5 +4,19 @@
 # select.('+fieldName') still works fine when fetching user 
 // @ts-ignore
 
+#----------#
+# typegoose// in order to use populate:
+#use this:
+ref: 'IUser'
 
+# not this:
+ref: () => Iuser
 
+#----------#
+### IMPORTANT ###
+
+# when to use toString() method with ObjectId in MongoDB?
+when you work with refs. i carry user in auth middleware so i can directly compare ObjectIds to other refs.
+just be careful!
+
+#----------#

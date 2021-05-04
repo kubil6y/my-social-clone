@@ -27,7 +27,7 @@ export class ISocial {
   },
 })
 export class IProfile {
-  @prop({ ref: () => IUser })
+  @prop({ ref: 'IUser' })
   user!: Ref<IUser>;
 
   @prop({ required: true })

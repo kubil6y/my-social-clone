@@ -13,13 +13,13 @@ import { IUser } from './user.model';
   },
 })
 export class IFollower {
-  @prop({ ref: () => IUser })
+  @prop({ ref: 'IUser' })
   user!: Ref<IUser>;
 
-  @prop({ ref: () => IUser })
+  @prop({ ref: 'IUser' })
   follower!: Ref<IUser>[];
 
-  @prop({ ref: () => IUser })
+  @prop({ ref: 'IUser' })
   following!: Ref<IUser>[];
 }
 
