@@ -12,7 +12,7 @@ export enum UserRole {
 }
 
 @pre<IUser>('save', async function (next) {
-  if (!this.isModified('password')) {
+  if (this.isModified('password') || this.isNew) {
     this.password = await argon2.hash(this.password);
   }
   return next();
@@ -42,7 +42,7 @@ export class IUser {
   })
   public email!: string;
 
-  @prop({ required: true })
+  @prop({ required: true, select: false })
   public password!: string;
 
   @prop({ required: true, unique: true, trim: true, lowercase: true })

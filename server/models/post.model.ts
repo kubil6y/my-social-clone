@@ -7,7 +7,7 @@ import {
 import { IUser } from './user.model';
 
 class ILike {
-  @prop({ type: () => IUser })
+  @prop({ ref: () => IUser })
   public user?: Ref<IUser>;
 }
 
@@ -28,6 +28,12 @@ class IComment {
   date?: Date;
 }
 
+@modelOptions({
+  schemaOptions: {
+    collection: 'posts',
+    timestamps: true,
+  },
+})
 export class IPost {
   @prop({ ref: () => IUser })
   public user?: Ref<IUser>;
