@@ -32,9 +32,7 @@ export const PastResultsItem: React.FC<PastResultsItemProps> = ({
 }) => {
   // search term on click
   const handleTermClick = (term: string) => {
-    console.log('clicked on', term);
     setVal(term);
-    //setPastResults((prev) => [term, ...prev]);
   };
 
   const handleDeleteItem = (target: string) => {
@@ -53,7 +51,11 @@ export const PastResultsItem: React.FC<PastResultsItemProps> = ({
         cursor="pointer"
         _hover={{ bg: 'gray.50' }}
       >
-        <Flex alignItems="center" onClick={() => handleTermClick(item)}>
+        <Flex
+          w="100%"
+          alignItems="center"
+          onClick={() => handleTermClick(item)}
+        >
           <Center p="8px" rounded="full" bg="gray.200" h="40px" w="40px">
             <Icon h="25px" w="25px" as={BsSearch} color="gray.500" />
           </Center>

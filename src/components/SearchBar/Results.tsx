@@ -76,7 +76,7 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({
             <Text fontWeight="bold">{capitalize(item.name)}</Text>
 
             {/* TODO */}
-            {item.username !== item.username && (
+            {item.username == item.username && (
               <Flex alignItems="center" ml="20px">
                 <Icon as={RiUserFill} h={3} w={3} color="gray.500" />
                 <Text color="gray.500" fontWeight="bold" ml="3px" fontSize="xs">
