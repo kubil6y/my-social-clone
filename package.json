@@ -17,6 +17,7 @@
     "@chakra-ui/react": "^1.6.0",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@typegoose/typegoose": "^7.6.0",
     "argon2": "^0.27.2",
     "axios": "^0.21.1",
     "dotenv": "^8.2.0",

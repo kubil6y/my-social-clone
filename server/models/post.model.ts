@@ -1,42 +1,51 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import {
+  getModelForClass,
+  modelOptions,
+  prop,
+  Ref,
+} from '@typegoose/typegoose';
+import { IUser } from './user.model';
 
-interface ILike {
-  user: Schema.Types.ObjectId;
+class ILike {
+  @prop({ type: () => IUser })
+  public user?: Ref<IUser>;
 }
 
-interface IComment {
-  _id: string;
-  user: Schema.Types.ObjectId;
-  text: string;
-  date: Date;
-}
-
-export interface IPost extends Document {
-  user: Schema.Types.ObjectId;
-  text: string;
-  location?: string;
-  picUrl?: string;
-  likes: ILike[];
-  comments: IComment[];
-}
-
-const PostSchema = new Schema(
-  {
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
-    text: { type: String, required: true },
-    location: { type: String },
-    picUrl: { type: String },
-    likes: [{ user: { type: Schema.Types.ObjectId, ref: 'User' } }],
-    comments: [
-      {
-        _id: { type: String, required: true },
-        user: { type: Schema.Types.ObjectId, ref: 'User' },
-        text: { type: String, required: true },
-        date: { type: Date, default: Date.now },
-      },
-    ],
+@modelOptions({
+  schemaOptions: {
+    collection: 'posts',
+    timestamps: true,
   },
-  { timestamps: true }
-);
+})
+class IComment {
+  @prop({ ref: () => IUser })
+  public user?: Ref<IUser>;
 
-export const Post = mongoose.model<IPost>('Post', PostSchema);
+  @prop({ required: true })
+  public text!: string;
+
+  @prop({ default: new Date() })
+  date?: Date;
+}
+
+export class IPost {
+  @prop({ ref: () => IUser })
+  public user?: Ref<IUser>;
+
+  @prop({ required: true })
+  public text!: string;
+
+  @prop()
+  public location?: string;
+
+  @prop()
+  public picUrl?: string;
+
+  @prop({ type: () => ILike })
+  public likes?: ILike[];
+
+  @prop({ type: () => IComment })
+  public comments?: IComment[];
+}
+
+export const Post = getModelForClass(IPost);

@@ -1,43 +1,73 @@
-//https://thecodebarbarian.com/working-with-mongoose-in-typescript.html
 import argon2 from 'argon2';
-import mongoose, { Document, Schema } from 'mongoose';
+import {
+  getModelForClass,
+  modelOptions,
+  pre,
+  prop,
+} from '@typegoose/typegoose';
 
-export interface IUser extends Document {
-  name: string;
-  email: string;
-  password: string;
-  username: string;
-  profilePicUrl?: string;
-  newMessagePopup?: boolean;
-  unreadMessage?: boolean;
-  unreadNotification?: boolean;
-  role?: string;
-  resetToken?: string;
-  expireToken?: Date;
+export enum UserRole {
+  user = 'user',
+  root = 'root',
 }
 
-const UserSchema = new Schema(
-  {
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true },
-    username: { type: String, required: true, unique: true, trim: true },
-    profilePicUrl: { type: String },
-    newMessagePopup: { type: Boolean, default: true },
-    unreadMessage: { type: Boolean, default: false },
-    unreadNotification: { type: Boolean, default: false },
-    role: { type: String, default: 'user', enum: ['user', 'root'] },
-    resetToken: { type: String },
-    expireToken: { type: Date },
-  },
-  { timestamps: true }
-);
-
-UserSchema.pre<IUser>('save', async function (next) {
+@pre<IUser>('save', async function (next) {
   if (!this.isModified('password')) {
     this.password = await argon2.hash(this.password);
   }
   return next();
-});
+})
+@modelOptions({
+  schemaOptions: {
+    collection: 'users',
+    timestamps: true,
+  },
+})
+export class IUser {
+  @prop({ required: true })
+  public name!: string;
 
-export const User = mongoose.model<IUser>('User', UserSchema);
+  @prop({
+    required: true,
+    unique: true,
+    lowercase: true,
+    trim: true,
+    validate: {
+      validator: (email) => {
+        const emailRegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return emailRegExp.test(email);
+      },
+      message: 'Email is invalid.',
+    },
+  })
+  public email!: string;
+
+  @prop({ required: true })
+  public password!: string;
+
+  @prop({ required: true, unique: true, trim: true, lowercase: true })
+  public username!: string;
+
+  @prop()
+  public profilePicUrl?: string;
+
+  @prop({ default: true })
+  public newMessagePopup?: boolean;
+
+  @prop({ default: false })
+  public unreadMessage?: boolean;
+
+  @prop({ default: false })
+  public unreadNotification?: boolean;
+
+  @prop({ enum: UserRole, default: UserRole.user })
+  public role?: UserRole;
+
+  @prop()
+  public resetToken?: string;
+
+  @prop()
+  public expireToken?: Date;
+}
+
+export const User = getModelForClass(IUser);
