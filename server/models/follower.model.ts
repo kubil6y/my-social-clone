@@ -1,26 +1,23 @@
-import {
-  getModelForClass,
-  modelOptions,
-  prop,
-  Ref,
-} from '@typegoose/typegoose';
-import { IUser } from './user.model';
+import mongoose, { Schema, Document } from 'mongoose';
 
-@modelOptions({
-  schemaOptions: {
-    collection: 'followers',
-    timestamps: true,
-  },
-})
-export class IFollower {
-  @prop({ ref: 'IUser' })
-  user!: Ref<IUser>;
-
-  @prop({ ref: 'IUser' })
-  follower!: Ref<IUser>[];
-
-  @prop({ ref: 'IUser' })
-  following!: Ref<IUser>[];
+interface _Follower {
+  user: mongoose.Types.ObjectId;
 }
 
-export const Follower = getModelForClass(IFollower);
+interface _Following {
+  user: mongoose.Types.ObjectId;
+}
+
+export interface IFollower extends Document {
+  user: mongoose.Types.ObjectId;
+  followers: _Follower[];
+  following: _Following[];
+}
+
+const FollowerSchema = new Schema({
+  user: { type: Schema.Types.ObjectId, ref: 'User' },
+  followers: [{ user: Schema.Types.ObjectId, ref: 'User' }],
+  following: [{ user: Schema.Types.ObjectId, ref: 'User' }],
+});
+
+export const Follower = mongoose.model<IFollower>('Follower', FollowerSchema);

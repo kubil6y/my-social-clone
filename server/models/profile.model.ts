@@ -1,40 +1,30 @@
-import {
-  getModelForClass,
-  modelOptions,
-  prop,
-  Ref,
-} from '@typegoose/typegoose';
-import { IUser } from './user.model';
+import mongoose, { Schema, Document } from 'mongoose';
 
-export class ISocial {
-  @prop()
-  youtube?: string;
-
-  @prop()
-  twitter?: string;
-
-  @prop()
-  intagram?: string;
-
-  @prop()
+interface ISocial {
   facebook?: string;
+  twitter?: string;
+  youtube?: string;
+  instagram?: string;
 }
 
-@modelOptions({
-  schemaOptions: {
-    collection: 'profiles',
-    timestamps: true,
+export interface IProfile extends Document {
+  user: Schema.Types.ObjectId;
+  bio: string;
+  social: ISocial;
+}
+
+const ProfileSchema = new Schema(
+  {
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    bio: { type: String, required: true },
+    social: {
+      facebook: { type: String },
+      twitter: { type: String },
+      youtube: { type: String },
+      instagram: { type: String },
+    },
   },
-})
-export class IProfile {
-  @prop({ ref: 'IUser' })
-  user!: Ref<IUser>;
+  { timestamps: true }
+);
 
-  @prop({ required: true })
-  bio!: string;
-
-  @prop({ type: () => ISocial })
-  social?: ISocial;
-}
-
-export const Profile = getModelForClass(IProfile);
+export const Profile = mongoose.model<IProfile>('Profile', ProfileSchema);
