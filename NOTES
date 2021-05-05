@@ -20,3 +20,6 @@ when you work with refs. always use toString() with refs. it doesnt matter if yo
 just be careful!
 
 #----------#
+# using ref: () => IUser does not work very well.
+@prop({ ref: 'IUser' })
+public user?: Ref<IUser>;
