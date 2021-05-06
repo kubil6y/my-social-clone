@@ -27,13 +27,13 @@ class ISocial {
   },
 })
 export class IProfile {
-  @prop({ ref: () => IUser })
+  @prop({ ref: 'IUser' })
   public user?: Ref<IUser>;
 
   @prop({ required: true })
   public bio!: string;
 
-  @prop()
+  @prop({ default: {} })
   public social: ISocial;
 }
 

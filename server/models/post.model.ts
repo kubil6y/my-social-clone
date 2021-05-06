@@ -41,10 +41,11 @@ export class IPost {
   @prop()
   public picUrl?: string;
 
-  @prop({ type: () => ILike })
+  // subdocument arrays need _id: false (from documentation to make them work easier i guess...)
+  @prop({ type: ILike, _id: false })
   public likes?: ILike[];
 
-  @prop({ type: () => IComment })
+  @prop({ type: IComment, _id: false })
   public comments?: IComment[];
 }
 

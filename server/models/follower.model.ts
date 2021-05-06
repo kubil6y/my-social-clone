@@ -7,12 +7,12 @@ import {
 } from '@typegoose/typegoose';
 
 class _Follower {
-  @prop({ ref: () => IUser })
+  @prop({ ref: 'IUser' })
   public user?: Ref<IUser>;
 }
 
 class _Following {
-  @prop({ ref: () => IUser })
+  @prop({ ref: 'IUser' })
   public user?: Ref<IUser>;
 }
 
@@ -23,13 +23,13 @@ class _Following {
   },
 })
 export class IFollower {
-  @prop({ ref: () => IUser })
+  @prop({ ref: 'IUser' })
   public user?: Ref<IUser>;
 
-  @prop({ type: () => _Follower })
+  @prop({ type: _Follower, _id: false })
   public followers?: _Follower[];
 
-  @prop({ type: () => _Following })
+  @prop({ type: _Following, _id: false })
   public following?: _Following[];
 }
 

@@ -25,7 +25,11 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
   const imgRef = useRef(null);
   const inputRef = useRef(null);
   const previewCanvasRef = useRef(null);
-  const [crop, setCrop] = useState({ unit: '%', width: 30, aspect: 1 / 1 });
+  const [crop, setCrop] = useState({
+    unit: '%',
+    width: 30,
+    aspect: 1 / 1,
+  });
   const [completedCrop, setCompletedCrop] = useState(null);
 
   const [clear, setClear] = useState(false);
@@ -59,9 +63,11 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
     setDone(true);
   };
 
+  // @ts-ignore
   const onSelectFile = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const reader = new FileReader();
+      // @ts-ignore
       reader.addEventListener('load', () => setUpImg(reader.result));
       reader.readAsDataURL(e.target.files[0]);
     }
@@ -129,7 +135,9 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
           <ReactCrop
             src={upImg}
             onImageLoaded={onLoad}
+            // @ts-ignore
             crop={crop}
+            // @ts-ignore
             onChange={(c) => setCrop(c)}
             onComplete={(c) => setCompletedCrop(c)}
           />

@@ -19,7 +19,6 @@ import {
   FooterMessage,
   HeaderMessage,
   InputWithIcon,
-  //ImageDropDiv,
   ImageCropper,
 } from '../components';
 import { catchErrors, uploadPic } from '../utils';

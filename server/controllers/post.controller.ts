@@ -86,7 +86,6 @@ export const likeAPost = async (req: Request, res: Response) => {
     const post = await Post.findById(postId);
     if (!post) return res.status(404).send('Post not found.');
 
-    console.log({ likes: post.likes });
     const hasLiked = post.likes.find(
       (like) => like.user.toString() === user._id.toString()
     );
@@ -129,7 +128,7 @@ export const dislikeAPost = async (req: Request, res: Response) => {
 export const getLikesOfAPost = async (req: Request, res: Response) => {
   const { postId } = req.params;
   try {
-    const post = await Post.findById(postId).populate('likes');
+    const post = await Post.findById(postId).populate('likes.user');
     if (!post) return res.status(404).send('Post not found.');
 
     return res.json(post.likes);
@@ -148,7 +147,7 @@ export const commentOnAPost = async (req: Request, res: Response) => {
       errors.text = 'Comment should be at least one character';
     }
 
-    const post = await Post.findById(postId).populate('likes');
+    const post = await Post.findById(postId).populate('likes.user');
     if (!post) return res.status(404).send('Post not found.');
 
     if (Object.keys(errors).length > 0) {
@@ -165,6 +164,18 @@ export const commentOnAPost = async (req: Request, res: Response) => {
     post.comments.unshift(newComment);
     await post.save();
     return res.send('Comment Added');
+  } catch (error) {
+    return msg500(error, res);
+  }
+};
+
+export const getCommentsOfAPost = async (req: Request, res: Response) => {
+  const { postId } = req.params;
+  try {
+    const post = await Post.findById(postId).populate('comments.user');
+    if (!post) return res.status(404).send('Post not found.');
+
+    return res.json(post);
   } catch (error) {
     return msg500(error, res);
   }
