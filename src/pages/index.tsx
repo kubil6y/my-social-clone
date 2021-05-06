@@ -8,8 +8,14 @@ import { baseUrl, capitalize } from '../utils';
 import { Post } from '../types';
 import { CreatePost } from '../components';
 
-export default function Home({ user, userFollowStats, data: postData }) {
+export default function Home({
+  user,
+  userFollowStats,
+  data: postData,
+  error: postsError,
+}) {
   const [posts, setPosts] = useState<Post[]>(postData);
+  const [error, setError] = useState<any>(postsError);
 
   // setting up title
   useEffect(() => {
@@ -29,7 +35,7 @@ export default function Home({ user, userFollowStats, data: postData }) {
         </Text>
       </Flex>
 
-      <CreatePost src={user.profilePicUrl} />
+      <CreatePost userAvatar={user.profilePicUrl} />
 
       <Box>
         {posts &&
@@ -51,7 +57,11 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   });
 
   if (!data) {
-    throw new Error('yarak');
+    return {
+      props: {
+        error: 'Something went wrong',
+      },
+    };
   }
 
   return {
