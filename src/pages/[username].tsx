@@ -16,6 +16,7 @@ const ProfilePage: React.FC<ProfilePageProps> = () => {
   return (
     <div>
       <Box id="onepx" w="1px" h="1px" bg="transparent" />
+      <h1>merhaba</h1>
       <p>[username]: {username}</p>
     </div>
   );

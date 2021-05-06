@@ -23,3 +23,22 @@ just be careful!
 # using ref: () => IUser does not work very well.
 @prop({ ref: 'IUser' })
 public user?: Ref<IUser>;
+
+#----------#
+# i had trouble with typegoose when creating subdocument arrays. so i added uuid field to work with.
+# for some reason i can not make this, required field so i defaulted with uuid.
+# kind of ugly solution but IT WORKS.
+class IComment {
+  @prop({ default: () => uuidv4() })
+  uuid?: string;
+  //...
+}
+
+// subdocument arrays need _id: false (from documentation to make them work easier i guess...)
+@prop({ type: ILike, _id: false })
+public likes?: ILike[];
+
+@prop({ type: IComment, _id: false })
+public comments?: IComment[];
+
+#----------#

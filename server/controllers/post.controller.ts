@@ -93,6 +93,7 @@ export const likeAPost = async (req: Request, res: Response) => {
       return res.status(400).send('You have already liked the post.');
     }
 
+    // so it shows as the most recent (eventhough unshift is less optimal than push!)
     post.likes.unshift({ user: user._id });
     await post.save();
     return res.send('Liked Successfully');
@@ -155,7 +156,7 @@ export const commentOnAPost = async (req: Request, res: Response) => {
     }
 
     const newComment = {
-      _id: uuidv4(),
+      //uuid: uuidv4(),
       user: user._id,
       text,
       date: new Date(),

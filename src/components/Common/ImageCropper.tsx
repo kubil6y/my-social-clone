@@ -1,4 +1,10 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react';
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  ChangeEvent,
+} from 'react';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
 import { Box, Text, Flex, Icon, HStack, Button } from '@chakra-ui/react';
@@ -21,11 +27,11 @@ interface ImageCropperProps {
 }
 
 export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
-  const [upImg, setUpImg] = useState();
-  const imgRef = useRef(null);
-  const inputRef = useRef(null);
-  const previewCanvasRef = useRef(null);
-  const [crop, setCrop] = useState({
+  const [upImg, setUpImg] = useState<any>();
+  const imgRef = useRef<any>(null);
+  const inputRef = useRef<any>(null);
+  const previewCanvasRef = useRef<any>(null);
+  const [crop, setCrop] = useState<any>({
     unit: '%',
     width: 30,
     aspect: 1 / 1,
@@ -63,11 +69,9 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
     setDone(true);
   };
 
-  // @ts-ignore
-  const onSelectFile = (e) => {
+  const onSelectFile = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const reader = new FileReader();
-      // @ts-ignore
       reader.addEventListener('load', () => setUpImg(reader.result));
       reader.readAsDataURL(e.target.files[0]);
     }
@@ -135,9 +139,7 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
           <ReactCrop
             src={upImg}
             onImageLoaded={onLoad}
-            // @ts-ignore
             crop={crop}
-            // @ts-ignore
             onChange={(c) => setCrop(c)}
             onComplete={(c) => setCompletedCrop(c)}
           />

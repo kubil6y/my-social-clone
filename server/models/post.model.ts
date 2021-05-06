@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import {
   getModelForClass,
   modelOptions,
@@ -7,11 +8,18 @@ import {
 import { IUser } from './user.model';
 
 class ILike {
+  // like does not require uuid because,
+  // a user can not like it multiple times.
   @prop({ ref: 'IUser' })
   public user?: Ref<IUser>;
 }
 
 class IComment {
+  // for more information (check notes)
+  // for some reason i can not make this required!
+  @prop({ default: () => uuidv4() })
+  uuid?: string;
+
   @prop({ ref: 'IUser' })
   public user?: Ref<IUser>;
 
