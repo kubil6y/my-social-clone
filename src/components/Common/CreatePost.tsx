@@ -104,31 +104,15 @@ export const CreatePost: React.FC<CreatePostProps> = ({ src }) => {
                 cursor='pointer'
               />
 
-              <Box position='relative'>
-                <Icon
-                  as={AiOutlineSmile}
-                  h={6}
-                  w={6}
-                  color='blue.500'
-                  cursor='pointer'
-                  ml='15px'
-                  onClick={() => setShowEmoji((s) => !s)}
-                />
-                <Collapse in={showEmoji}>
-                  <Box
-                    h='100%'
-                    w='100%'
-                    sx={{
-                      position: 'absolute',
-                      top: '2rem',
-                      right: '2rem',
-                    }}
-                    ref={ref}
-                  >
-                    <Picker onSelect={handleEmojiSelect} />
-                  </Box>
-                </Collapse>
-              </Box>
+              <Icon
+                as={AiOutlineSmile}
+                h={6}
+                w={6}
+                color='blue.500'
+                cursor='pointer'
+                ml='15px'
+                onClick={() => setShowEmoji((s) => !s)}
+              />
             </Flex>
 
             {/* button */}
@@ -142,6 +126,8 @@ export const CreatePost: React.FC<CreatePostProps> = ({ src }) => {
               send
             </Button>
           </Flex>
+
+          {showEmoji && <Picker onSelect={handleEmojiSelect} />}
         </form>
       </Box>
     </Flex>
