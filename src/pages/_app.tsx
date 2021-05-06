@@ -1,3 +1,4 @@
+import 'emoji-mart/css/emoji-mart.css';
 import React from 'react';
 import axios from 'axios';
 import App from 'next/app';

@@ -20,8 +20,6 @@ export enum UserRole {
 @modelOptions({
   schemaOptions: {
     collection: 'users',
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
     timestamps: true,
   },
 })

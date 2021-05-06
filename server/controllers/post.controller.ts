@@ -1,7 +1,6 @@
 import { Response, Request } from 'express';
 import { msg401, msg500 } from '../utils';
 import { Post, IPost, UserRole } from '../models';
-import { v4 as uuidv4 } from 'uuid';
 
 export const createPost = async (req: Request, res: Response) => {
   const { text, location, picUrl } = req.body;
@@ -156,7 +155,6 @@ export const commentOnAPost = async (req: Request, res: Response) => {
     }
 
     const newComment = {
-      //uuid: uuidv4(),
       user: user._id,
       text,
       date: new Date(),
@@ -165,6 +163,21 @@ export const commentOnAPost = async (req: Request, res: Response) => {
     post.comments.unshift(newComment);
     await post.save();
     return res.send('Comment Added');
+  } catch (error) {
+    return msg500(error, res);
+  }
+};
+
+export const getCommentOfAPost = async (req: Request, res: Response) => {
+  const { commentId, postId } = req.params;
+  try {
+    const post = await Post.findById(postId).populate('comments.user');
+    if (!post) return res.status(404).send('Post not found.');
+
+    const comment = post.comments.find((comment) => comment.uuid === commentId);
+    if (!comment) return res.status(404).send('Comment not found.');
+
+    return res.json(comment);
   } catch (error) {
     return msg500(error, res);
   }

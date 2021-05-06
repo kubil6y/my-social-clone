@@ -8,6 +8,7 @@ import {
   dislikeAPost,
   editCommentOnPost,
   getAllPosts,
+  getCommentOfAPost,
   getCommentsOfAPost,
   getLikesOfAPost,
   getPostById,
@@ -26,6 +27,7 @@ router.post('/like/:postId', auth, likeAPost);
 router.delete('/dislike/:postId', auth, dislikeAPost);
 
 router.get('/comments/:postId', auth, getCommentsOfAPost);
+router.get('/comment/:postId/:commentId', auth, getCommentOfAPost);
 router.post('/comment/:postId', auth, commentOnAPost);
 router.delete('/comment/:postId/:commentId', auth, deleteCommentOnPost);
 router.put('/comment/:postId/:commentId', auth, editCommentOnPost);

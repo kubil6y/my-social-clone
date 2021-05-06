@@ -19,8 +19,6 @@ class _Following {
 @modelOptions({
   schemaOptions: {
     collection: 'followers',
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
     timestamps: true,
   },
 })

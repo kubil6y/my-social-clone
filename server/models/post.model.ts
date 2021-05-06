@@ -18,8 +18,8 @@ class ILike {
 }
 
 class IComment {
-  // for more information (check notes)
   // for some reason i can not make this required!
+  // for more information (check notes)
   @prop({ default: () => uuidv4() })
   uuid?: string;
 
@@ -39,8 +39,6 @@ class IComment {
 @modelOptions({
   schemaOptions: {
     collection: 'posts',
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true },
     timestamps: true,
   },
 })
