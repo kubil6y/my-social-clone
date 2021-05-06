@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import isEmail from 'validator/lib/isEmail';
 import { Request, Response } from 'express';
 import { msg500, regexUserName, userPng } from '../utils';
-import { Follower, IFollower, IProfile, IUser, Profile, User } from '../models';
+import { Follower, Profile, User } from '../models';
 import { IJwtPayload } from '../utils/types';
 import { JWT_SECRET, __prod__ } from '../constants';
 
@@ -78,7 +78,7 @@ export const registerUser = async (req: Request, res: Response) => {
       username: username.toLowerCase(),
       password,
       profilePicUrl: profilePicUrl || userPng,
-    } as IUser);
+    });
 
     await user.save();
 
@@ -92,12 +92,12 @@ export const registerUser = async (req: Request, res: Response) => {
       user: user._id,
       follower: [],
       following: [],
-    } as IFollower);
+    });
     const profile = new Profile({
       user: user._id,
       bio,
       social,
-    } as IProfile);
+    });
 
     await follower.save();
     await profile.save();

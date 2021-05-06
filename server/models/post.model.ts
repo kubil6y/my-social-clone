@@ -12,6 +12,9 @@ class ILike {
   // a user can not like it multiple times.
   @prop({ ref: 'IUser' })
   public user?: Ref<IUser>;
+
+  @prop({ default: () => new Date() })
+  createdAt?: Date;
 }
 
 class IComment {
@@ -26,13 +29,18 @@ class IComment {
   @prop({ required: true })
   public text!: string;
 
-  @prop({ default: new Date() })
-  date?: Date;
+  @prop({ default: () => new Date() })
+  createdAt?: Date;
+
+  @prop({ default: () => new Date() })
+  updatedAt?: Date;
 }
 
 @modelOptions({
   schemaOptions: {
     collection: 'posts',
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     timestamps: true,
   },
 })

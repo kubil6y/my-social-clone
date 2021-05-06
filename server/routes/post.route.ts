@@ -3,8 +3,10 @@ import { auth } from '../middlewares';
 import {
   commentOnAPost,
   createPost,
+  deleteCommentOnPost,
   deletePostById,
   dislikeAPost,
+  editCommentOnPost,
   getAllPosts,
   getCommentsOfAPost,
   getLikesOfAPost,
@@ -23,5 +25,7 @@ router.get('/likes/:postId', auth, getLikesOfAPost);
 router.post('/like/:postId', auth, likeAPost);
 router.delete('/dislike/:postId', auth, dislikeAPost);
 
-router.post('/comment/:postId', auth, commentOnAPost);
 router.get('/comments/:postId', auth, getCommentsOfAPost);
+router.post('/comment/:postId', auth, commentOnAPost);
+router.delete('/comment/:postId/:commentId', auth, deleteCommentOnPost);
+router.put('/comment/:postId/:commentId', auth, editCommentOnPost);

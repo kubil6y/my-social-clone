@@ -1,6 +1,6 @@
 import { Response, Request } from 'express';
 import { msg401, msg500 } from '../utils';
-import { Post, IPost } from '../models';
+import { Post, IPost, UserRole } from '../models';
 import { v4 as uuidv4 } from 'uuid';
 
 export const createPost = async (req: Request, res: Response) => {
@@ -176,7 +176,69 @@ export const getCommentsOfAPost = async (req: Request, res: Response) => {
     const post = await Post.findById(postId).populate('comments.user');
     if (!post) return res.status(404).send('Post not found.');
 
-    return res.json(post);
+    return res.json(post.comments);
+  } catch (error) {
+    return msg500(error, res);
+  }
+};
+
+export const deleteCommentOnPost = async (req: Request, res: Response) => {
+  const { commentId, postId } = req.params;
+  const { user } = req;
+  try {
+    const post = await Post.findById(postId).populate('comments.user');
+    if (!post) return res.status(404).send('Post not found.');
+
+    const comment = post.comments.find((comment) => comment.uuid === commentId);
+    if (!comment) return res.status(404).send('Comment not found.');
+
+    // @ts-ignore
+    const isOwner = comment.user._id.toString() === user._id.toString();
+    const hasAccess = isOwner || UserRole.root === user.role;
+    if (!hasAccess) return msg401(res);
+
+    const newComments = post.comments.filter(
+      (comment) => comment.uuid !== commentId
+    );
+    post.comments = newComments;
+    await post.save();
+    return res.send('Comment Deleted');
+  } catch (error) {
+    return msg500(error, res);
+  }
+};
+
+export const editCommentOnPost = async (req: Request, res: Response) => {
+  const { commentId, postId } = req.params;
+  const { user } = req;
+  const { text } = req.body;
+  try {
+    const post = await Post.findById(postId);
+    if (!post) return res.status(404).send('Post not found.');
+
+    const comment = post.comments.find((comment) => comment.uuid === commentId);
+    if (!comment) return res.status(404).send('Comment not found.');
+
+    const isOwner = comment.user.toString() === user._id.toString();
+    const hasAccess = isOwner || UserRole.root === user.role;
+    if (!hasAccess) return msg401(res);
+
+    // replacing comment with new text
+    const newComments = post.comments.map((comment) =>
+      comment.uuid === commentId
+        ? {
+            uuid: comment.uuid,
+            user: comment.user,
+            createdAt: comment.createdAt,
+            updatedAt: new Date(),
+            text,
+          }
+        : comment
+    );
+    post.comments = newComments;
+    await post.save();
+
+    return res.send('Post Comment Edited');
   } catch (error) {
     return msg500(error, res);
   }

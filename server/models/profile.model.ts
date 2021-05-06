@@ -23,6 +23,8 @@ class ISocial {
 @modelOptions({
   schemaOptions: {
     collection: 'profiles',
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
     timestamps: true,
   },
 })
