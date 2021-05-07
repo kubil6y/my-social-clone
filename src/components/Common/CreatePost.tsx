@@ -52,10 +52,17 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
     locationConfirmed: false,
     showLocationField: false,
   });
+
+  // small states
+  const isSendDisabled = text.length === 0;
   const locationConfirmActive = locationValue.length > 0;
 
+  // refs
+  const sendButtonRef = useRef<any>(null);
+  const hiddenSendButtonRef = useRef<any>(null);
+
   const handleLocationConfirm = (e: any) => {
-    e.preventDefault();
+    if (e.target instanceof HTMLFormElement) e.preventDefault();
     if (locationConfirmActive) {
       setLocation((prev) => ({
         ...prev,
@@ -77,11 +84,13 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
 
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({
-      text,
-      location,
-      media,
-    });
+    let body: any = {};
+    if (!text) return;
+    if (locationValue) body.locationValue = locationValue.trim();
+    if (media) body.media = media;
+    body.text = text;
+
+    console.log(body);
   };
 
   // selecting emoji action
@@ -176,137 +185,161 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
               resize='vertical'
               placeholder="What's happening?"
             />
+            <button
+              type='submit'
+              style={{ display: 'none' }}
+              ref={hiddenSendButtonRef}
+            />
+          </form>
 
-            {/* image preview */}
-            {mediaPreview && (
-              <Box
-                display='block'
-                w='100%'
-                rounded='2xl'
-                position='relative'
-                overflow='hidden'
-                shadow='lg'
-                my='5px'
-              >
-                <Tooltip label='Remove'>
-                  <Box
-                    onClick={handleImagePreviewCancel}
-                    sx={{
-                      position: 'absolute',
-                      top: '4px',
-                      left: '4px',
-                      zIndex: 10,
-                    }}
-                    p='5px'
-                    overflow='hidden'
-                    rounded='full'
-                    cursor='pointer'
-                    bg='gray.700'
-                    _hover={{ bg: 'gray.600' }}
-                  >
-                    <Icon as={AiOutlineClose} h={6} w={6} color='white' />
-                  </Box>
-                </Tooltip>
-                <Box>
-                  <img
-                    src={mediaPreview}
-                    style={{
-                      objectFit: 'cover',
-                      maxWidth: '100%',
-                      display: 'block',
-                    }}
-                  />
-                </Box>
-              </Box>
-            )}
-
-            <Divider orientation='horizontal' />
-
-            <Flex
-              justifyContent='space-between'
-              alignItems='center'
-              px='0'
-              py='10px'
+          {/* image preview */}
+          {mediaPreview && (
+            <Box
+              display='block'
+              w='100%'
+              rounded='2xl'
+              position='relative'
+              overflow='hidden'
+              shadow='lg'
+              my='5px'
             >
-              {/* icons */}
-              <Flex alignItems='center'>
-                <Center
-                  p='7px'
-                  _hover={{ bg: 'gray.200' }}
-                  rounded='full'
-                  cursor='pointer'
-                  onClick={imagePickerOpen}
-                >
-                  <Icon as={AiOutlineFileImage} h={6} w={6} color='blue.500' />
-                </Center>
-
+              <Tooltip label='Remove'>
                 <Box
-                  position='relative'
-                  p='7px'
-                  ml='8px'
-                  _hover={{ bg: 'gray.200' }}
+                  onClick={handleImagePreviewCancel}
+                  sx={{
+                    position: 'absolute',
+                    top: '4px',
+                    left: '4px',
+                    zIndex: 10,
+                  }}
+                  p='5px'
+                  overflow='hidden'
                   rounded='full'
                   cursor='pointer'
-                  ref={smileEmojiRef}
-                  onClick={handleSmileIconClick}
+                  bg='gray.700'
+                  _hover={{ bg: 'gray.600' }}
                 >
-                  <Icon
-                    as={AiOutlineSmile}
-                    h={6}
-                    w={6}
-                    color='blue.500'
-                    cursor='pointer'
-                  />
-
-                  {showEmoji && (
-                    <Box
-                      position='absolute'
-                      sx={{ top: '2.5rem', left: '-5rem' }}
-                      ref={emojiBoxRef}
-                    >
-                      <Picker onSelect={handleEmojiSelect} />
-                    </Box>
-                  )}
+                  <Icon as={AiOutlineClose} h={6} w={6} color='white' />
                 </Box>
-                <Center
-                  ml='8px'
-                  p='7px'
-                  _hover={{ bg: 'gray.200' }}
-                  rounded='full'
-                  cursor='pointer'
-                  onClick={handleLocationClick}
-                >
-                  <Icon as={IoLocationOutline} h={6} w={6} color='blue.500' />
-                </Center>
-              </Flex>
+              </Tooltip>
+              <Box>
+                <img
+                  src={mediaPreview}
+                  style={{
+                    objectFit: 'cover',
+                    maxWidth: '100%',
+                    display: 'block',
+                  }}
+                />
+              </Box>
+            </Box>
+          )}
 
-              <Box ml='auto' mr='1rem' fontStyle='oblique'>
-                {locationConfirmed && (
-                  <Text color='gray.600' fontSize='sm'>
-                    @{locationValue}
-                  </Text>
+          <Divider orientation='horizontal' />
+
+          <Flex
+            justifyContent='space-between'
+            alignItems='center'
+            px='0'
+            py='10px'
+          >
+            {/* icons */}
+            <Flex alignItems='center'>
+              <Center
+                p='7px'
+                _hover={{ bg: 'gray.200' }}
+                rounded='full'
+                cursor='pointer'
+                onClick={imagePickerOpen}
+              >
+                <Icon as={AiOutlineFileImage} h={6} w={6} color='blue.500' />
+              </Center>
+
+              <Box
+                position='relative'
+                p='7px'
+                ml='8px'
+                _hover={{ bg: 'gray.200' }}
+                rounded='full'
+                cursor='pointer'
+                ref={smileEmojiRef}
+                onClick={handleSmileIconClick}
+              >
+                <Icon
+                  as={AiOutlineSmile}
+                  h={6}
+                  w={6}
+                  color='blue.500'
+                  cursor='pointer'
+                />
+
+                {showEmoji && (
+                  <Box
+                    position='absolute'
+                    sx={{ top: '2.5rem', left: '-5rem' }}
+                    ref={emojiBoxRef}
+                  >
+                    <Picker onSelect={handleEmojiSelect} />
+                  </Box>
                 )}
               </Box>
-              {/* button */}
-              <Button
-                type='submit'
+              <Center
+                ml='8px'
+                p='7px'
+                _hover={{ bg: 'gray.200' }}
                 rounded='full'
+                cursor='pointer'
+                onClick={handleLocationClick}
+              >
+                <Icon as={IoLocationOutline} h={6} w={6} color='blue.500' />
+              </Center>
+            </Flex>
+
+            <Box ml='auto' mr='1rem' fontStyle='oblique'>
+              {locationConfirmed && (
+                <Text color='gray.600' fontSize='sm'>
+                  @{locationValue && locationValue.trim()}
+                </Text>
+              )}
+            </Box>
+            {/* button */}
+            <Tooltip
+              bg='red.500'
+              color='white'
+              label={isSendDisabled ? 'Text field must not be empty.' : ''}
+            >
+              <Button
                 colorScheme='blue'
+                rounded='full'
                 letterSpacing='wide'
                 textDecoration='uppercase'
+                ref={sendButtonRef}
+                onClick={() => hiddenSendButtonRef.current.click()}
               >
                 send
               </Button>
-            </Flex>
+            </Tooltip>
+          </Flex>
 
-            {showLocationField && (
-              <Flex>
+          {showLocationField && (
+            <Flex>
+              <form onSubmit={handleLocationConfirm}>
                 <Input
                   placeholder='Enter your location'
                   size='md'
                   w='250px'
                   fontSize='md'
                   value={locationValue}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Escape') {
+                      setLocation((prev) => ({
+                        ...prev,
+                        locationValue: '',
+                        locationConfirmed: false,
+                        showLocationField: false,
+                      }));
+                    }
+                  }}
                   onChange={(e) =>
                     setLocation((prev) => ({
                       ...prev,
@@ -314,46 +347,45 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
                     }))
                   }
                 />
+              </form>
+              <Center
+                ml='8px'
+                p='7px'
+                _hover={{ bg: 'gray.200' }}
+                rounded='full'
+                cursor='pointer'
+                onClick={() => {
+                  setLocation((prev) => ({
+                    ...prev,
+                    locationValue: '',
+                    locationConfirmed: false,
+                    showLocationField: false,
+                  }));
+                }}
+              >
+                <Icon as={AiOutlineCloseCircle} h={6} w={6} color='red.500' />
+              </Center>
 
+              <Tooltip
+                bg='red.500'
+                color='white'
+                label={
+                  !locationConfirmActive ? 'Enter a location to confirm' : ''
+                }
+              >
                 <Center
-                  ml='8px'
+                  ml='4px'
                   p='7px'
                   _hover={{ bg: 'gray.200' }}
                   rounded='full'
-                  cursor='pointer'
-                  onClick={() => {
-                    setLocation((prev) => ({
-                      ...prev,
-                      locationValue: '',
-                      locationConfirmed: false,
-                      showLocationField: false,
-                    }));
-                  }}
+                  cursor={locationConfirmActive ? 'pointer' : 'cursor'}
+                  onClick={handleLocationConfirm}
                 >
-                  <Icon as={AiOutlineCloseCircle} h={6} w={6} color='red.500' />
+                  <Icon as={AiOutlineCheck} h={6} w={6} color='blue.500' />
                 </Center>
-
-                <Tooltip
-                  bg='red.500'
-                  color='white'
-                  label={
-                    !locationConfirmActive ? 'Enter a location to confirm' : ''
-                  }
-                >
-                  <Center
-                    ml='4px'
-                    p='7px'
-                    _hover={{ bg: 'gray.200' }}
-                    rounded='full'
-                    cursor={locationConfirmActive ? 'pointer' : 'cursor'}
-                    onClick={handleLocationConfirm}
-                  >
-                    <Icon as={AiOutlineCheck} h={6} w={6} color='blue.500' />
-                  </Center>
-                </Tooltip>
-              </Flex>
-            )}
-          </form>
+              </Tooltip>
+            </Flex>
+          )}
         </Box>
       </Flex>
     </>
