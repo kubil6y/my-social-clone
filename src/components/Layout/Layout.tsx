@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Router from 'next/router';
 import nprogress from 'nprogress';
 import { useNetworkState } from 'react-use';
-import { Container, useToast, Grid } from '@chakra-ui/react';
+import { Container, useToast, Grid, Box } from '@chakra-ui/react';
 import {
   Sticky,
   HeadTags,
@@ -41,16 +41,11 @@ export const Layout = ({ children, user }) => {
       {user ? (
         <>
           <Container maxW='container.xl'>
-            <Grid templateColumns='2.5fr 6.5fr 3.5fr' gap={4}>
+            <Grid templateColumns='2.5fr 700px 3.5fr' gap={4}>
               <Sticky>
                 <SideMenu user={user} />
               </Sticky>
-              {/*
-               *<Box w="100%" h="2000px" py="5px" px="10px">
-               *  MAIN FEED
-               *</Box>
-               */}
-              {children}
+              <Box>{children}</Box>
               <Sticky>
                 <SearchBar />
               </Sticky>

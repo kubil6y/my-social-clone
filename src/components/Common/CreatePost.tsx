@@ -3,10 +3,13 @@ import Image from 'next/image';
 import { Picker } from 'emoji-mart';
 import { useClickOutside } from '../../hooks';
 import {
+  AiOutlineCheck,
   AiOutlineClose,
+  AiOutlineCloseCircle,
   AiOutlineFileImage,
   AiOutlineSmile,
 } from 'react-icons/ai';
+import { IoLocationOutline } from 'react-icons/io5';
 import {
   Box,
   Button,
@@ -14,6 +17,8 @@ import {
   Divider,
   Flex,
   Icon,
+  Input,
+  Text,
   Textarea,
   Tooltip,
 } from '@chakra-ui/react';
@@ -37,37 +42,85 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
   const smileEmojiRef = useRef(null);
   useClickOutside(emojiBoxRef, smileEmojiRef, () => setShowEmoji(false));
 
-  const imagePickerOpen = () => {
-    hiddenInputRef.current.click();
-  };
+  // location field
+  //const [location, setLocation] = useState('');
+  const [
+    { locationValue, showLocationField, locationConfirmed },
+    setLocation,
+  ] = useState({
+    locationValue: '',
+    locationConfirmed: false,
+    showLocationField: false,
+  });
+  const locationConfirmActive = locationValue.length > 0;
 
-  const handleImageInput = (e: ChangeEvent<HTMLInputElement>) => {
-    setMediaState({
-      media: e.target.files[0],
-      mediaPreview: URL.createObjectURL(e.target.files[0]),
-    });
+  const handleLocationConfirm = (e: any) => {
+    e.preventDefault();
+    if (locationConfirmActive) {
+      setLocation((prev) => ({
+        ...prev,
+        locationConfirmed: true,
+        showLocationField: false,
+      }));
+    } else {
+      return;
+    }
   };
 
   const handleImagePreviewCancel = () => {
     setMediaState((state: any) => ({
       ...state,
-      //media: null,
+      media: null,
       mediaPreview: null,
     }));
-
-    //setMediaState({
-    //media: null,
-    //mediaPreview: null,
-    //});
   };
 
   const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(text);
+    console.log({
+      text,
+      location,
+      media,
+    });
   };
 
+  // selecting emoji action
   const handleEmojiSelect = (element: any) => {
     setText((state) => state + element.native);
+  };
+
+  // image picker icon click
+  const imagePickerOpen = () => {
+    if (showLocationField) {
+      setLocation((prev) => ({
+        ...prev,
+        showLocationField: false,
+      }));
+    }
+    if (showEmoji) setShowEmoji(false);
+    hiddenInputRef.current.click();
+  };
+
+  // location icon click
+  const handleLocationClick = () => {
+    if (showEmoji) setShowEmoji(false);
+    //setShowLocationField((st) => !st);
+    setLocation((prev) => ({
+      ...prev,
+      showLocationField: !showLocationField,
+    }));
+  };
+
+  // smile icon click
+  const handleSmileIconClick = () => {
+    //setShowLocationField(false);
+    setLocation((prev) => ({
+      ...prev,
+      showLocationField: false,
+    }));
+
+    // it doesnt have toggle functionality because of click outside stuff. TODO
+    setShowEmoji(true);
   };
 
   return (
@@ -125,45 +178,47 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
             />
 
             {/* image preview */}
-            <Box
-              display='block'
-              w='100%'
-              rounded='2xl'
-              position='relative'
-              overflow='hidden'
-              shadow='lg'
-              my='5px'
-            >
-              <Tooltip label='Remove'>
-                <Box
-                  onClick={handleImagePreviewCancel}
-                  sx={{
-                    position: 'absolute',
-                    top: '4px',
-                    left: '4px',
-                    zIndex: 10,
-                  }}
-                  p='5px'
-                  overflow='hidden'
-                  rounded='full'
-                  cursor='pointer'
-                  bg='gray.700'
-                  _hover={{ bg: 'gray.600' }}
-                >
-                  <Icon as={AiOutlineClose} h={6} w={6} color='white' />
+            {mediaPreview && (
+              <Box
+                display='block'
+                w='100%'
+                rounded='2xl'
+                position='relative'
+                overflow='hidden'
+                shadow='lg'
+                my='5px'
+              >
+                <Tooltip label='Remove'>
+                  <Box
+                    onClick={handleImagePreviewCancel}
+                    sx={{
+                      position: 'absolute',
+                      top: '4px',
+                      left: '4px',
+                      zIndex: 10,
+                    }}
+                    p='5px'
+                    overflow='hidden'
+                    rounded='full'
+                    cursor='pointer'
+                    bg='gray.700'
+                    _hover={{ bg: 'gray.600' }}
+                  >
+                    <Icon as={AiOutlineClose} h={6} w={6} color='white' />
+                  </Box>
+                </Tooltip>
+                <Box>
+                  <img
+                    src={mediaPreview}
+                    style={{
+                      objectFit: 'cover',
+                      maxWidth: '100%',
+                      display: 'block',
+                    }}
+                  />
                 </Box>
-              </Tooltip>
-              <Box>
-                <img
-                  src={mediaPreview}
-                  style={{
-                    objectFit: 'cover',
-                    maxWidth: '100%',
-                    display: 'block',
-                  }}
-                />
               </Box>
-            </Box>
+            )}
 
             <Divider orientation='horizontal' />
 
@@ -171,23 +226,18 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
               justifyContent='space-between'
               alignItems='center'
               px='0'
-              py='1rem'
+              py='10px'
             >
               {/* icons */}
-              <Flex>
+              <Flex alignItems='center'>
                 <Center
                   p='7px'
                   _hover={{ bg: 'gray.200' }}
                   rounded='full'
                   cursor='pointer'
+                  onClick={imagePickerOpen}
                 >
-                  <Icon
-                    onClick={imagePickerOpen}
-                    as={AiOutlineFileImage}
-                    h={6}
-                    w={6}
-                    color='blue.500'
-                  />
+                  <Icon as={AiOutlineFileImage} h={6} w={6} color='blue.500' />
                 </Center>
 
                 <Box
@@ -197,8 +247,8 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
                   _hover={{ bg: 'gray.200' }}
                   rounded='full'
                   cursor='pointer'
-                  onClick={() => setShowEmoji(true)}
                   ref={smileEmojiRef}
+                  onClick={handleSmileIconClick}
                 >
                   <Icon
                     as={AiOutlineSmile}
@@ -218,8 +268,25 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
                     </Box>
                   )}
                 </Box>
+                <Center
+                  ml='8px'
+                  p='7px'
+                  _hover={{ bg: 'gray.200' }}
+                  rounded='full'
+                  cursor='pointer'
+                  onClick={handleLocationClick}
+                >
+                  <Icon as={IoLocationOutline} h={6} w={6} color='blue.500' />
+                </Center>
               </Flex>
 
+              <Box ml='auto' mr='1rem' fontStyle='oblique'>
+                {locationConfirmed && (
+                  <Text color='gray.600' fontSize='sm'>
+                    @{locationValue}
+                  </Text>
+                )}
+              </Box>
               {/* button */}
               <Button
                 type='submit'
@@ -231,6 +298,61 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
                 send
               </Button>
             </Flex>
+
+            {showLocationField && (
+              <Flex>
+                <Input
+                  placeholder='Enter your location'
+                  size='md'
+                  w='250px'
+                  fontSize='md'
+                  value={locationValue}
+                  onChange={(e) =>
+                    setLocation((prev) => ({
+                      ...prev,
+                      locationValue: e.target.value,
+                    }))
+                  }
+                />
+
+                <Center
+                  ml='8px'
+                  p='7px'
+                  _hover={{ bg: 'gray.200' }}
+                  rounded='full'
+                  cursor='pointer'
+                  onClick={() => {
+                    setLocation((prev) => ({
+                      ...prev,
+                      locationValue: '',
+                      locationConfirmed: false,
+                      showLocationField: false,
+                    }));
+                  }}
+                >
+                  <Icon as={AiOutlineCloseCircle} h={6} w={6} color='red.500' />
+                </Center>
+
+                <Tooltip
+                  bg='red.500'
+                  color='white'
+                  label={
+                    !locationConfirmActive ? 'Enter a location to confirm' : ''
+                  }
+                >
+                  <Center
+                    ml='4px'
+                    p='7px'
+                    _hover={{ bg: 'gray.200' }}
+                    rounded='full'
+                    cursor={locationConfirmActive ? 'pointer' : 'cursor'}
+                    onClick={handleLocationConfirm}
+                  >
+                    <Icon as={AiOutlineCheck} h={6} w={6} color='blue.500' />
+                  </Center>
+                </Tooltip>
+              </Flex>
+            )}
           </form>
         </Box>
       </Flex>
