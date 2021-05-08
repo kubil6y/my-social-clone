@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import axios from 'axios';
-import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import {
   AiFillHeart,
@@ -35,7 +34,7 @@ interface PostDetailsProps {
 
 const PostDetails: React.FC<PostDetailsProps> = ({
   user,
-  data: postData,
+  data: post,
   error,
 }) => {
   const router = useRouter();
@@ -46,10 +45,10 @@ const PostDetails: React.FC<PostDetailsProps> = ({
 
   // small states
   const hasAccess =
-    user.role === UserRoles.root || postData.user.username === user.username;
+    user.role === UserRoles.root || post.user.username === user.username;
 
   // @ts-ignore
-  const hasLikedBefore = postData.likes.find(
+  const hasLikedBefore = post.likes.find(
     (like: Like) => like.user.toString() === user._id.toString()
   );
 
@@ -97,7 +96,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({
       </Box>
 
       <Box p='1rem'>
-        <Link href={`/${postData.user.username}`}>
+        <Link href={`/${post.user.username}`}>
           <Box display='inline-flex' cursor='pointer'>
             <Center
               rounded='full'
@@ -109,7 +108,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({
               }}
             >
               <Image
-                src={postData?.user?.profilePicUrl}
+                src={post?.user?.profilePicUrl}
                 alt='user profile picture'
                 width={48}
                 height={48}
@@ -122,83 +121,112 @@ const PostDetails: React.FC<PostDetailsProps> = ({
                   fontWeight='bold'
                   _hover={{ textDecor: 'underline' }}
                 >
-                  {postData.user.name}
+                  {post.user.name}
                 </Text>
 
                 <Text color='gray.500' fontSize='sm'>
-                  @{postData.user.username}
+                  @{post.user.username}
                 </Text>
               </Box>
             </Box>
           </Box>
         </Link>
-        <Text fontSize='2xl'>{postData.text}</Text>
+        <Text fontSize='2xl'>{post.text}</Text>
 
         {/* button group */}
-        <Flex mt='4px'>
-          <Tooltip label='Comment' fontSize='xs' bg='gray.500'>
-            <Center
-              p='7px'
-              rounded='full'
-              overflow='hidden'
-              cursor='pointer'
-              _hover={{ bg: 'blue.100' }}
-              onClick={() => console.log('comment icon clicked')}
-            >
-              <Icon
-                as={AiOutlineMessage}
-                h={5}
-                w={5}
-                color='gray.500'
-                _hover={{ color: 'blue.500' }}
-              />
-            </Center>
-          </Tooltip>
-
-          {hasLikedBefore ? (
-            <Tooltip label='Dislike' fontSize='xs' bg='gray.500'>
+        <Flex mt='6px'>
+          <Flex alignItems='center'>
+            <Tooltip label='Comment' fontSize='xs' bg='gray.500'>
               <Center
+                cursor='pointer'
                 p='7px'
-                mx='12px'
                 rounded='full'
                 overflow='hidden'
-                cursor='pointer'
-                _hover={{ bg: 'red.100', color: 'red.500' }}
-                onClick={() => console.log('dislike!')}
-              >
-                <Icon as={AiFillHeart} h={5} w={5} color='red.500' />
-              </Center>
-            </Tooltip>
-          ) : (
-            <Tooltip label='Like' fontSize='xs' bg='gray.500'>
-              <Center
-                p='7px'
-                mx='12px'
-                rounded='full'
-                overflow='hidden'
-                cursor='pointer'
-                _hover={{ bg: 'red.100', color: 'red.500' }}
-                onClick={() => console.log('like')}
+                _hover={{ bg: 'blue.100' }}
+                onClick={() => setShowCommentModal(true)}
               >
                 <Icon
-                  as={AiOutlineHeart}
+                  as={AiOutlineMessage}
                   h={5}
                   w={5}
                   color='gray.500'
-                  _hover={{ color: 'red.500' }}
+                  _hover={{ color: 'blue.500' }}
                 />
               </Center>
             </Tooltip>
+
+            <Text
+              mx='3px'
+              color={post.comments.length > 0 ? 'blue.500' : 'gray.500'}
+              fontSize='sm'
+              userSelect='none'
+            >
+              {post.comments.length}
+            </Text>
+          </Flex>
+
+          {hasLikedBefore ? (
+            <Flex alignItems='center' mx='25px'>
+              <Tooltip label='Dislike' fontSize='xs' bg='gray.500'>
+                <Center
+                  p='7px'
+                  cursor='pointer'
+                  rounded='full'
+                  overflow='hidden'
+                  _hover={{ bg: 'red.100', color: 'red.500' }}
+                  onClick={() => console.log('dislike!')}
+                >
+                  <Icon as={AiFillHeart} h={5} w={5} color='red.500' />
+                </Center>
+              </Tooltip>
+              <Text
+                mx='3px'
+                color={post.likes.length > 0 ? 'red.500' : 'gray.500'}
+                fontSize='sm'
+                userSelect='none'
+              >
+                {post.likes.length}
+              </Text>
+            </Flex>
+          ) : (
+            <Flex alignItems='center' mx='25px'>
+              <Tooltip label='Like' fontSize='xs' bg='gray.500'>
+                <Center
+                  cursor='pointer'
+                  p='7px'
+                  rounded='full'
+                  overflow='hidden'
+                  _hover={{ bg: 'red.100', color: 'red.500' }}
+                  onClick={() => console.log('like')}
+                >
+                  <Icon
+                    as={AiOutlineHeart}
+                    h={5}
+                    w={5}
+                    color='gray.500'
+                    _hover={{ color: 'red.500' }}
+                  />
+                </Center>
+              </Tooltip>
+              <Text
+                mx='3px'
+                color={post.likes.length > 0 ? 'red.500' : 'gray.500'}
+                fontSize='sm'
+                userSelect='none'
+              >
+                {post.likes.length}
+              </Text>
+            </Flex>
           )}
 
           {hasAccess && (
             <Tooltip label='Delete Message' fontSize='xs' bg='red.400'>
               <Center
+                cursor='pointer'
                 p='7px'
                 rounded='full'
                 overflow='hidden'
                 _hover={{ bg: 'red.200' }}
-                cursor='pointer'
                 onClick={handleTrashIconClick}
               >
                 <Icon as={AiOutlineDelete} h={5} w={5} color='red.500' />

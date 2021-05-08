@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import { Center, Divider, Flex, Text, Icon, Tooltip } from '@chakra-ui/react';
 import { Like, Post, User, UserRoles } from '../../types';
 import {
@@ -10,7 +10,8 @@ import {
   AiFillHeart,
   AiOutlineMessage,
 } from 'react-icons/ai';
-import { MyAlert } from '../../components';
+import { CommentModal, MyAlert } from '../../components';
+import { deletePost } from '../../actions';
 
 interface PostCardProps {
   user: User;
@@ -19,13 +20,14 @@ interface PostCardProps {
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
-  const router = useRouter();
-
   const [likes, setLikes] = useState(post.likes);
   const [showAlert, setShowAlert] = useState(false);
+
+  // ui states
+  const [showCommentModal, setShowCommentModal] = useState(false);
+
   const hasAccess =
     user.role === UserRoles.root || post.user.username === user.username;
-
   // @ts-ignore
   const hasLikedBefore = post.likes.find(
     (like: Like) => like.user === user._id
@@ -36,20 +38,26 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
   };
 
   const pushToPostDetails = () => {
-    router.push(`/${post.user.username}/status/${post._id}`);
+    Router.push(`/${post.user.username}/status/${post._id}`);
   };
 
   return (
     <>
+      <CommentModal
+        user={user}
+        post={post}
+        hasLikedBefore={hasLikedBefore}
+        isOpen={showCommentModal}
+        onClose={() => setShowCommentModal(false)}
+        handleCommentSend={() => console.log('sent')}
+      />
+
       <MyAlert
         showAlert={showAlert}
         setShowAlert={setShowAlert}
         body='This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from the search results. '
         header='Delete Message?'
-        handleYes={() => {
-          console.log('clicked delete yes and modal will close');
-          setShowAlert(false);
-        }}
+        handleYes={() => deletePost(post._id, setPosts, setShowAlert)}
       />
 
       <Flex p='1rem' _hover={{ bg: 'gray.100' }}>
@@ -64,7 +72,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
           _hover={{
             filter: 'opacity(.8)',
           }}
-          onClick={() => router.push(`/${post.user.username}`)}
+          onClick={() => Router.push(`/${post.user.username}`)}
         >
           <Image src={post.user.profilePicUrl} width='50px' height='50px' />
         </Center>
@@ -116,60 +124,74 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
           </Text>
 
           {/* button group */}
-          <Flex mt='4px'>
-            <Tooltip label='Comment' fontSize='xs' bg='gray.500'>
-              <Center
-                cursor='pointer'
-                p='7px'
-                rounded='full'
-                overflow='hidden'
-                _hover={{ bg: 'blue.100' }}
-                onClick={() => console.log('comment icon clicked')}
-              >
-                <Icon
-                  as={AiOutlineMessage}
-                  h={5}
-                  w={5}
-                  color='gray.500'
-                  _hover={{ color: 'blue.500' }}
-                />
-              </Center>
-            </Tooltip>
-
-            {hasLikedBefore ? (
-              <Tooltip label='Dislike' fontSize='xs' bg='gray.500'>
-                <Center
-                  p='7px'
-                  cursor='pointer'
-                  mx='12px'
-                  rounded='full'
-                  overflow='hidden'
-                  _hover={{ bg: 'red.100', color: 'red.500' }}
-                  onClick={() => console.log('dislike!')}
-                >
-                  <Icon as={AiFillHeart} h={5} w={5} color='red.500' />
-                </Center>
-              </Tooltip>
-            ) : (
-              <Tooltip label='Like' fontSize='xs' bg='gray.500'>
+          <Flex mt='6px'>
+            <Flex alignItems='center'>
+              <Tooltip label='Comment' fontSize='xs' bg='gray.500'>
                 <Center
                   cursor='pointer'
                   p='7px'
-                  mx='12px'
                   rounded='full'
                   overflow='hidden'
-                  _hover={{ bg: 'red.100', color: 'red.500' }}
-                  onClick={() => console.log('like')}
+                  _hover={{ bg: 'blue.100' }}
+                  onClick={() => setShowCommentModal(true)}
                 >
                   <Icon
-                    as={AiOutlineHeart}
+                    as={AiOutlineMessage}
                     h={5}
                     w={5}
                     color='gray.500'
-                    _hover={{ color: 'red.500' }}
+                    _hover={{ color: 'blue.500' }}
                   />
                 </Center>
               </Tooltip>
+
+              <Text mx='3px' color='gray.500' fontSize='sm' userSelect='none'>
+                {post.comments.length}
+              </Text>
+            </Flex>
+
+            {hasLikedBefore ? (
+              <Flex alignItems='center' mx='25px'>
+                <Tooltip label='Dislike' fontSize='xs' bg='gray.500'>
+                  <Center
+                    p='7px'
+                    cursor='pointer'
+                    rounded='full'
+                    overflow='hidden'
+                    _hover={{ bg: 'red.100', color: 'red.500' }}
+                    onClick={() => console.log('dislike!')}
+                  >
+                    <Icon as={AiFillHeart} h={5} w={5} color='red.500' />
+                  </Center>
+                </Tooltip>
+                <Text mx='3px' color='gray.500' fontSize='sm' userSelect='none'>
+                  {post.likes.length}
+                </Text>
+              </Flex>
+            ) : (
+              <Flex alignItems='center' mx='25px'>
+                <Tooltip label='Like' fontSize='xs' bg='gray.500'>
+                  <Center
+                    cursor='pointer'
+                    p='7px'
+                    rounded='full'
+                    overflow='hidden'
+                    _hover={{ bg: 'red.100', color: 'red.500' }}
+                    onClick={() => console.log('like')}
+                  >
+                    <Icon
+                      as={AiOutlineHeart}
+                      h={5}
+                      w={5}
+                      color='gray.500'
+                      _hover={{ color: 'red.500' }}
+                    />
+                  </Center>
+                </Tooltip>
+                <Text mx='3px' color='gray.500' fontSize='sm' userSelect='none'>
+                  {post.likes.length}
+                </Text>
+              </Flex>
             )}
 
             {hasAccess && (

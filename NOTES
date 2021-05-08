@@ -42,3 +42,7 @@ public likes?: ILike[];
 public comments?: IComment[];
 
 #----------#
+# unmounted error
+first mutate the state and then do the async functions.
+
+#----------#

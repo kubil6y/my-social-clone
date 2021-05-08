@@ -8,7 +8,7 @@ import {
 } from '@chakra-ui/react';
 
 interface NoPostsProps {
-  setShowNoPosts: Function;
+  setShowNoPosts: () => void;
 }
 export const NoPosts: React.FC<NoPostsProps> = ({ setShowNoPosts }) => {
   return (

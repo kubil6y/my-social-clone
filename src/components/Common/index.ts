@@ -5,3 +5,4 @@ export * from './CreatePost';
 export * from './PostCard';
 export * from './NoPosts';
 export * from './MyAlert';
+export * from './CommentModal';

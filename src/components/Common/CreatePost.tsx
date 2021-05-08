@@ -77,7 +77,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
     }
   };
 
-  const handleImagePrevieRemove = () => {
+  const handleImagePreviewRemove = () => {
     setMediaState((state: any) => ({
       ...state,
       media: null,
@@ -190,7 +190,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
               fontSize='20px'
               color='gray.700'
               maxLength={200}
-              rows={2}
+              rows={3}
               w='100%'
               resize='vertical'
               placeholder="What's happening?"
@@ -215,7 +215,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
             >
               <Tooltip label='Remove'>
                 <Box
-                  onClick={handleImagePrevieRemove}
+                  onClick={handleImagePreviewRemove}
                   sx={{
                     position: 'absolute',
                     top: '4px',
@@ -315,7 +315,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
             </Box>
             {/* button */}
             <Tooltip
-              bg='red.500'
+              bg='red.400'
               color='white'
               label={isSendDisabled ? 'Text field must not be empty.' : ''}
             >
