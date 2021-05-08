@@ -2,6 +2,7 @@ import React, { ChangeEvent, useState, useRef } from 'react';
 import Image from 'next/image';
 import { Picker } from 'emoji-mart';
 import { useClickOutside } from '../../hooks';
+import { IoLocationOutline } from 'react-icons/io5';
 import {
   AiOutlineCheck,
   AiOutlineClose,
@@ -9,7 +10,6 @@ import {
   AiOutlineFileImage,
   AiOutlineSmile,
 } from 'react-icons/ai';
-import { IoLocationOutline } from 'react-icons/io5';
 import {
   Box,
   Button,
@@ -22,12 +22,15 @@ import {
   Textarea,
   Tooltip,
 } from '@chakra-ui/react';
+import { User } from '../../types';
 
 interface CreatePostProps {
-  userAvatar: string;
+  user: User;
+  setPosts: Function;
 }
 
-export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
+export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
+  // image state
   const [{ media, mediaPreview }, setMediaState] = useState<any>({
     media: null,
     mediaPreview: null,
@@ -43,7 +46,6 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
   useClickOutside(emojiBoxRef, smileEmojiRef, () => setShowEmoji(false));
 
   // location field
-  //const [location, setLocation] = useState('');
   const [
     { locationValue, showLocationField, locationConfirmed },
     setLocation,
@@ -74,23 +76,12 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
     }
   };
 
-  const handleImagePreviewCancel = () => {
+  const handleImagePrevieRemove = () => {
     setMediaState((state: any) => ({
       ...state,
       media: null,
       mediaPreview: null,
     }));
-  };
-
-  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    let body: any = {};
-    if (!text) return;
-    if (locationValue) body.locationValue = locationValue.trim();
-    if (media) body.media = media;
-    body.text = text;
-
-    console.log(body);
   };
 
   // selecting emoji action
@@ -132,6 +123,20 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
     setShowEmoji(true);
   };
 
+  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let body: any = {};
+    if (isSendDisabled) return;
+    if (locationValue) body.locationValue = locationValue.trim();
+    if (media) body.media = media;
+    body.text = text.trim();
+
+    // TODO mutate app state
+    // go async
+    // clean up component state
+    console.log(body);
+  };
+
   return (
     <>
       <input
@@ -151,7 +156,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
         borderColor='gray.100'
         py='4px'
         px='10px'
-        mb='12px'
+        //mb='12px'
         alignItems='flex-start'
       >
         <Center
@@ -162,7 +167,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
           flexShrink={0}
         >
           <Image
-            src={userAvatar}
+            src={user?.profilePicUrl}
             alt='user profile picture'
             width={48}
             height={48}
@@ -205,7 +210,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
             >
               <Tooltip label='Remove'>
                 <Box
-                  onClick={handleImagePreviewCancel}
+                  onClick={handleImagePrevieRemove}
                   sx={{
                     position: 'absolute',
                     top: '4px',
@@ -222,11 +227,12 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
                   <Icon as={AiOutlineClose} h={6} w={6} color='white' />
                 </Box>
               </Tooltip>
-              <Box>
+              <Box w='100%'>
                 <img
                   src={mediaPreview}
                   style={{
                     objectFit: 'cover',
+                    width: '100%',
                     maxWidth: '100%',
                     display: 'block',
                   }}
@@ -310,6 +316,11 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
             >
               <Button
                 colorScheme='blue'
+                bg={isSendDisabled ? 'blue.200' : 'blue.500'}
+                _hover={{
+                  bg: isSendDisabled ? 'blue.200' : 'blue.600',
+                }}
+                cursor={isSendDisabled ? 'auto' : 'pointer'}
                 rounded='full'
                 letterSpacing='wide'
                 textDecoration='uppercase'
@@ -388,6 +399,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ userAvatar }) => {
           )}
         </Box>
       </Flex>
+      <Box height='12px' w='100%' bg='gray.50'></Box>
     </>
   );
 };

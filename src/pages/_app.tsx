@@ -2,11 +2,15 @@ import 'emoji-mart/css/emoji-mart.css';
 import React from 'react';
 import axios from 'axios';
 import App from 'next/app';
+import dayjs from 'dayjs';
 import { parseCookies, destroyCookie } from 'nookies';
 import { baseUrl } from '../utils';
 import { redirectUser } from '../actions';
 import { ChakraProvider } from '@chakra-ui/react';
 import { Layout } from '../components';
+import relativeTime from 'dayjs/plugin/relativeTime';
+
+dayjs.extend(relativeTime);
 
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {

@@ -36,7 +36,7 @@ export interface Comment {
 }
 
 export interface Like {
-  user: string;
+  user: User | string;
   createdAt: Date;
 }
 
@@ -45,8 +45,8 @@ export interface Post {
   user: User;
   text: string;
   location: string;
-  likes: Like[];
-  comments: Comment[];
+  likes: Like[] | string[];
+  comments: Comment[] | string[];
   createdAt: Date;
   updatedAt: Date;
   __v: any;

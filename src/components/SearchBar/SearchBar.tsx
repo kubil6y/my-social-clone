@@ -49,6 +49,7 @@ export const SearchBar = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
+    if (!isDropdown) setIsDropdown(true);
     setVal(value);
   };
 
@@ -94,18 +95,23 @@ export const SearchBar = () => {
   }, [debouncedValue]);
 
   return (
-    <Box w="100%" py="5px" px="10px" bg="white">
+    <Box w='100%' py='5px' px='10px' bg='white'>
       <Box></Box>
       <InputGroup ref={inputRef}>
         <InputLeftElement
-          pointerEvents="none"
-          children={<AiOutlineSearch color="gray.500" />}
+          pointerEvents='none'
+          children={<AiOutlineSearch color='gray.500' />}
         />
         <Input
-          type="text"
-          placeholder="Search MySocial"
-          rounded="full"
+          type='text'
+          placeholder='Search MySocial'
+          rounded='full'
           value={val}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              setIsDropdown(false);
+            }
+          }}
           onChange={handleChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
@@ -114,16 +120,19 @@ export const SearchBar = () => {
 
         {val.length > 0 && (
           <InputRightElement
-            cursor="pointer"
+            cursor='pointer'
             children={
               <Center
-                p="4px"
-                bg="blue.500"
-                rounded="full"
-                overflow="hidden"
-                onClick={() => setVal('')}
+                p='4px'
+                bg='blue.500'
+                rounded='full'
+                overflow='hidden'
+                onClick={() => {
+                  if (isDropdown) setIsDropdown(false);
+                  setVal('');
+                }}
               >
-                <AiOutlineClose color="white" />
+                <AiOutlineClose color='white' />
               </Center>
             }
           />
@@ -133,10 +142,10 @@ export const SearchBar = () => {
       {isDropdown && (
         <Box
           ref={dropboxRef}
-          mt="2.45px"
-          minH="100px"
-          borderRadius="4px"
-          fontSize="15px"
+          mt='2.45px'
+          minH='100px'
+          borderRadius='4px'
+          fontSize='15px'
           sx={{
             boxShadow:
               'rgb(101 119 134 / 20%) 0px 0px 15px, rgb(101 119 134 / 15%) 0px 0px 3px 1px',

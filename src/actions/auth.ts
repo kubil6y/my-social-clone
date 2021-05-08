@@ -3,11 +3,13 @@ import Router from 'next/router';
 import cookie from 'js-cookie';
 import { baseUrl, catchErrors } from '../utils';
 
-export const setToken = (token) => {
-  cookie.set('token', token);
+export const setToken = (token: any) => {
+  cookie.set('token', token, {
+    expires: 1,
+  });
 };
 
-export const redirectUser = (ctx, location) => {
+export const redirectUser = (ctx: any, location: string) => {
   if (ctx.req) {
     // it means user on server side
     ctx.res.writeHead(302, { Location: location });
