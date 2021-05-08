@@ -29,13 +29,14 @@ export const Alert: React.FC<AlertProps> = ({
   return (
     <>
       <AlertDialog
+        size='xs'
         isCentered
         isOpen={showAlert}
         leastDestructiveRef={cancelRef}
         onClose={() => setShowAlert(false)}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent rounded='3xl' width='320px'>
+          <AlertDialogContent rounded='3xl'>
             <AlertDialogHeader
               fontSize='xl'
               fontWeight='bold'

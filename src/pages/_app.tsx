@@ -21,6 +21,7 @@ class MyApp extends App {
     const protectedRoutes = [
       '/',
       '/[username]',
+      '/[username]/status/[postId]',
       '/notifications',
       '/post/[postId]',
       '/messages',

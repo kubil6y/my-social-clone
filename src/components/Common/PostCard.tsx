@@ -1,22 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import dayjs from 'dayjs';
-import {
-  Box,
-  Center,
-  Divider,
-  Flex,
-  Text,
-  Icon,
-  Tooltip,
-} from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { Center, Divider, Flex, Text, Icon, Tooltip } from '@chakra-ui/react';
 import { Like, Post, User, UserRoles } from '../../types';
 import {
-  AiOutlineComment,
   AiOutlineDelete,
   AiOutlineHeart,
   AiFillHeart,
+  AiOutlineMessage,
 } from 'react-icons/ai';
 import { Alert } from './Alert';
 
@@ -27,6 +20,9 @@ interface PostCardProps {
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
+  const router = useRouter();
+
+  const [likes, setLikes] = useState(post.likes);
   const [showAlert, setShowAlert] = useState(false);
   const hasAccess =
     user.role === UserRoles.root || post.user.username === user.username;
@@ -45,7 +41,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
       <Alert
         showAlert={showAlert}
         setShowAlert={setShowAlert}
-        body='This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from Twitter search results. '
+        body='This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from the search results. '
         header='Delete Message?'
         handleYes={() => {
           console.log('clicked delete yes and modal will close');
@@ -53,7 +49,12 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
         }}
       />
 
-      <Flex p='1rem' cursor='pointer' _hover={{ bg: 'gray.100' }}>
+      <Flex
+        p='1rem'
+        cursor='pointer'
+        _hover={{ bg: 'gray.100' }}
+        onClick={() => router.push(`/${post.user.username}/status/${post._id}`)}
+      >
         {/* avatar */}
         <Center
           overflow='hidden'
@@ -116,7 +117,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
                 onClick={() => console.log('comment icon clicked')}
               >
                 <Icon
-                  as={AiOutlineComment}
+                  as={AiOutlineMessage}
                   h={5}
                   w={5}
                   color='gray.500'
@@ -160,7 +161,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
             )}
 
             {hasAccess && (
-              <Tooltip label='Delete Message' fontSize='xs' bg='red.500'>
+              <Tooltip label='Delete Message' fontSize='xs' bg='red.400'>
                 <Center
                   p='7px'
                   rounded='full'
