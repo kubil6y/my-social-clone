@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import axios from 'axios';
@@ -25,6 +25,7 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { Like, Post, User, UserRoles } from '../../../types';
+import { MyAlert } from '../../../components';
 
 interface PostDetailsProps {
   user: User;
@@ -40,6 +41,10 @@ const PostDetails: React.FC<PostDetailsProps> = ({
   const router = useRouter();
   //const { postId, username } = router.query;
 
+  // ui states
+  const [showAlert, setShowAlert] = useState(false);
+
+  // small states
   const hasAccess =
     user.role === UserRoles.root || postData.user.username === user.username;
 
@@ -47,13 +52,6 @@ const PostDetails: React.FC<PostDetailsProps> = ({
   const hasLikedBefore = postData.likes.find(
     (like: Like) => like.user.toString() === user._id.toString()
   );
-
-  console.log({
-    likes: postData.likes,
-    user,
-    hasAccess,
-    hasLikedBefore,
-  });
 
   if (error) {
     return (
@@ -67,11 +65,21 @@ const PostDetails: React.FC<PostDetailsProps> = ({
   }
 
   const handleTrashIconClick = () => {
-    console.log('trash icon clicked from [username]/...');
+    setShowAlert(true);
   };
 
   return (
     <>
+      <MyAlert
+        showAlert={showAlert}
+        setShowAlert={setShowAlert}
+        body='This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from the search results. '
+        header='Delete Message?'
+        handleYes={() => {
+          console.log('clicked delete yes and modal will close');
+          setShowAlert(false);
+        }}
+      />
       <Box
         display='inline-flex'
         cursor='pointer'

@@ -17,7 +17,7 @@ interface AlertProps {
   setShowAlert: Function;
 }
 
-export const Alert: React.FC<AlertProps> = ({
+export const MyAlert: React.FC<AlertProps> = ({
   header,
   body,
   handleYes,

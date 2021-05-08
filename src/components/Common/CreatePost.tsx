@@ -1,5 +1,6 @@
 import React, { ChangeEvent, useState, useRef } from 'react';
 import Image from 'next/image';
+import Router from 'next/router';
 import { Picker } from 'emoji-mart';
 import { useClickOutside } from '../../hooks';
 import { IoLocationOutline } from 'react-icons/io5';
@@ -164,6 +165,11 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
           mt='2px'
           mr='1rem'
           flexShrink={0}
+          cursor='pointer'
+          onClick={() => Router.push(`/${user.username}`)}
+          _hover={{
+            filter: 'opacity(.8)',
+          }}
         >
           <Image
             src={user?.profilePicUrl}

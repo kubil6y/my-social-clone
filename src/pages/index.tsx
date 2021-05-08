@@ -63,22 +63,30 @@ export default function Home({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { token } = parseCookies(context, 'token');
-  const { data } = await axios.get(`${baseUrl}/api/posts`, {
-    headers: { Authorization: token },
-  });
+  try {
+    const { token } = parseCookies(context, 'token');
+    const { data } = await axios.get(`${baseUrl}/api/posts`, {
+      headers: { Authorization: token },
+    });
 
-  if (!data) {
+    if (!data) {
+      return {
+        props: {
+          error: true,
+        },
+      };
+    }
+
+    return {
+      props: {
+        data,
+      },
+    };
+  } catch (error) {
     return {
       props: {
         error: true,
       },
     };
   }
-
-  return {
-    props: {
-      data,
-    },
-  };
 };
