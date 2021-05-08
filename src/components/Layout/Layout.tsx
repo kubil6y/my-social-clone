@@ -41,11 +41,13 @@ export const Layout = ({ children, user }) => {
       {user ? (
         <>
           <Container maxW='container.xl'>
-            <Grid templateColumns='2.5fr 700px 3.5fr' gap={4}>
+            <Grid templateColumns='2.5fr 6fr 4fr' gap={4}>
               <Sticky>
                 <SideMenu user={user} />
               </Sticky>
-              <Box>{children}</Box>
+              <Box border='1px' borderColor='gray.100' mb='2rem'>
+                {children}
+              </Box>
               <Sticky>
                 <SearchBar />
               </Sticky>

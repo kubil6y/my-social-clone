@@ -117,20 +117,20 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
   return (
     <Box>
       <input
-        type="file"
-        accept="image/*"
+        type='file'
+        accept='image/*'
         onChange={onSelectFile}
         ref={inputRef}
         style={{ display: 'none' }}
       />
-      <Flex alignItems="center">
-        <Text fontSize="lg">Select a profile picture</Text>
+      <Flex alignItems='center'>
+        <Text fontSize='lg'>Select a profile picture</Text>
         <Icon
           as={AiOutlineUpload}
           h={8}
           w={8}
-          ml="10px"
-          cursor="pointer"
+          ml='10px'
+          cursor='pointer'
           onClick={uploadIconClick}
         />
       </Flex>
@@ -146,27 +146,27 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
         )}
       </Box>
 
-      <Box my="10px">
+      <Box my='10px'>
         <canvas
           ref={previewCanvasRef}
           // Rounding is important so the canvas width and height matches/is a multiple for sharpness.
           style={{
             width: Math.round(completedCrop?.width ?? 0),
             height: Math.round(completedCrop?.height ?? 0),
-            borderRadius: '10px',
+            borderRadius: '9999px',
           }}
         />
       </Box>
 
       {/* controls */}
       {upImg && !doneTwice && !clear && (
-        <HStack spacing="10px" my="1rem">
+        <HStack spacing='10px' my='1rem'>
           {!done ? (
             <Button
               rightIcon={<AiOutlineClear />}
-              colorScheme="green"
-              variant="solid"
-              size="sm"
+              colorScheme='green'
+              variant='solid'
+              size='sm'
               onClick={clearHandler}
             >
               Clear
@@ -174,9 +174,9 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
           ) : (
             <Button
               rightIcon={<AiOutlineClose />}
-              colorScheme="red"
-              variant="solid"
-              size="sm"
+              colorScheme='red'
+              variant='solid'
+              size='sm'
               onClick={cancelHandler}
             >
               Cancel
@@ -185,9 +185,9 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
 
           <Button
             rightIcon={<AiOutlineCheck />}
-            colorScheme="blue"
-            variant="solid"
-            size="sm"
+            colorScheme='blue'
+            variant='solid'
+            size='sm'
             onClick={doneHandler}
           >
             Done

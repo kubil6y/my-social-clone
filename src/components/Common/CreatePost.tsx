@@ -152,11 +152,10 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
         }}
       />
       <Flex
-        border='1px'
+        borderY='1px'
         borderColor='gray.100'
         py='4px'
         px='10px'
-        //mb='12px'
         alignItems='flex-start'
       >
         <Center

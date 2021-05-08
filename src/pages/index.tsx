@@ -20,7 +20,6 @@ export default function Home({
   // ui states
   const [showNoPosts, setShowNoPosts] = useState(Boolean(error));
 
-  console.log({ posts });
   if (posts.length === 0 || error)
     return (
       showNoPosts && <NoPosts setShowNoPosts={() => setShowNoPosts(false)} />
@@ -48,7 +47,7 @@ export default function Home({
 
       <Divider orientation='horizontal' />
 
-      <Box w='100%' borderLeft='1px' borderRight='1px' borderColor='gray.100'>
+      <Box w='100%'>
         {posts &&
           posts.map((post) => (
             <PostCard
