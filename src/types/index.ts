@@ -52,3 +52,18 @@ export interface Post {
   updatedAt: Date;
   __v: any;
 }
+
+export interface Profile {
+  social: {
+    _id: string;
+    facebook?: string;
+    twitter?: string;
+    instagram?: string;
+    youtube?: string;
+  };
+  _id: string;
+  user: string;
+  bio: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

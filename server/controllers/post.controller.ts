@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Response, Request } from 'express';
 import { msg401, msg500 } from '../utils';
-import { Post, IPost, UserRole, User } from '../models';
+import { Post, IPost, UserRole, User, Profile } from '../models';
 
 export const createPost = async (req: Request, res: Response) => {
   const { text, location, picUrl } = req.body;
@@ -266,11 +266,13 @@ export const getUserPosts = async (req: Request, res: Response) => {
   const { username } = req.params;
   try {
     const user = await User.findOne({ username });
-    console.log({ user });
     if (!user) return res.status(404).send('User does not exists');
 
+    // this endpoint is for [username] profile page.
+    const profile = await Profile.findOne({ user });
+
     const posts = await Post.find({ user: user._id });
-    return res.json(posts);
+    return res.json({ posts, profile });
   } catch (error) {
     return msg500(error, res);
   }

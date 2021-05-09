@@ -49,6 +49,10 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
     Router.push(`/${post.user.username}/status/${post._id}`);
   };
 
+  const pushToUserDetails = () => {
+    Router.push(`/${post.user.username}`);
+  };
+
   return (
     <>
       <CommentModal
@@ -79,7 +83,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
           _hover={{
             filter: 'opacity(.8)',
           }}
-          onClick={() => Router.push(`/${post.user.username}`)}
+          onClick={pushToUserDetails}
         >
           <Image src={post.user.profilePicUrl} width='50px' height='50px' />
         </Center>
@@ -90,7 +94,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
             alignItems='center'
             justifyContent='flex-start'
             cursor='pointer'
-            onClick={pushToPostDetails}
+            onClick={pushToUserDetails}
           >
             <Text
               fontSize='sm'
