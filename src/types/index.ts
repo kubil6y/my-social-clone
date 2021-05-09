@@ -45,6 +45,7 @@ export interface Post {
   user: User;
   text: string;
   location: string;
+  picUrl?: string;
   likes: Like[] | string[];
   comments: Comment[] | string[];
   createdAt: Date;

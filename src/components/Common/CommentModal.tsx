@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import Router from 'next/router';
@@ -16,13 +16,14 @@ import {
   Text,
   Button,
 } from '@chakra-ui/react';
+import { addComment } from '../../actions';
 
 interface CommentModalProps {
   user: User;
   post: Post;
   isOpen: boolean;
   onClose: () => void;
-  setPosts: Function;
+  setComments: Function;
 }
 
 export const CommentModal: React.FC<CommentModalProps> = ({
@@ -30,7 +31,7 @@ export const CommentModal: React.FC<CommentModalProps> = ({
   post,
   isOpen,
   onClose,
-  setPosts,
+  setComments,
 }) => {
   // states
   const [text, setText] = useState('');
@@ -39,13 +40,9 @@ export const CommentModal: React.FC<CommentModalProps> = ({
   // initial focus
   const initialRef = useRef(null);
 
-  const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // TODO
-    //setPosts((prev: any) => ({ ...prev }));
-    console.log({
-      text,
-    });
+    await addComment(post._id, text, setText, setComments, onClose);
   };
 
   return (
@@ -60,8 +57,8 @@ export const CommentModal: React.FC<CommentModalProps> = ({
       >
         <ModalOverlay />
         <ModalContent rounded='3xl'>
-          <Flex px='8px' py='4px' borderBottom='1px' borderColor='gray.300'>
-            <Tooltip label='Close' fontSize='xs' bg='gray.500'>
+          <Flex px='12px' py='5px' borderBottom='1px' borderColor='gray.300'>
+            <Tooltip label='Close' fontSize='xs' bg='gray.600'>
               <Center
                 cursor='pointer'
                 p='7px'
@@ -202,6 +199,7 @@ export const CommentModal: React.FC<CommentModalProps> = ({
                     rounded='full'
                     letterSpacing='wide'
                     textDecoration='uppercase'
+                    onClick={handleSubmit}
                   >
                     send
                   </Button>

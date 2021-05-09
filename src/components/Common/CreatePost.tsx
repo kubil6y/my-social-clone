@@ -24,6 +24,8 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import { User } from '../../types';
+import { uploadPic } from '../../utils';
+import { sendPost } from '../../actions';
 
 interface CreatePostProps {
   user: User;
@@ -124,18 +126,21 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
     setShowEmoji(true);
   };
 
-  const handleSubmit = (e: ChangeEvent<HTMLFormElement>) => {
+  //******************** MAIN FUNCTION ********************//
+  const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
     let body: any = {};
     if (isSendDisabled) return;
-    if (locationValue) body.locationValue = locationValue.trim();
-    if (media) body.media = media;
+    if (locationValue) body.location = locationValue.trim();
+    if (media) {
+      body.picUrl = await uploadPic(media);
+    }
     body.text = text.trim();
 
     // TODO mutate app state
     // go async
     // clean up component state
-    console.log(body);
+    await sendPost(body, setPosts, setMediaState, setLocation, setText);
   };
 
   return (
@@ -286,6 +291,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
 
                 {showEmoji && (
                   <Box
+                    zIndex='9999'
                     position='absolute'
                     sx={{ top: '2.5rem', left: '-5rem' }}
                     ref={emojiBoxRef}

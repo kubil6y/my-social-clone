@@ -133,6 +133,25 @@ const PostDetails: React.FC<PostDetailsProps> = ({
         </Link>
         <Text fontSize='2xl'>{post.text}</Text>
 
+        {post.picUrl && (
+          <Box
+            my='8px'
+            rounded='xl'
+            overflow='hidden'
+            cursor='pointer'
+            onClick={() => console.log('todo full image maybe?')}
+          >
+            <img
+              src={post.picUrl}
+              style={{
+                maxHeight: '400px',
+                width: '100%',
+                objectFit: 'cover',
+              }}
+            />
+          </Box>
+        )}
+
         {/* button group */}
         <Flex mt='6px'>
           <Flex alignItems='center'>
@@ -143,7 +162,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({
                 rounded='full'
                 overflow='hidden'
                 _hover={{ bg: 'blue.100' }}
-                onClick={() => setShowCommentModal(true)}
+                onClick={() => console.log('TODO shit here comment model')}
               >
                 <Icon
                   as={AiOutlineMessage}

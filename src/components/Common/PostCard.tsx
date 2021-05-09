@@ -2,7 +2,15 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import dayjs from 'dayjs';
 import Router from 'next/router';
-import { Center, Divider, Flex, Text, Icon, Tooltip } from '@chakra-ui/react';
+import {
+  Center,
+  Divider,
+  Flex,
+  Text,
+  Icon,
+  Tooltip,
+  Box,
+} from '@chakra-ui/react';
 import { Like, Post, User, UserRoles } from '../../types';
 import {
   AiOutlineDelete,
@@ -11,7 +19,7 @@ import {
   AiOutlineMessage,
 } from 'react-icons/ai';
 import { CommentModal, MyAlert } from '../../components';
-import { deletePost } from '../../actions';
+import { deletePost, likePost } from '../../actions';
 
 interface PostCardProps {
   user: User;
@@ -21,6 +29,7 @@ interface PostCardProps {
 
 export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
   const [likes, setLikes] = useState(post.likes);
+  const [comments, setComments] = useState(post.comments);
   const [showAlert, setShowAlert] = useState(false);
 
   // ui states
@@ -29,9 +38,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
   const hasAccess =
     user.role === UserRoles.root || post.user.username === user.username;
   // @ts-ignore
-  const hasLikedBefore = post.likes.find(
-    (like: Like) => like.user === user._id
-  );
+  const hasLikedBefore = likes.find((like: Like) => like.user === user._id);
 
   const handleTrashIconClick = () => {
     setShowAlert(true);
@@ -46,10 +53,9 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
       <CommentModal
         user={user}
         post={post}
-        hasLikedBefore={hasLikedBefore}
         isOpen={showCommentModal}
         onClose={() => setShowCommentModal(false)}
-        handleCommentSend={() => console.log('sent')}
+        setComments={setComments}
       />
 
       <MyAlert
@@ -123,6 +129,25 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
             {post.text}
           </Text>
 
+          {post.picUrl && (
+            <Box
+              my='8px'
+              rounded='xl'
+              overflow='hidden'
+              cursor='pointer'
+              onClick={() => console.log('TODO full image')}
+            >
+              <img
+                src={post.picUrl}
+                style={{
+                  maxHeight: '400px',
+                  width: '100%',
+                  objectFit: 'cover',
+                }}
+              />
+            </Box>
+          )}
+
           {/* button group */}
           <Flex mt='6px'>
             <Flex alignItems='center'>
@@ -146,7 +171,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
               </Tooltip>
 
               <Text mx='3px' color='gray.500' fontSize='sm' userSelect='none'>
-                {post.comments.length}
+                {comments.length}
               </Text>
             </Flex>
 
@@ -159,13 +184,15 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
                     rounded='full'
                     overflow='hidden'
                     _hover={{ bg: 'red.100', color: 'red.500' }}
-                    onClick={() => console.log('dislike!')}
+                    onClick={() =>
+                      likePost(user._id, post._id, setLikes, false)
+                    }
                   >
                     <Icon as={AiFillHeart} h={5} w={5} color='red.500' />
                   </Center>
                 </Tooltip>
                 <Text mx='3px' color='gray.500' fontSize='sm' userSelect='none'>
-                  {post.likes.length}
+                  {likes.length}
                 </Text>
               </Flex>
             ) : (
@@ -177,7 +204,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
                     rounded='full'
                     overflow='hidden'
                     _hover={{ bg: 'red.100', color: 'red.500' }}
-                    onClick={() => console.log('like')}
+                    onClick={() => likePost(user._id, post._id, setLikes, true)}
                   >
                     <Icon
                       as={AiOutlineHeart}
@@ -189,7 +216,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
                   </Center>
                 </Tooltip>
                 <Text mx='3px' color='gray.500' fontSize='sm' userSelect='none'>
-                  {post.likes.length}
+                  {likes.length}
                 </Text>
               </Flex>
             )}

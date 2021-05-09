@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { Response, Request } from 'express';
 import { msg401, msg500 } from '../utils';
 import { Post, IPost, UserRole } from '../models';
@@ -14,14 +15,14 @@ export const createPost = async (req: Request, res: Response) => {
     }
 
     const newPost: any = {
-      user: user._id,
+      user,
       text,
     };
 
     if (location) newPost.location = location;
     if (picUrl) newPost.picUrl = picUrl;
 
-    const post = new Post(newPost as IPost);
+    const post = new Post(newPost);
     await post.save();
 
     // TODO we will only send the _id of this post at the end.
@@ -35,8 +36,10 @@ export const getAllPosts = async (_: Request, res: Response) => {
   try {
     const posts = await Post.find()
       .sort({ createdAt: 'desc' })
-      .populate('user')
-      .populate('comments.user');
+      .populate('user');
+
+    // with twitter layout i only need, comment and like counts.
+    //.populate('comments.user');
 
     return res.json(posts);
   } catch (error) {
@@ -155,6 +158,7 @@ export const commentOnAPost = async (req: Request, res: Response) => {
     }
 
     const newComment = {
+      uuid: uuidv4(),
       user: user._id,
       text,
       date: new Date(),
