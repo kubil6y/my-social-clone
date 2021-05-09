@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import Image from 'next/image';
+import cookie from 'js-cookie';
 import Link from 'next/link';
 import axios from 'axios';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import {
   AiFillHeart,
   AiOutlineArrowLeft,
@@ -12,7 +13,7 @@ import {
 } from 'react-icons/ai';
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
-import { baseUrl } from '../../../utils';
+import { baseUrl, catchErrors } from '../../../utils';
 import {
   Flex,
   Icon,
@@ -22,9 +23,14 @@ import {
   Alert,
   AlertIcon,
   Tooltip,
+  Divider,
+  Collapse,
+  Textarea,
+  Button,
 } from '@chakra-ui/react';
 import { Like, Post, User, UserRoles } from '../../../types';
-import { MyAlert } from '../../../components';
+import { MyAlert, PostComment } from '../../../components';
+import { addComment, deletePost, likePost } from '../../../actions';
 
 interface PostDetailsProps {
   user: User;
@@ -37,18 +43,20 @@ const PostDetails: React.FC<PostDetailsProps> = ({
   data: post,
   error,
 }) => {
-  const router = useRouter();
-  //const { postId, username } = router.query;
+  const [likes, setLikes] = useState(post.likes);
+  const [comments, setComments] = useState(post.comments);
+  const [text, setText] = useState('');
 
   // ui states
   const [showAlert, setShowAlert] = useState(false);
+  const [showInputField, setShowInputField] = useState(true);
 
   // small states
   const hasAccess =
     user.role === UserRoles.root || post.user.username === user.username;
 
   // @ts-ignore
-  const hasLikedBefore = post.likes.find(
+  const hasLikedBefore = likes.find(
     (like: Like) => like.user.toString() === user._id.toString()
   );
 
@@ -67,6 +75,28 @@ const PostDetails: React.FC<PostDetailsProps> = ({
     setShowAlert(true);
   };
 
+  const handleYes = async () => {
+    try {
+      await axios.delete(`${baseUrl}/api/posts/${post._id}`, {
+        headers: {
+          Authorization: cookie.get('token'),
+        },
+      });
+      setShowAlert(false);
+    } catch (error) {
+      console.log(catchErrors(error));
+    } finally {
+      Router.push('/');
+    }
+  };
+
+  const handleSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await addComment(post._id, text, setText, setComments, () =>
+      setShowInputField(false)
+    );
+  };
+
   return (
     <>
       <MyAlert
@@ -74,10 +104,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({
         setShowAlert={setShowAlert}
         body='This can’t be undone and it will be removed from your profile, the timeline of any accounts that follow you, and from the search results. '
         header='Delete Message?'
-        handleYes={() => {
-          console.log('clicked delete yes and modal will close');
-          setShowAlert(false);
-        }}
+        handleYes={handleYes}
       />
       <Box
         display='inline-flex'
@@ -87,7 +114,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({
         px='15px'
         height='53px'
         alignItems='center'
-        onClick={() => router.push('/')}
+        onClick={() => Router.push('/')}
       >
         <Icon as={AiOutlineArrowLeft} w={7} h={7} color='blue.500' />
         <Text fontSize='20px' fontWeight='bold' lineHeight='24px' ml='1rem'>
@@ -133,7 +160,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({
         </Link>
         <Text fontSize='2xl'>{post.text}</Text>
 
-        {post.picUrl && (
+        {post?.picUrl && (
           <Box
             my='8px'
             rounded='xl'
@@ -162,7 +189,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({
                 rounded='full'
                 overflow='hidden'
                 _hover={{ bg: 'blue.100' }}
-                onClick={() => console.log('TODO shit here comment model')}
+                onClick={() => setShowInputField((st) => !st)}
               >
                 <Icon
                   as={AiOutlineMessage}
@@ -176,11 +203,11 @@ const PostDetails: React.FC<PostDetailsProps> = ({
 
             <Text
               mx='3px'
-              color={post.comments.length > 0 ? 'blue.500' : 'gray.500'}
+              color={comments.length > 0 ? 'blue.500' : 'gray.500'}
               fontSize='sm'
               userSelect='none'
             >
-              {post.comments.length}
+              {comments.length}
             </Text>
           </Flex>
 
@@ -193,18 +220,18 @@ const PostDetails: React.FC<PostDetailsProps> = ({
                   rounded='full'
                   overflow='hidden'
                   _hover={{ bg: 'red.100', color: 'red.500' }}
-                  onClick={() => console.log('dislike!')}
+                  onClick={() => likePost(user._id, post._id, setLikes, false)}
                 >
                   <Icon as={AiFillHeart} h={5} w={5} color='red.500' />
                 </Center>
               </Tooltip>
               <Text
                 mx='3px'
-                color={post.likes.length > 0 ? 'red.500' : 'gray.500'}
+                color={likes.length > 0 ? 'red.500' : 'gray.500'}
                 fontSize='sm'
                 userSelect='none'
               >
-                {post.likes.length}
+                {likes.length}
               </Text>
             </Flex>
           ) : (
@@ -216,7 +243,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({
                   rounded='full'
                   overflow='hidden'
                   _hover={{ bg: 'red.100', color: 'red.500' }}
-                  onClick={() => console.log('like')}
+                  onClick={() => likePost(user._id, post._id, setLikes, true)}
                 >
                   <Icon
                     as={AiOutlineHeart}
@@ -229,11 +256,11 @@ const PostDetails: React.FC<PostDetailsProps> = ({
               </Tooltip>
               <Text
                 mx='3px'
-                color={post.likes.length > 0 ? 'red.500' : 'gray.500'}
+                color={likes.length > 0 ? 'red.500' : 'gray.500'}
                 fontSize='sm'
                 userSelect='none'
               >
-                {post.likes.length}
+                {likes.length}
               </Text>
             </Flex>
           )}
@@ -254,6 +281,53 @@ const PostDetails: React.FC<PostDetailsProps> = ({
           )}
         </Flex>
       </Box>
+
+      <Collapse in={showInputField} animateOpacity>
+        {showInputField && (
+          <form onSubmit={handleSubmit}>
+            <Flex flexDir='column' p='1rem'>
+              <Textarea
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                fontSize='20px'
+                color='gray.700'
+                maxLength={200}
+                rows={2}
+                w='100%'
+                resize='vertical'
+                placeholder='Enter your comment'
+              />
+              <Button
+                type='submit'
+                colorScheme='blue'
+                size='md'
+                rounded='full'
+                my='10px'
+                ml='auto'
+              >
+                send
+              </Button>
+            </Flex>
+          </form>
+        )}
+      </Collapse>
+
+      {post?.comments && comments.length > 0 && (
+        <>
+          <Divider orientation='horizontal' />
+          <Box>
+            {comments.map((comment: any) => (
+              <PostComment
+                key={comment.uuid}
+                comment={comment}
+                user={user}
+                setComments={setComments}
+                postId={post._id}
+              />
+            ))}
+          </Box>
+        </>
+      )}
     </>
   );
 };

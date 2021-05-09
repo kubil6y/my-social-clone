@@ -26,6 +26,7 @@ import {
 import { User } from '../../types';
 import { uploadPic } from '../../utils';
 import { sendPost } from '../../actions';
+import { MdLocationOn } from 'react-icons/md';
 
 interface CreatePostProps {
   user: User;
@@ -312,11 +313,14 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
               </Center>
             </Flex>
 
-            <Box ml='auto' mr='1rem' fontStyle='oblique'>
+            <Box ml='auto' mr='1rem'>
               {locationConfirmed && (
-                <Text color='gray.600' fontSize='sm'>
-                  @{locationValue && locationValue.trim()}
-                </Text>
+                <Flex alignItems='center'>
+                  <Icon as={MdLocationOn} color='gray.500' w={4} h={4} />
+                  <Text fontSize='xs' color='gray.500'>
+                    {locationValue && locationValue.trim()}
+                  </Text>
+                </Flex>
               )}
             </Box>
             {/* button */}

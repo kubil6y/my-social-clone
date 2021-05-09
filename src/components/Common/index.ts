@@ -3,6 +3,7 @@ export * from './SocialSection';
 export * from './ImageCropper';
 export * from './CreatePost';
 export * from './PostCard';
-export * from './NoPosts';
 export * from './MyAlert';
 export * from './CommentModal';
+export * from './ImageModalView';
+export * from './PostComment';

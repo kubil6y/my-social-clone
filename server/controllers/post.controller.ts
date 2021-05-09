@@ -157,16 +157,17 @@ export const commentOnAPost = async (req: Request, res: Response) => {
       return res.status(400).json(errors);
     }
 
+    // TODO this might be an issue
     const newComment = {
       uuid: uuidv4(),
-      user: user._id,
+      user,
       text,
       date: new Date(),
     };
 
     post.comments.unshift(newComment);
     await post.save();
-    return res.send('Comment Added');
+    return res.json(newComment);
   } catch (error) {
     return msg500(error, res);
   }

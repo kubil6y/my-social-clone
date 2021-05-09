@@ -71,7 +71,6 @@ export const likePost = async (
   }
 };
 
-// TODO
 export const addComment = async (
   postId: string,
   text: string,
@@ -84,6 +83,23 @@ export const addComment = async (
     setComments((prev) => [data, ...prev]);
     setText('');
     onClose();
+  } catch (error) {
+    console.log(catchErrors(error));
+  }
+};
+
+export const deleteComment = async (
+  postId: string,
+  commentUuid: string,
+  setComments: Function,
+  setShowAlert: Function
+) => {
+  try {
+    setComments((prev: any) =>
+      prev.filter((comment: any) => comment.uuid !== commentUuid)
+    );
+    setShowAlert(false);
+    await Axios.delete(`/comments/${postId}/${commentUuid}`);
   } catch (error) {
     console.log(catchErrors(error));
   }

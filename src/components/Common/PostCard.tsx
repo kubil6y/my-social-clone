@@ -18,6 +18,7 @@ import {
   AiFillHeart,
   AiOutlineMessage,
 } from 'react-icons/ai';
+import { MdLocationOn } from 'react-icons/md';
 import { CommentModal, MyAlert } from '../../components';
 import { deletePost, likePost } from '../../actions';
 
@@ -124,6 +125,19 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
                 {dayjs(post.createdAt).fromNow()}
               </Text>
             </Tooltip>
+            {post?.location && (
+              <>
+                <Text color='gray.500' mx='5px'>
+                  ·
+                </Text>
+                <Flex alignItems='center' ml='-3px' justifyContent='center'>
+                  <Icon as={MdLocationOn} color='gray.500' w={4} h={4} />
+                  <Text fontSize='xs' color='gray.500'>
+                    {post?.location}
+                  </Text>
+                </Flex>
+              </>
+            )}
           </Flex>
           <Text cursor='pointer' onClick={pushToPostDetails}>
             {post.text}
@@ -135,7 +149,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
               rounded='xl'
               overflow='hidden'
               cursor='pointer'
-              onClick={() => console.log('TODO full image')}
+              onClick={pushToPostDetails}
             >
               <img
                 src={post.picUrl}

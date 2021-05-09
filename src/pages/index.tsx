@@ -6,7 +6,7 @@ import { parseCookies } from 'nookies';
 import { Box, Divider, Flex, Text } from '@chakra-ui/react';
 import { baseUrl, capitalize } from '../utils';
 import { Post } from '../types';
-import { CreatePost, NoPosts, PostCard } from '../components';
+import { CreatePost, NoPosts, PostCard, PostError } from '../components';
 
 export default function Home({
   user,
@@ -18,12 +18,11 @@ export default function Home({
   const [error, setError] = useState<any>(postsError);
 
   // ui states
-  const [showNoPosts, setShowNoPosts] = useState(Boolean(error));
+  const [showErrorMsg, setShowErrorMsg] = useState(true);
+  const [showNoPost, setShowNoPosts] = useState(true);
 
-  if (posts.length === 0 || error)
-    return (
-      showNoPosts && <NoPosts setShowNoPosts={() => setShowNoPosts(false)} />
-    );
+  if (error && showErrorMsg)
+    return <PostError setShowMsg={() => setShowErrorMsg(false)} />;
 
   // setting up title
   useEffect(() => {
@@ -46,6 +45,10 @@ export default function Home({
       <CreatePost user={user} setPosts={setPosts} />
 
       <Divider orientation='horizontal' />
+
+      {posts.length === 0 && showNoPost && (
+        <NoPosts setShowNoPosts={() => setShowNoPosts(false)} />
+      )}
 
       <Box w='100%'>
         {posts &&
