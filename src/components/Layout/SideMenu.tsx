@@ -47,12 +47,12 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
       <Link href={href}>
         <Box
           {...restProps}
-          display="inline-flex"
-          borderRadius="9999px"
-          cursor="pointer"
+          display='inline-flex'
+          borderRadius='9999px'
+          cursor='pointer'
           _hover={{ color: 'blue.500', bg: 'gray.100' }}
-          alignItems="center"
-          p="12px"
+          alignItems='center'
+          p='12px'
         >
           <Icon
             as={activeIcon && isActive(pathname) ? activeIcon : icon}
@@ -61,8 +61,8 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
             w={7}
           />
           <Text
-            fontSize="xl"
-            fontWeight="bold"
+            fontSize='xl'
+            fontWeight='bold'
             p={0}
             mx={5}
             color={isActive(pathname) && 'blue.500'}
@@ -86,64 +86,64 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
   return (
     <Box>
       <Box
-        display="inline-flex"
-        borderRadius="9999px"
-        cursor="pointer"
-        color="pink.500"
+        display='inline-flex'
+        borderRadius='9999px'
+        cursor='pointer'
+        color='pink.500'
         _hover={{ color: 'blue.600', bg: 'gray.100' }}
-        alignItems="center"
-        p="12px"
-        ml="2px"
+        alignItems='center'
+        p='12px'
+        ml='2px'
         onClick={() => router.push('/')}
       >
-        <Icon as={GiDonkey} h={7} w={7} color="blue.500" />
+        <Icon as={GiDonkey} h={7} w={7} color='blue.500' />
       </Box>
       <Box></Box>
       <SideMenuItem
-        text="Home"
-        href="/"
-        pathname="/"
+        text='Home'
+        href='/'
+        pathname='/'
         icon={AiOutlineHome}
         activeIcon={AiFillHome}
       />
 
       <SideMenuItem
-        text="Messages"
-        href="/messages"
-        pathname="/messages"
+        text='Messages'
+        href='/messages'
+        pathname='/messages'
         icon={AiOutlineMail}
         activeIcon={AiFillMail}
         defaultColor={messagesColor}
       />
 
       <SideMenuItem
-        text="Notifications"
-        href="/notifications"
-        pathname="/notifications"
+        text='Notifications'
+        href='/notifications'
+        pathname='/notifications'
         icon={AiOutlineBell}
         activeIcon={AiFillBell}
         defaultColor={notificationsColor}
       />
 
       <SideMenuItem
-        text="Account"
+        text='Profile'
         href={`/${username.toLowerCase()}`}
-        pathname="/[username]"
+        pathname='/[username]'
         icon={RiUserLine}
         activeIcon={RiUserFill}
       />
 
       <Box
         onClick={() => logoutUser(email)}
-        display="inline-flex"
-        borderRadius="9999px"
-        cursor="pointer"
+        display='inline-flex'
+        borderRadius='9999px'
+        cursor='pointer'
         _hover={{ color: 'blue.500', bg: 'gray.100' }}
-        alignItems="center"
-        p="12px"
+        alignItems='center'
+        p='12px'
       >
         <Icon as={AiOutlineLogout} h={7} w={7} />
-        <Text fontSize="xl" fontWeight="bold" p={0} mx={5}>
+        <Text fontSize='xl' fontWeight='bold' p={0} mx={5}>
           Logout
         </Text>
       </Box>

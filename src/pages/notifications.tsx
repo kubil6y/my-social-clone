@@ -3,7 +3,7 @@ interface notificationsProps {}
 const notifications: React.FC<notificationsProps> = () => {
   return (
     <div>
-      <p>notifications</p>
+      <p>Work in progress...</p>
     </div>
   );
 };

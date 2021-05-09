@@ -22,9 +22,6 @@ export const PostComment: React.FC<PostCommentProps> = ({
   setComments,
 }) => {
   const [showAlert, setShowAlert] = useState(false);
-  // TODO
-  // implement functionalities for comment, delete and like/dislike
-  //AiOutlineDelete
 
   const hasAccess =
     user.role === UserRoles.root || comment.user.username === user.username;

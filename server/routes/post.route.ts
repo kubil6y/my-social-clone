@@ -12,6 +12,7 @@ import {
   getCommentsOfAPost,
   getLikesOfAPost,
   getPostById,
+  getUserPosts,
   likeAPost,
 } from '../controllers';
 
@@ -21,6 +22,8 @@ router.get('/', auth, getAllPosts);
 router.get('/:postId', auth, getPostById);
 router.post('/', auth, createPost);
 router.delete('/:postId', auth, deletePostById);
+
+router.get('/user/:username', auth, getUserPosts);
 
 router.get('/likes/:postId', auth, getLikesOfAPost);
 router.post('/like/:postId', auth, likeAPost);

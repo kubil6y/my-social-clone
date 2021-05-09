@@ -169,6 +169,7 @@ export const SearchBar = () => {
               setPastResults={setPastResults}
               setVal={setVal}
               setResults={setResults}
+              setIsDropdown={setIsDropdown}
             />
           )}
         </Box>

@@ -14,6 +14,9 @@ import {
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
 import { baseUrl, catchErrors } from '../../../utils';
+import { Like, Post, User, UserRoles } from '../../../types';
+import { MyAlert, NoData, PostComment } from '../../../components';
+import { addComment, likePost } from '../../../actions';
 import {
   Flex,
   Icon,
@@ -28,9 +31,6 @@ import {
   Textarea,
   Button,
 } from '@chakra-ui/react';
-import { Like, Post, User, UserRoles } from '../../../types';
-import { MyAlert, PostComment } from '../../../components';
-import { addComment, deletePost, likePost } from '../../../actions';
 
 interface PostDetailsProps {
   user: User;
@@ -50,6 +50,7 @@ const PostDetails: React.FC<PostDetailsProps> = ({
   // ui states
   const [showAlert, setShowAlert] = useState(false);
   const [showInputField, setShowInputField] = useState(true);
+  const [showNoCommentMsg, setShowNoCommentMsg] = useState(true);
 
   // small states
   const hasAccess =
@@ -311,6 +312,13 @@ const PostDetails: React.FC<PostDetailsProps> = ({
           </form>
         )}
       </Collapse>
+
+      {comments.length === 0 && showNoCommentMsg && (
+        <NoData
+          text='No comments have found. '
+          onClose={() => setShowNoCommentMsg(false)}
+        />
+      )}
 
       {post?.comments && comments.length > 0 && (
         <>

@@ -6,7 +6,7 @@ import { parseCookies } from 'nookies';
 import { Box, Divider, Flex, Text } from '@chakra-ui/react';
 import { baseUrl, capitalize } from '../utils';
 import { Post } from '../types';
-import { CreatePost, NoPosts, PostCard, PostError } from '../components';
+import { CreatePost, NoData, PostCard, PostError } from '../components';
 
 export default function Home({
   user,
@@ -26,7 +26,7 @@ export default function Home({
 
   // setting up title
   useEffect(() => {
-    const title = `Welcome ${capitalize(user.name)}`;
+    const title = user && `Welcome ${capitalize(user?.name)}`;
     document.title = title;
   }, []);
 
@@ -47,7 +47,10 @@ export default function Home({
       <Divider orientation='horizontal' />
 
       {posts.length === 0 && showNoPost && (
-        <NoPosts setShowNoPosts={() => setShowNoPosts(false)} />
+        <NoData
+          onClose={() => setShowNoPosts(false)}
+          text='No posts have found.'
+        />
       )}
 
       <Box w='100%'>

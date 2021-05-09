@@ -22,6 +22,7 @@ interface ResultsItemProps {
   pastResults: string[];
   setPastResults: Function;
   setVal: Function;
+  setIsDropdown: Function;
 }
 
 interface ResultsProps {
@@ -31,6 +32,7 @@ interface ResultsProps {
   pastResults: any;
   setPastResults: Function;
 
+  setIsDropdown: Function;
   setResults: Function;
   setVal: Function;
 }
@@ -41,6 +43,7 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({
   setVal,
   pastResults,
   setPastResults,
+  setIsDropdown,
 }) => {
   const router = useRouter();
 
@@ -52,43 +55,44 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({
       setPastResults([username, ...newPastResults]);
     }
 
-    router.push(`/${username}`);
     setResults([]);
     setVal('');
+    setIsDropdown(false);
+    router.push(`/${username}`);
   };
 
   return (
-    <Box w="100%" overflow="hidden">
+    <Box w='100%' overflow='hidden'>
       <Flex
-        alignItems="center"
-        py="16px"
-        px="20px"
+        alignItems='center'
+        py='16px'
+        px='20px'
         _hover={{ bg: 'gray.50' }}
-        cursor="pointer"
+        cursor='pointer'
         onClick={() => handleClick(item.username)}
-        overflow="hidden"
+        overflow='hidden'
       >
-        <Center rounded="full" w="40px" h="40px" overflow="hidden">
-          <Image src={item.profilePicUrl} width="40px" height="40px" />
+        <Center rounded='full' w='40px' h='40px' overflow='hidden'>
+          <Image src={item.profilePicUrl} width='40px' height='40px' />
         </Center>
-        <Box ml="10px">
-          <Flex alignItems="center">
-            <Text fontWeight="bold">{capitalize(item.name)}</Text>
+        <Box ml='10px'>
+          <Flex alignItems='center'>
+            <Text fontWeight='bold'>{capitalize(item.name)}</Text>
 
             {/* TODO */}
             {item.username == item.username && (
-              <Flex alignItems="center" ml="20px">
-                <Icon as={RiUserFill} h={3} w={3} color="gray.500" />
-                <Text color="gray.500" fontWeight="bold" ml="3px" fontSize="xs">
-                  Following
+              <Flex alignItems='center' ml='20px'>
+                <Icon as={RiUserFill} h={3} w={3} color='gray.500' />
+                <Text color='gray.500' fontWeight='bold' ml='3px' fontSize='xs'>
+                  Following (wip)
                 </Text>
               </Flex>
             )}
           </Flex>
-          <Text color="gray.600">@{item.username}</Text>
+          <Text color='gray.600'>@{item.username}</Text>
         </Box>
       </Flex>
-      <Divider orientation="horizontal" />
+      <Divider orientation='horizontal' />
     </Box>
   );
 };
@@ -102,12 +106,13 @@ export const Results: React.FC<ResultsProps> = ({
   setResults,
   setVal,
   setPastResults,
+  setIsDropdown,
 }) => {
   return (
-    <Box mt="2.45px" minH="100px" overflow="hidden">
+    <Box mt='2.45px' minH='100px' overflow='hidden'>
       {isLoading && (
-        <Box py="16px" px="20px">
-          <Progress size="xs" isIndeterminate color="blue.500" mt="3px" />
+        <Box py='16px' px='20px'>
+          <Progress size='xs' isIndeterminate color='blue.500' mt='3px' />
         </Box>
       )}
       {data &&
@@ -120,20 +125,21 @@ export const Results: React.FC<ResultsProps> = ({
             setVal={setVal}
             pastResults={pastResults}
             setPastResults={setPastResults}
+            setIsDropdown={setIsDropdown}
           />
         ))}
 
       {data && Array.isArray(data) && data.length === 0 && !isLoading && (
         <>
-          <Flex p="12px" pt="20px" justifyContent="center" alignItems="center">
-            <Icon as={AiOutlineMeh} h={6} w={6} color="gray.600" />
-            <Text color="gray.600" align="center" ml="5px">
+          <Flex p='12px' pt='20px' justifyContent='center' alignItems='center'>
+            <Icon as={AiOutlineMeh} h={6} w={6} color='gray.600' />
+            <Text color='gray.600' align='center' ml='5px'>
               No results
             </Text>
           </Flex>
           {pastResults && pastResults.length > 0 && (
             <>
-              <Divider orientation="horizontal" mt="2.45px" />
+              <Divider orientation='horizontal' mt='2.45px' />
               <PastResults
                 setVal={setVal}
                 setPastResults={setPastResults}
