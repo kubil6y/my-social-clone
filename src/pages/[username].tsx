@@ -208,7 +208,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
       {posts && posts.length > 0 ? (
         <Box>
           <Text fontWeight='bold' p='1rem'>
-            {userData && `${capitalize(userData?.username)}'s posts`}
+            {userData && `${capitalize(userData?.name)}'s posts`}
           </Text>
           <Divider orientation='horizontal' />
           {posts.map((post) => (

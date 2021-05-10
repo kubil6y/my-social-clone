@@ -3,28 +3,33 @@ import Head from 'next/head';
 export const HeadTags = () => (
   <>
     <Head>
-      <meta name="viewport" content="initial-scale=1.0, width=device-width" />
-      <meta charSet="UTF-8" />
+      <meta name='viewport' content='initial-scale=1.0, width=device-width' />
+      <meta charSet='UTF-8' />
       <link
-        rel="apple-touch-icon"
-        sizes="180x180"
-        href="/apple-touch-icon.png"
+        rel='apple-touch-icon'
+        sizes='180x180'
+        href='/apple-touch-icon.png'
       />
       <link
-        rel="icon"
-        type="image/png"
-        sizes="32x32"
-        href="/favicon-32x32.png"
+        rel='icon'
+        type='image/png'
+        sizes='32x32'
+        href='/favicon-32x32.png'
       />
       <link
-        rel="icon"
-        type="image/png"
-        sizes="16x16"
-        href="/favicon-16x16.png"
+        rel='icon'
+        type='image/png'
+        sizes='16x16'
+        href='/favicon-16x16.png'
       />
-      <link rel="manifest" href="/site.webmanifest" />
+      <link rel='manifest' href='/site.webmanifest' />
 
-      <link rel="stylesheet" type="text/css" href="/nprogress.css" />
+      <link
+        rel='stylesheet'
+        href='https://cdnjs.cloudflare.com/ajax/libs/github-fork-ribbon-css/0.2.3/gh-fork-ribbon.min.css'
+      />
+
+      <link rel='stylesheet' type='text/css' href='/nprogress.css' />
 
       <title>MySocial</title>
     </Head>
