@@ -158,9 +158,9 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
               <img
                 src={post.picUrl}
                 style={{
-                  maxHeight: '400px',
                   width: '100%',
                   objectFit: 'cover',
+                  objectPosition: 'center',
                 }}
               />
             </Box>
