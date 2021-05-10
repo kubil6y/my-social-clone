@@ -25,11 +25,12 @@ class MyDocument extends Document {
               style={{
                 fill: '#70b7fd',
                 color: '#fff',
-                position: 'absolute',
-                top: '0',
+                position: 'fixed',
+                bottom: '0',
                 border: '0',
-                right: '0',
+                left: '0',
                 zIndex: 9999,
+                transform: 'rotate(180deg)',
               }}
               aria-hidden='true'
             >
