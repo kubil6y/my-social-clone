@@ -13,7 +13,7 @@ import {
 } from 'react-icons/ai';
 import { GiDonkey } from 'react-icons/gi';
 import { RiUserFill, RiUserLine } from 'react-icons/ri';
-import { Box, Icon, Text, Tooltip } from '@chakra-ui/react';
+import { Box, Icon, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
 import { logoutUser } from '../../actions';
 
 interface SideMenuItemProps {
@@ -41,6 +41,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
   tooltipLabel,
   ...restProps
 }) => {
+  const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
   const router = useRouter();
   const isActive = (path: string) => router.pathname === path;
 
@@ -63,15 +64,17 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
               h={7}
               w={7}
             />
-            <Text
-              fontSize='xl'
-              fontWeight='bold'
-              p={0}
-              mx={5}
-              color={isActive(pathname) && 'blue.500'}
-            >
-              {text}
-            </Text>
+            {isLargerThan1200px && (
+              <Text
+                fontSize='xl'
+                fontWeight='bold'
+                p={0}
+                mx={5}
+                color={isActive(pathname) && 'blue.500'}
+              >
+                {text}
+              </Text>
+            )}
           </Box>
         </Link>
       ) : (
@@ -91,9 +94,17 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
               h={7}
               w={7}
             />
-            <Text fontSize='xl' fontWeight='bold' p={0} mx={5} color='gray.300'>
-              {text}
-            </Text>
+            {isLargerThan1200px && (
+              <Text
+                fontSize='xl'
+                fontWeight='bold'
+                p={0}
+                mx={5}
+                color='gray.300'
+              >
+                {text}
+              </Text>
+            )}
           </Box>
         </Tooltip>
       )}
@@ -103,6 +114,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
 };
 
 export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
+  const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
   const router = useRouter();
   const { username, unreadNotification, unreadMessage, email } = user;
 
@@ -169,9 +181,11 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
         p='12px'
       >
         <Icon as={AiOutlineLogout} h={7} w={7} />
-        <Text fontSize='xl' fontWeight='bold' p={0} mx={5}>
-          Logout
-        </Text>
+        {isLargerThan1200px && (
+          <Text fontSize='xl' fontWeight='bold' p={0} mx={5}>
+            Logout
+          </Text>
+        )}
       </Box>
     </Box>
   );

@@ -23,7 +23,7 @@ class MyDocument extends Document {
               height='80'
               viewBox='0 0 250 250'
               style={{
-                fill: '#70b7fd',
+                fill: '#de0000',
                 color: '#fff',
                 position: 'fixed',
                 bottom: '0',

@@ -87,7 +87,7 @@ export const SuggestionItem: React.FC<SuggestionItemProps> = ({
 
           <Box ml='1rem'>
             <Flex alignItems='center'>
-              <Text fontWeight='bold' fontSize='lg'>
+              <Text fontWeight='bold' fontSize='md'>
                 {name}
               </Text>
               <Text color='gray.500' ml='6px'>
@@ -105,7 +105,7 @@ export const SuggestionItem: React.FC<SuggestionItemProps> = ({
 
 export const Suggestions: React.FC = () => {
   return (
-    <Box bg='gray.50' overflow='hidden' rounded='3xl' mt='1rem'>
+    <Box bg='gray.50' overflow='hidden' rounded='3xl' mt='1rem' ml='1rem'>
       <Text fontWeight='bold' p='1rem' fontSize='xl'>
         Suggestions
       </Text>
