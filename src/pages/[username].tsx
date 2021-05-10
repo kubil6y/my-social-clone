@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
 import dayjs from 'dayjs';
@@ -7,6 +7,7 @@ import {
   Box,
   Button,
   Center,
+  Divider,
   Flex,
   Icon,
   Text,
@@ -14,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
-import { baseUrl } from '../utils';
+import { baseUrl, capitalize } from '../utils';
 import { Post, Profile, User, UserFollowStats } from '../types';
 import {
   AiOutlineFacebook,
@@ -23,26 +24,39 @@ import {
   AiOutlineYoutube,
   AiOutlineCalendar,
 } from 'react-icons/ai';
+import { NoData, PostCard } from '../components';
 
 interface ProfilePageProps {
   user: User;
+  userData: User;
   profile: Profile;
-  userFollowStats: UserFollowStats;
-  posts: Post[];
+  userFollowStats?: UserFollowStats;
+  postsData: Post[];
 }
 
+// user is who is logged in
+// userData is the user we fetch with params {username}
 const ProfilePage: React.FC<ProfilePageProps> = ({
   user,
+  userData,
   profile,
-  userFollowStats,
-  posts,
+  postsData,
 }) => {
   const router = useRouter();
   const { username } = router.query;
 
-  const { social } = profile;
+  const [posts, setPosts] = useState(postsData);
+  const [showNoData, setShowNodata] = useState(true);
+
+  // i render all social media links for this demo.
+  // for optional rendering, you can use social?.twitter && ...
+  //const { social } = profile;
 
   const hasAccess = username === user.username;
+
+  React.useEffect(() => {
+    setPosts(postsData);
+  }, [username]);
 
   return (
     <>
@@ -68,20 +82,33 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
             left: '12px',
           }}
         >
-          <Image src={user.profilePicUrl} width={140} height={140} />
+          <Image src={userData?.profilePicUrl} width={140} height={140} />
         </Box>
         {hasAccess && (
-          <Button variant='outline' colorScheme='blue' rounded='full' ml='auto'>
-            Edit profile
-          </Button>
+          <Tooltip
+            label='Work In Progress...'
+            bg='gray.500'
+            color='white'
+            fontSize='xs'
+          >
+            <Button
+              variant='outline'
+              colorScheme='blue'
+              rounded='full'
+              ml='auto'
+            >
+              Edit profile
+            </Button>
+          </Tooltip>
         )}
+        {!hasAccess && <Box h='40px' bg='transparent'></Box>}
       </Flex>
       <Box p='1rem' color='gray.500'>
         <Text fontSize='xl' fontWeight='bold' color='gray.800'>
-          {user?.name}
+          {userData.name}
         </Text>
 
-        <Text fontSize='sm'>@{user?.username}</Text>
+        <Text fontSize='sm'>@{username}</Text>
 
         {profile?.bio && (
           <Box my='12px'>
@@ -98,91 +125,109 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
 
         {/* social links */}
         <Flex mt='8px'>
-          {social?.twitter && (
-            <a
-              href='https://twitter.com'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <Tooltip label='Twitter' bg='gray.500' color='white'>
-                <Center
-                  h='30px'
-                  w='30px'
-                  _hover={{ bg: 'gray.100' }}
-                  cursor='pointer'
-                  rounded='full'
-                  overflow='hidden'
-                >
-                  <Icon color='blue.400' w={5} h={5} as={AiOutlineTwitter} />
-                </Center>
-              </Tooltip>
-            </a>
-          )}
+          <a
+            href='https://twitter.com'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Tooltip label='Twitter' bg='gray.500' color='white'>
+              <Center
+                h='30px'
+                w='30px'
+                _hover={{ bg: 'gray.100' }}
+                cursor='pointer'
+                rounded='full'
+                overflow='hidden'
+              >
+                <Icon color='blue.400' w={5} h={5} as={AiOutlineTwitter} />
+              </Center>
+            </Tooltip>
+          </a>
 
-          {social?.youtube && (
-            <a
-              href='https://youtube.com'
-              target='_blank'
-              rel='noopener noreferrer'
-              style={{ marginLeft: '3px', marginRight: '3px' }}
-            >
-              <Tooltip label='Youtube' bg='gray.500' color='white'>
-                <Center
-                  h='30px'
-                  w='30px'
-                  _hover={{ bg: 'gray.100' }}
-                  cursor='pointer'
-                  rounded='full'
-                  overflow='hidden'
-                >
-                  <Icon color='red.400' w={5} h={5} as={AiOutlineYoutube} />
-                </Center>
-              </Tooltip>
-            </a>
-          )}
-          {social?.instagram && (
-            <a
-              href='https://instagram.com'
-              target='_blank'
-              rel='noopener noreferrer'
-              style={{ marginLeft: '3px', marginRight: '3px' }}
-            >
-              <Tooltip label='Instagram' bg='gray.500' color='white'>
-                <Center
-                  h='30px'
-                  w='30px'
-                  _hover={{ bg: 'gray.100' }}
-                  cursor='pointer'
-                  rounded='full'
-                  overflow='hidden'
-                >
-                  <Icon color='blue.400' w={5} h={5} as={AiOutlineInstagram} />
-                </Center>
-              </Tooltip>
-            </a>
-          )}
-          {social?.facebook && (
-            <a
-              href='http://facebook.com'
-              target='_blank'
-              rel='noopener noreferrer'
-            >
-              <Tooltip label='Facebook' bg='gray.500' color='white'>
-                <Center
-                  h='30px'
-                  w='30px'
-                  _hover={{ bg: 'gray.100' }}
-                  cursor='pointer'
-                  rounded='full'
-                  overflow='hidden'
-                >
-                  <Icon color='purple.400' w={5} h={5} as={AiOutlineFacebook} />
-                </Center>
-              </Tooltip>
-            </a>
-          )}
+          <a
+            href='https://youtube.com'
+            target='_blank'
+            rel='noopener noreferrer'
+            style={{ marginLeft: '3px', marginRight: '3px' }}
+          >
+            <Tooltip label='Youtube' bg='gray.500' color='white'>
+              <Center
+                h='30px'
+                w='30px'
+                _hover={{ bg: 'gray.100' }}
+                cursor='pointer'
+                rounded='full'
+                overflow='hidden'
+              >
+                <Icon color='red.400' w={5} h={5} as={AiOutlineYoutube} />
+              </Center>
+            </Tooltip>
+          </a>
+
+          <a
+            href='https://instagram.com'
+            target='_blank'
+            rel='noopener noreferrer'
+            style={{ marginLeft: '3px', marginRight: '3px' }}
+          >
+            <Tooltip label='Instagram' bg='gray.500' color='white'>
+              <Center
+                h='30px'
+                w='30px'
+                _hover={{ bg: 'gray.100' }}
+                cursor='pointer'
+                rounded='full'
+                overflow='hidden'
+              >
+                <Icon color='blue.400' w={5} h={5} as={AiOutlineInstagram} />
+              </Center>
+            </Tooltip>
+          </a>
+
+          <a
+            href='http://facebook.com'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            <Tooltip label='Facebook' bg='gray.500' color='white'>
+              <Center
+                h='30px'
+                w='30px'
+                _hover={{ bg: 'gray.100' }}
+                cursor='pointer'
+                rounded='full'
+                overflow='hidden'
+              >
+                <Icon color='purple.400' w={5} h={5} as={AiOutlineFacebook} />
+              </Center>
+            </Tooltip>
+          </a>
         </Flex>
       </Box>
+      <Divider orientation='horizontal' />
+      {posts && posts.length > 0 ? (
+        <Box>
+          <Text fontWeight='bold' p='1rem'>
+            {userData && `${capitalize(userData?.username)}'s posts`}
+          </Text>
+          <Divider orientation='horizontal' />
+          {posts.map((post) => (
+            <PostCard
+              post={post}
+              setPosts={setPosts}
+              user={user}
+              key={post._id}
+            />
+          ))}
+        </Box>
+      ) : (
+        showNoData && (
+          <NoData
+            text={`${userData.username} has no posts.`}
+            onClose={() => setShowNodata(false)}
+          />
+        )
+      )}
     </>
   );
 };
@@ -205,11 +250,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       };
     }
 
-    const { posts, profile } = data;
+    const { posts, profile, userData } = data;
 
     return {
       props: {
-        posts,
+        userData,
+        postsData: posts,
         profile,
       },
     };

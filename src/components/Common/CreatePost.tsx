@@ -262,55 +262,66 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
           >
             {/* icons */}
             <Flex alignItems='center'>
-              <Center
-                p='7px'
-                _hover={{ bg: 'gray.200' }}
-                rounded='full'
-                cursor='pointer'
-                onClick={imagePickerOpen}
-              >
-                <Icon as={AiOutlineFileImage} h={6} w={6} color='blue.500' />
-              </Center>
-
-              <Box
-                position='relative'
-                p='7px'
-                ml='8px'
-                _hover={{ bg: 'gray.200' }}
-                rounded='full'
-                cursor='pointer'
-                ref={smileEmojiRef}
-                onClick={handleSmileIconClick}
-              >
-                <Icon
-                  as={AiOutlineSmile}
-                  h={6}
-                  w={6}
-                  color='blue.500'
+              <Tooltip label='Image' bg='gray.500' color='white' fontSize='xs'>
+                <Center
+                  p='7px'
+                  _hover={{ bg: 'gray.200' }}
+                  rounded='full'
                   cursor='pointer'
-                />
+                  onClick={imagePickerOpen}
+                >
+                  <Icon as={AiOutlineFileImage} h={6} w={6} color='blue.500' />
+                </Center>
+              </Tooltip>
 
-                {showEmoji && (
-                  <Box
-                    zIndex='9999'
-                    position='absolute'
-                    sx={{ top: '2.5rem', left: '-5rem' }}
-                    ref={emojiBoxRef}
-                  >
-                    <Picker onSelect={handleEmojiSelect} />
-                  </Box>
-                )}
-              </Box>
-              <Center
-                ml='8px'
-                p='7px'
-                _hover={{ bg: 'gray.200' }}
-                rounded='full'
-                cursor='pointer'
-                onClick={handleLocationClick}
+              <Tooltip label='Emoji' bg='gray.500' color='white' fontSize='xs'>
+                <Box
+                  position='relative'
+                  p='7px'
+                  ml='8px'
+                  _hover={{ bg: 'gray.200' }}
+                  rounded='full'
+                  cursor='pointer'
+                  ref={smileEmojiRef}
+                  onClick={handleSmileIconClick}
+                >
+                  <Icon
+                    as={AiOutlineSmile}
+                    h={6}
+                    w={6}
+                    color='blue.500'
+                    cursor='pointer'
+                  />
+
+                  {showEmoji && (
+                    <Box
+                      zIndex='9999'
+                      position='absolute'
+                      sx={{ top: '2.5rem', left: '-5rem' }}
+                      ref={emojiBoxRef}
+                    >
+                      <Picker onSelect={handleEmojiSelect} />
+                    </Box>
+                  )}
+                </Box>
+              </Tooltip>
+              <Tooltip
+                label='Location'
+                bg='gray.500'
+                color='white'
+                fontSize='xs'
               >
-                <Icon as={IoLocationOutline} h={6} w={6} color='blue.500' />
-              </Center>
+                <Center
+                  ml='8px'
+                  p='7px'
+                  _hover={{ bg: 'gray.200' }}
+                  rounded='full'
+                  cursor='pointer'
+                  onClick={handleLocationClick}
+                >
+                  <Icon as={IoLocationOutline} h={6} w={6} color='blue.500' />
+                </Center>
+              </Tooltip>
             </Flex>
 
             <Box ml='auto' mr='1rem'>
@@ -327,6 +338,7 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
             <Tooltip
               bg='red.400'
               color='white'
+              fontSize='xs'
               label={isSendDisabled ? 'Text field must not be empty.' : ''}
             >
               <Button
@@ -374,27 +386,30 @@ export const CreatePost: React.FC<CreatePostProps> = ({ user, setPosts }) => {
                   }
                 />
               </form>
-              <Center
-                ml='8px'
-                p='7px'
-                _hover={{ bg: 'gray.200' }}
-                rounded='full'
-                cursor='pointer'
-                onClick={() => {
-                  setLocation((prev) => ({
-                    ...prev,
-                    locationValue: '',
-                    locationConfirmed: false,
-                    showLocationField: false,
-                  }));
-                }}
-              >
-                <Icon as={AiOutlineCloseCircle} h={6} w={6} color='red.500' />
-              </Center>
+              <Tooltip label='Cancel' bg='gray.500' color='white' fontSize='xs'>
+                <Center
+                  ml='8px'
+                  p='7px'
+                  _hover={{ bg: 'gray.200' }}
+                  rounded='full'
+                  cursor='pointer'
+                  onClick={() => {
+                    setLocation((prev) => ({
+                      ...prev,
+                      locationValue: '',
+                      locationConfirmed: false,
+                      showLocationField: false,
+                    }));
+                  }}
+                >
+                  <Icon as={AiOutlineCloseCircle} h={6} w={6} color='red.500' />
+                </Center>
+              </Tooltip>
 
               <Tooltip
-                bg='red.500'
+                bg='red.400'
                 color='white'
+                fontSize='xs'
                 label={
                   !locationConfirmActive ? 'Enter a location to confirm' : ''
                 }

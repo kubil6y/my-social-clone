@@ -13,14 +13,15 @@ import {
 } from 'react-icons/ai';
 import { GiDonkey } from 'react-icons/gi';
 import { RiUserFill, RiUserLine } from 'react-icons/ri';
-import { Box, Icon, Text } from '@chakra-ui/react';
+import { Box, Icon, Text, Tooltip } from '@chakra-ui/react';
 import { logoutUser } from '../../actions';
 
 interface SideMenuItemProps {
   icon: any;
   activeIcon?: any;
   text?: string;
-  href: string;
+  href?: string;
+  tooltipLabel?: string;
   defaultColor?: string;
   pathname: string;
   [key: string]: {};
@@ -37,6 +38,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
   href,
   defaultColor,
   pathname,
+  tooltipLabel,
   ...restProps
 }) => {
   const router = useRouter();
@@ -44,33 +46,57 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
 
   return (
     <>
-      <Link href={href}>
-        <Box
-          {...restProps}
-          display='inline-flex'
-          borderRadius='9999px'
-          cursor='pointer'
-          _hover={{ color: 'blue.500', bg: 'gray.100' }}
-          alignItems='center'
-          p='12px'
-        >
-          <Icon
-            as={activeIcon && isActive(pathname) ? activeIcon : icon}
-            color={isActive(pathname) ? 'blue.500' : defaultColor}
-            h={7}
-            w={7}
-          />
-          <Text
-            fontSize='xl'
-            fontWeight='bold'
-            p={0}
-            mx={5}
-            color={isActive(pathname) && 'blue.500'}
+      {href ? (
+        <Link href={href}>
+          <Box
+            {...restProps}
+            display='inline-flex'
+            borderRadius='9999px'
+            cursor='pointer'
+            _hover={{ color: 'blue.500', bg: 'gray.100' }}
+            alignItems='center'
+            p='12px'
           >
-            {text}
-          </Text>
-        </Box>
-      </Link>
+            <Icon
+              as={activeIcon && isActive(pathname) ? activeIcon : icon}
+              color={isActive(pathname) ? 'blue.500' : defaultColor}
+              h={7}
+              w={7}
+            />
+            <Text
+              fontSize='xl'
+              fontWeight='bold'
+              p={0}
+              mx={5}
+              color={isActive(pathname) && 'blue.500'}
+            >
+              {text}
+            </Text>
+          </Box>
+        </Link>
+      ) : (
+        <Tooltip label={tooltipLabel} bg='gray.500' color='white' fontSize='xs'>
+          <Box
+            {...restProps}
+            display='inline-flex'
+            borderRadius='9999px'
+            cursor='pointer'
+            _hover={{ color: 'blue.500', bg: 'gray.100' }}
+            alignItems='center'
+            p='12px'
+          >
+            <Icon
+              as={activeIcon && isActive(pathname) ? activeIcon : icon}
+              color={isActive(pathname) ? 'blue.500' : defaultColor}
+              h={7}
+              w={7}
+            />
+            <Text fontSize='xl' fontWeight='bold' p={0} mx={5} color='gray.300'>
+              {text}
+            </Text>
+          </Box>
+        </Tooltip>
+      )}
       <Box></Box>
     </>
   );
@@ -109,7 +135,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
 
       <SideMenuItem
         text='Messages'
-        href='/messages'
+        tooltipLabel='Work In Progress...'
         pathname='/messages'
         icon={AiOutlineMail}
         activeIcon={AiFillMail}
@@ -118,7 +144,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
 
       <SideMenuItem
         text='Notifications'
-        href='/notifications'
+        tooltipLabel='Work In Progress...'
         pathname='/notifications'
         icon={AiOutlineBell}
         activeIcon={AiFillBell}

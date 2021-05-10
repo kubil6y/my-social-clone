@@ -9,6 +9,7 @@ import {
   Navbar,
   SideMenu,
   SearchBar,
+  Suggestions,
 } from '../../components';
 
 export const Layout = ({ children, user }) => {
@@ -50,6 +51,7 @@ export const Layout = ({ children, user }) => {
               </Box>
               <Sticky>
                 <SearchBar />
+                <Suggestions />
               </Sticky>
             </Grid>
           </Container>

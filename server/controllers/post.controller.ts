@@ -271,8 +271,8 @@ export const getUserPosts = async (req: Request, res: Response) => {
     // this endpoint is for [username] profile page.
     const profile = await Profile.findOne({ user });
 
-    const posts = await Post.find({ user: user._id });
-    return res.json({ posts, profile });
+    const posts = await Post.find({ user: user._id }).populate('user');
+    return res.json({ posts, profile, userData: user });
   } catch (error) {
     return msg500(error, res);
   }

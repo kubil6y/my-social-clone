@@ -1,5 +1,5 @@
 import React from 'react';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import Image from 'next/image';
 import {
   Box,
@@ -45,7 +45,7 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({
   setPastResults,
   setIsDropdown,
 }) => {
-  const router = useRouter();
+  //const router = useRouter();
 
   const handleClick = (username: string) => {
     if (!pastResults.includes(username)) {
@@ -58,7 +58,7 @@ export const ResultsItem: React.FC<ResultsItemProps> = ({
     setResults([]);
     setVal('');
     setIsDropdown(false);
-    router.push(`/${username}`);
+    Router.push(`/${username}`);
   };
 
   return (
