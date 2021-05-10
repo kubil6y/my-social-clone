@@ -2,7 +2,15 @@ import Link from 'next/link';
 import cookie from 'js-cookie';
 import React, { FormEvent, useState, useEffect } from 'react';
 import { FooterMessage, HeaderMessage, InputWithIcon } from '../components';
-import { Text, Icon, Container, VStack, Button, Alert } from '@chakra-ui/react';
+import {
+  Text,
+  Icon,
+  Container,
+  VStack,
+  Button,
+  Alert,
+  useToast,
+} from '@chakra-ui/react';
 import {
   AiOutlineUser,
   AiOutlineEye,
@@ -10,6 +18,7 @@ import {
   AiOutlineUnlock,
 } from 'react-icons/ai';
 import { loginUser } from '../actions';
+import { useLocalStorage } from '../hooks';
 
 const initialState = {
   credentials: '',
@@ -22,6 +31,8 @@ const login: React.FC<loginProps> = () => {
   const [state, setState] = useState(initialState);
   const { credentials, password } = state;
   const [errors, setErrors] = useState<any>(null);
+
+  const toast = useToast();
 
   // ui states
   const [passwordType, setPasswordType] = useState('password');
@@ -62,6 +73,17 @@ const login: React.FC<loginProps> = () => {
   }, []);
 
   useEffect(() => {
+    toast({
+      title: 'Email Confirmation is not required for registering!',
+      description: 'Just enter some dummy data and enter the app.',
+      status: 'info',
+      duration: 9000,
+      position: 'top-right',
+      isClosable: true,
+    });
+  }, []);
+
+  useEffect(() => {
     const isValid = Object.values({
       credentials,
       password,
@@ -70,45 +92,45 @@ const login: React.FC<loginProps> = () => {
   }, [credentials, password]);
 
   return (
-    <Container maxW="container.md" p="0">
+    <Container maxW='container.md' p='0'>
       <HeaderMessage />
 
       <form onSubmit={handleSubmit}>
-        <VStack spacing="1rem">
+        <VStack spacing='1rem'>
           <InputWithIcon
-            id="credentials"
-            type="text"
+            id='credentials'
+            type='text'
             icon={AiOutlineUser}
-            placeholder="Enter email or username"
-            label="Credentials*"
+            placeholder='Enter email or username'
+            label='Credentials*'
             helperText="We'll never share your email."
-            name="credentials"
+            name='credentials'
             value={credentials}
             onChange={handleChange}
             error={errors?.credentials}
           />
 
           <InputWithIcon
-            id="password"
+            id='password'
             type={passwordType}
             icon={passwordIcon}
-            placeholder="Enter password"
-            label="Password*"
+            placeholder='Enter password'
+            label='Password*'
             value={password}
-            name="password"
+            name='password'
             onChange={handleChange}
             handleIconClick={handleIconClick}
             error={errors?.password}
           />
 
           <Button
-            type="submit"
-            bg="blue.500"
-            color="white"
-            w="100%"
+            type='submit'
+            bg='blue.500'
+            color='white'
+            w='100%'
             _hover={{ bg: 'blue.600' }}
             _active={{ bg: 'blue.700' }}
-            rounded="none"
+            rounded='none'
             disabled={disabled}
             isLoading={isLoading}
           >
@@ -117,14 +139,14 @@ const login: React.FC<loginProps> = () => {
         </VStack>
       </form>
 
-      <Alert status="info" mt="1rem">
-        <Icon as={AiOutlineUnlock} h={4} w={4} color="blue.700" />
-        <Link href="reset">
+      <Alert status='info' mt='1rem'>
+        <Icon as={AiOutlineUnlock} h={4} w={4} color='blue.700' />
+        <Link href='reset'>
           <Text
-            fontSize="xs"
-            ml=".5rem"
-            color="blue.600"
-            cursor="pointer"
+            fontSize='xs'
+            ml='.5rem'
+            color='blue.600'
+            cursor='pointer'
             _hover={{ textDecoration: 'underline' }}
           >
             Forget Password?
@@ -133,9 +155,9 @@ const login: React.FC<loginProps> = () => {
       </Alert>
 
       <FooterMessage
-        text="New Member?"
-        linkText="Register here."
-        href="/register"
+        text='New Member?'
+        linkText='Register here.'
+        href='/register'
       />
     </Container>
   );

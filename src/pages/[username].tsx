@@ -52,7 +52,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
   // for optional rendering, you can use social?.twitter && ...
   //const { social } = profile;
 
-  const hasAccess = username === user.username;
+  const hasAccess = username === user.username && userData?.role === 'root';
 
   React.useEffect(() => {
     setPosts(postsData);

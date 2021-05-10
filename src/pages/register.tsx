@@ -13,6 +13,7 @@ import {
   Textarea,
   FormControl,
   FormLabel,
+  useToast,
 } from '@chakra-ui/react';
 import {
   SocialSection,
@@ -23,6 +24,7 @@ import {
 } from '../components';
 import { catchErrors, uploadPic } from '../utils';
 import { registerUser } from '../actions';
+import { useLocalStorage } from '../hooks';
 
 const initialState = {
   name: '',
@@ -39,6 +41,8 @@ const initialState = {
 interface registerProps {}
 
 const register: React.FC<registerProps> = () => {
+  const toast = useToast();
+
   const [user, setUser] = useState(initialState);
   const {
     name,
@@ -100,23 +104,35 @@ const register: React.FC<registerProps> = () => {
     setDisabled(!isValid);
   }, [name, email, password, bio]);
 
+  useEffect(() => {
+    toast({
+      title: 'Email Confirmation is not required for registering!',
+      description:
+        'Just enter some dummy data and enter the app. Make sure to try out selecting a profile picture with image cropper :)',
+      status: 'info',
+      duration: 9000,
+      position: 'top-right',
+      isClosable: true,
+    });
+  }, []);
+
   return (
-    <Container maxW="container.md" p="0">
+    <Container maxW='container.md' p='0'>
       <HeaderMessage />
 
-      <input type="file" style={{ display: 'none' }} ref={inputRef} />
+      <input type='file' style={{ display: 'none' }} ref={inputRef} />
       <ImageCropper setMedia={setMedia} />
 
       <form onSubmit={handleSubmit}>
-        <VStack spacing="1rem">
+        <VStack spacing='1rem'>
           <InputWithIcon
             icon={AiOutlineUser}
-            id="name"
-            label="Name*"
-            placeholder="Enter your name"
-            name="name"
+            id='name'
+            label='Name*'
+            placeholder='Enter your name'
+            name='name'
             value={name}
-            type="text"
+            type='text'
             onChange={handleChange}
             required={true}
             error={errors?.name}
@@ -124,12 +140,12 @@ const register: React.FC<registerProps> = () => {
 
           <InputWithIcon
             icon={AiOutlineMail}
-            id="email"
-            label="Email*"
-            placeholder="Enter your email"
-            name="email"
+            id='email'
+            label='Email*'
+            placeholder='Enter your email'
+            name='email'
             value={email}
-            type="email"
+            type='email'
             onChange={handleChange}
             required={true}
             error={errors?.email}
@@ -137,10 +153,10 @@ const register: React.FC<registerProps> = () => {
 
           <InputWithIcon
             icon={passwordIcon}
-            id="password"
-            label="Password*"
-            placeholder="Enter your password"
-            name="password"
+            id='password'
+            label='Password*'
+            placeholder='Enter your password'
+            name='password'
             value={password}
             type={passwordType}
             onChange={handleChange}
@@ -151,21 +167,21 @@ const register: React.FC<registerProps> = () => {
 
           <InputWithIcon
             icon={AiOutlineTags}
-            id="username"
-            label="Username*"
-            placeholder="Enter your username"
-            name="username"
+            id='username'
+            label='Username*'
+            placeholder='Enter your username'
+            name='username'
             value={username}
-            type="text"
+            type='text'
             onChange={handleChange}
             error={errors?.username}
           />
 
           <FormControl>
-            <FormLabel mb="5px">Bio*</FormLabel>
+            <FormLabel mb='5px'>Bio*</FormLabel>
             <Textarea
-              placeholder="Enter your bio"
-              name="bio"
+              placeholder='Enter your bio'
+              name='bio'
               value={bio}
               onChange={handleChange}
             />
@@ -182,13 +198,13 @@ const register: React.FC<registerProps> = () => {
           />
 
           <Button
-            type="submit"
-            bg="blue.500"
-            color="white"
-            w="100%"
+            type='submit'
+            bg='blue.500'
+            color='white'
+            w='100%'
             _hover={{ bg: 'blue.600' }}
             _active={{ bg: 'blue.700' }}
-            rounded="none"
+            rounded='none'
             disabled={disabled}
             isLoading={isLoading}
           >
@@ -198,9 +214,9 @@ const register: React.FC<registerProps> = () => {
       </form>
 
       <FooterMessage
-        text="Already Member?"
-        linkText="Login here."
-        href="/login"
+        text='Already Member?'
+        linkText='Login here.'
+        href='/login'
       />
     </Container>
   );
