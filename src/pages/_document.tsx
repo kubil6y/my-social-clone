@@ -28,8 +28,8 @@ class MyDocument extends Document {
                 position: 'absolute',
                 top: '0',
                 border: '0',
-                left: '0',
-                transform: 'scale(-1, 1)',
+                right: '0',
+                zIndex: 9999,
               }}
               aria-hidden='true'
             >
@@ -47,7 +47,6 @@ class MyDocument extends Document {
               ></path>
             </svg>
           </a>
-
           <Main />
           <NextScript />
         </body>
