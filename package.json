@@ -2,13 +2,13 @@
   "name": "next-express-typescript-2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node index.ts",
+    "dev": "nodemon --exec ts-node server/main.ts",
     "build:server": "tsc --project tsconfig.server.json",
     "build:next": "next build",
-    "build": "npm run build:next && npm run build:server",
-    "start": "NODE_ENV=production node dist/index.js"
+    "build": "yarn build:next && yarn build:server",
+    "start": "NODE_ENV=production node dist/main.js"
   },
   "keywords": [],
   "author": "",
@@ -28,7 +28,7 @@
     "js-cookie": "^2.2.1",
     "jsonwebtoken": "^8.5.1",
     "lodash.debounce": "^4.0.8",
-    "mongoose": "^5.12.8",
+    "mongoose": "5.10.18",
     "next": "^10.2.0",
     "nookies": "^2.5.2",
     "nprogress": "^0.2.0",

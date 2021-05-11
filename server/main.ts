@@ -2,15 +2,10 @@ import 'reflect-metadata';
 require('dotenv').config({ path: './config.env' });
 import express, { Request, Response } from 'express';
 import next from 'next';
-import { NODE_ENV, __prod__, PORT, __dev__ } from './server/constants';
-import { connectDb } from './server/utils';
-import { trimBody } from './server/middlewares';
-import {
-  authRouter,
-  registerRouter,
-  searchRouter,
-  postRouter,
-} from './server/routes';
+import { NODE_ENV, __prod__, PORT, __dev__ } from './constants';
+import { connectDb } from './utils';
+import { trimBody } from './middlewares';
+import { authRouter, registerRouter, searchRouter, postRouter } from './routes';
 
 const dev = __dev__;
 const app = next({ dev });
