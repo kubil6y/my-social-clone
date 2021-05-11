@@ -1,6 +1,8 @@
 import React from 'react';
 import Image from 'next/image';
-import { Box, Center, Divider, Flex, Text } from '@chakra-ui/react';
+import { Box, Center, Divider, Flex, Icon, Text } from '@chakra-ui/react';
+import { BsCone } from 'react-icons/bs';
+import { AiFillApi } from 'react-icons/ai';
 
 const data = [
   {
@@ -106,9 +108,17 @@ export const SuggestionItem: React.FC<SuggestionItemProps> = ({
 export const Suggestions: React.FC = () => {
   return (
     <Box bg='gray.50' overflow='hidden' rounded='3xl' mt='1rem' ml='1rem'>
-      <Text fontWeight='bold' p='1rem' fontSize='xl'>
-        Suggestions
-      </Text>
+      <Flex alignItems='center' justifyContent='space-between' p='1rem'>
+        <Text fontWeight='bold' fontSize='xl'>
+          Suggestions
+        </Text>
+        <Flex alignItems='center'>
+          <Icon as={AiFillApi} h={4} w={4} color='gray.500' />
+          <Text fontSize='xs' color='gray.500' ml='4px'>
+            Work In Progress
+          </Text>
+        </Flex>
+      </Flex>
       <Divider orientation='horizontal' />
       {data.map((suggestion) => (
         <SuggestionItem key={suggestion.username} suggestion={suggestion} />

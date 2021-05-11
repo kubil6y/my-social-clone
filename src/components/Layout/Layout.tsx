@@ -17,7 +17,6 @@ export const Layout = ({ children, user }) => {
   const [isMedium, setIsMedium] = useState(false);
   const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
   const [isLargerThan1000px] = useMediaQuery('(min-width: 1000px)');
-  console.log({ isLargerThan1000px });
 
   // nprogress setup
   Router.events.on('routeChangeStart', () => nprogress.start());

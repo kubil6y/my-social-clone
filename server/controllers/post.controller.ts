@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { Response, Request } from 'express';
 import { msg401, msg500 } from '../utils';
-import { Post, IPost, UserRole, User, Profile } from '../models';
+import { Post, UserRole, User, Profile } from '../models';
 
 export const createPost = async (req: Request, res: Response) => {
   const { text, location, picUrl } = req.body;
@@ -32,11 +32,25 @@ export const createPost = async (req: Request, res: Response) => {
   }
 };
 
-export const getAllPosts = async (_: Request, res: Response) => {
+export const getAllPosts = async (req: Request, res: Response) => {
+  const { pageNumber } = req.query;
   try {
-    const posts = await Post.find()
-      .sort({ createdAt: 'desc' })
-      .populate('user');
+    const size = 6;
+    let posts: any[];
+    if (+pageNumber === 1) {
+      // first posts come from getServerSideProps,
+      // getServerSideProps has pageNumber as 1
+      posts = await Post.find()
+        .sort({ createdAt: 'desc' })
+        .limit(size)
+        .populate('user');
+    } else {
+      posts = await Post.find()
+        .sort({ createdAt: 'desc' })
+        .skip(size * (+pageNumber - 1))
+        .limit(size)
+        .populate('user');
+    }
 
     // with twitter layout i only need, comment and like counts.
     //.populate('comments.user');

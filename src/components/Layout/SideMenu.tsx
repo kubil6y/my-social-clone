@@ -116,10 +116,13 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
 export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
   const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
   const router = useRouter();
-  const { username, unreadNotification, unreadMessage, email } = user;
+  const { username, email } = user;
 
-  const messagesColor = unreadMessage && 'orange.500';
-  const notificationsColor = unreadNotification && 'orange.500';
+  //const messagesColor = unreadMessage && 'orange.500';
+  //const notificationsColor = unreadNotification && 'orange.500';
+
+  const messagesColor = 'gray.300';
+  const notificationsColor = 'gray.300';
 
   return (
     <Box>

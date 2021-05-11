@@ -1,21 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import axios from 'axios';
+import cookie from 'js-cookie';
 import { GetServerSideProps } from 'next';
 import { parseCookies } from 'nookies';
-import { Box, Divider, Flex, Text } from '@chakra-ui/react';
+import {
+  Alert,
+  AlertIcon,
+  Box,
+  Center,
+  Divider,
+  Flex,
+  Spinner,
+  Text,
+} from '@chakra-ui/react';
 import { baseUrl, capitalize } from '../utils';
 import { Post } from '../types';
 import { CreatePost, NoData, PostCard, PostError } from '../components';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
-export default function Home({
-  user,
-  userFollowStats,
-  data: postData,
-  error: postsError,
-}) {
+export default function Home({ user, data: postData, error: postsError }) {
   const [posts, setPosts] = useState<Post[]>(postData);
   const [error, setError] = useState<any>(postsError);
+
+  // infinite scroll states
+  const [hasMore, setHasMore] = useState(true);
+  const [pageNumber, setPageNumber] = useState(2); // 2 by default
 
   // ui states
   const [showErrorMsg, setShowErrorMsg] = useState(true);
@@ -29,6 +39,22 @@ export default function Home({
     const title = user && `Welcome ${capitalize(user?.name)}`;
     document.title = title;
   }, []);
+
+  const fetchDataOnScroll = async () => {
+    try {
+      const { data } = await axios.get(`${baseUrl}/api/posts`, {
+        headers: { Authorization: cookie.get('token') },
+        params: { pageNumber },
+      });
+
+      if (data.length === 0) setHasMore(false); // inf scroll requires it.
+
+      setPosts((prev) => [...prev, ...data]);
+      setPageNumber((prev) => prev + 1);
+    } catch (error) {
+      console.log('Error fetching posts');
+    }
+  };
 
   return (
     <Box>
@@ -53,17 +79,40 @@ export default function Home({
         />
       )}
 
-      <Box w='100%'>
-        {posts &&
-          posts.map((post) => (
-            <PostCard
-              key={post._id}
-              post={post}
-              user={user}
-              setPosts={setPosts}
+      <InfiniteScroll
+        hasMore={hasMore}
+        next={fetchDataOnScroll}
+        loader={
+          <Center w='100%' p='1rem'>
+            <Spinner
+              thickness='4px'
+              speed='0.65s'
+              emptyColor='gray.200'
+              color='blue.500'
+              size='xl'
             />
-          ))}
-      </Box>
+          </Center>
+        }
+        endMessage={
+          <Alert status='info'>
+            <AlertIcon />
+            No more posts are available.
+          </Alert>
+        }
+        dataLength={posts.length}
+      >
+        <Box w='100%'>
+          {posts &&
+            posts.map((post) => (
+              <PostCard
+                key={post._id}
+                post={post}
+                user={user}
+                setPosts={setPosts}
+              />
+            ))}
+        </Box>
+      </InfiniteScroll>
     </Box>
   );
 }
@@ -73,6 +122,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { token } = parseCookies(context, 'token');
     const { data } = await axios.get(`${baseUrl}/api/posts`, {
       headers: { Authorization: token },
+      params: { pageNumber: 1 },
     });
 
     if (!data) {
