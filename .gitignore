@@ -1,5 +1,5 @@
-#conf_env
 config.env
+.gitignore
 
 # dist build
 dist
