@@ -27,8 +27,12 @@ export const registerUser = async (
   try {
     setIsLoading(true);
 
-    cookie.remove('token');
-    cookie.remove('email');
+    cookie.set('token', '', {
+      expires: new Date(),
+    });
+    cookie.set('email', '', {
+      expires: new Date(),
+    });
 
     const { data } = await axios.post(`${baseUrl}/api/register/`, {
       user,
