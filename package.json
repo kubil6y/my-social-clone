@@ -2,13 +2,13 @@
   "name": "next-express-typescript-2",
   "version": "1.0.0",
   "description": "",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node main.ts",
+    "dev": "nodemon --exec ts-node index.ts",
     "build:server": "tsc --project tsconfig.server.json",
     "build:next": "next build",
     "build": "yarn build:next && yarn build:server",
-    "start": "NODE_ENV=production node dist/main.js"
+    "start": "NODE_ENV=production node dist/index.js"
   },
   "keywords": [],
   "author": "",
