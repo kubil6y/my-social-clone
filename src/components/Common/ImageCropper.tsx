@@ -123,17 +123,21 @@ export const ImageCropper: React.FC<ImageCropperProps> = ({ setMedia }) => {
         ref={inputRef}
         style={{ display: 'none' }}
       />
-      <Flex alignItems='center'>
-        <Text fontSize='lg'>Select a profile picture</Text>
-        <Icon
-          as={AiOutlineUpload}
-          h={8}
-          w={8}
-          ml='10px'
-          cursor='pointer'
-          onClick={uploadIconClick}
-        />
-      </Flex>
+
+      <span data-trigger='fileinput'>
+        <Flex alignItems='center'>
+          <Text fontSize='lg'>Select a profile picture</Text>
+          <Icon
+            as={AiOutlineUpload}
+            h={8}
+            w={8}
+            ml='10px'
+            cursor='pointer'
+            onClick={uploadIconClick}
+          />
+        </Flex>
+      </span>
+
       <Box>
         {!done && (
           <ReactCrop

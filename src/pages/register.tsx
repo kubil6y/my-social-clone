@@ -24,7 +24,6 @@ import {
 } from '../components';
 import { catchErrors, uploadPic } from '../utils';
 import { registerUser } from '../actions';
-import { useLocalStorage } from '../hooks';
 
 const initialState = {
   name: '',

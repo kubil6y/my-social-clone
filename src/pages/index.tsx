@@ -20,6 +20,13 @@ import { CreatePost, NoData, PostCard, PostError } from '../components';
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 export default function Home({ user, data: postData, error: postsError }) {
+  useEffect(() => {
+    cookie.set('email', '', {
+      domain: '/',
+      expires: new Date(),
+    });
+  }, []);
+
   const [posts, setPosts] = useState<Post[]>(postData);
   const [error, setError] = useState<any>(postsError);
 

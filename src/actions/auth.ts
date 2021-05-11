@@ -14,8 +14,7 @@ export const redirectUser = (ctx: any, location: string) => {
     ctx.res.end();
   } else {
     // user on client side
-    window.location.reload();
-    //Router.push(location);
+    Router.push(location);
   }
 };
 
@@ -28,17 +27,18 @@ export const registerUser = async (
   try {
     setIsLoading(true);
 
+    cookie.remove('token');
+    cookie.remove('email');
+
     const { data } = await axios.post(`${baseUrl}/api/register/`, {
       user,
       profilePicUrl,
     });
 
     setToken(data);
-    Router.push('/');
+    window.location.reload();
   } catch (error) {
     setErrors(catchErrors(error));
-  } finally {
-    setIsLoading(false);
   }
 };
 
