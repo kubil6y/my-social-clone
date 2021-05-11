@@ -1,13 +1,23 @@
 import React from 'react';
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
+  Modal,
+  ModalContent,
+  ModalOverlay,
+  Flex,
+  Tooltip,
+  Center,
+  Icon,
+  Text,
+  //AlertDialog,
+  //AlertDialogBody,
+  //AlertDialogContent,
+  //AlertDialogFooter,
+  //AlertDialogHeader,
+  //AlertDialogOverlay,
   Button,
+  Box,
 } from '@chakra-ui/react';
+import { AiOutlineClose } from 'react-icons/ai';
 
 interface AlertProps {
   header: string;
@@ -24,37 +34,49 @@ export const MyAlert: React.FC<AlertProps> = ({
   showAlert,
   setShowAlert,
 }) => {
-  const cancelRef = React.useRef();
-
   return (
     <>
-      <AlertDialog
-        size='xs'
-        isCentered
+      <Modal
         isOpen={showAlert}
-        leastDestructiveRef={cancelRef}
-        onClose={() => setShowAlert(false)}
+        onClose={() => {
+          setShowAlert(false);
+        }}
+        size='md'
       >
-        <AlertDialogOverlay>
-          <AlertDialogContent rounded='3xl'>
-            <AlertDialogHeader
-              fontSize='xl'
-              fontWeight='bold'
-              textAlign='center'
-              pb='4px'
-            >
+        <ModalOverlay />
+        <ModalContent rounded='3xl'>
+          <Flex px='12px' py='5px' borderBottom='1px' borderColor='gray.300'>
+            <Tooltip label='Close' fontSize='xs' bg='gray.600'>
+              <Center
+                cursor='pointer'
+                p='7px'
+                rounded='full'
+                overflow='hidden'
+                _hover={{ bg: 'blue.100' }}
+                onClick={() => setShowAlert(false)}
+              >
+                <Icon
+                  as={AiOutlineClose}
+                  h={5}
+                  w={5}
+                  color='gray.500'
+                  _hover={{ color: 'blue.500' }}
+                />
+              </Center>
+            </Tooltip>
+          </Flex>
+          <Box p='1rem'>
+            <Text fontWeight='bold' textAlign='center' fontSize='2xl'>
               {header}
-            </AlertDialogHeader>
-
-            <AlertDialogBody color='gray.500' fontSize='sm'>
+            </Text>
+            <Text color='gray.500' fontSize='sm' mt='10px'>
               {body}
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
+            </Text>
+            <Flex justifyContent='flex-end' alignItems='center' mt='10px'>
               <Button
-                ref={cancelRef}
                 onClick={() => setShowAlert(false)}
                 rounded='3xl'
+                px='40px'
               >
                 Cancel
               </Button>
@@ -63,13 +85,14 @@ export const MyAlert: React.FC<AlertProps> = ({
                 onClick={handleYes}
                 ml={3}
                 rounded='3xl'
+                px='40px'
               >
                 Delete
               </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+            </Flex>
+          </Box>
+        </ModalContent>
+      </Modal>
     </>
   );
 };

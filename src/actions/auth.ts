@@ -4,9 +4,7 @@ import cookie from 'js-cookie';
 import { baseUrl, catchErrors } from '../utils';
 
 export const setToken = (token: any) => {
-  cookie.set('token', token, {
-    expires: 1,
-  });
+  cookie.set('token', token); //deleted expiresIn
 };
 
 export const redirectUser = (ctx: any, location: string) => {
@@ -16,7 +14,8 @@ export const redirectUser = (ctx: any, location: string) => {
     ctx.res.end();
   } else {
     // user on client side
-    Router.push(location);
+    window.location.reload();
+    //Router.push(location);
   }
 };
 
@@ -58,7 +57,9 @@ export const loginUser = async (
     });
 
     setToken(data);
-    Router.push('/');
+    cookie.remove('email');
+    window.location.reload();
+    //Router.push('/');
   } catch (error) {
     setErrors(catchErrors(error));
   } finally {
@@ -67,7 +68,8 @@ export const loginUser = async (
 };
 
 export const logoutUser = (email: string) => {
-  cookie.set('email', email, { expires: 7 });
+  cookie.set('email', email); //deleted expiresIn
   cookie.remove('token');
-  Router.push('/login');
+  window.location.reload();
+  //Router.push('/login');
 };

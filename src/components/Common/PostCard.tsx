@@ -11,7 +11,7 @@ import {
   Tooltip,
   Box,
 } from '@chakra-ui/react';
-import { Like, Post, User, UserRoles } from '../../types';
+import { Like, Post, User } from '../../types';
 import {
   AiOutlineDelete,
   AiOutlineHeart,
@@ -37,7 +37,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
   const [showCommentModal, setShowCommentModal] = useState(false);
 
   const hasAccess =
-    user.role === UserRoles.root || post.user.username === user.username;
+    user.role === 'root' || post.user.username === user.username;
   // @ts-ignore
   const hasLikedBefore = likes.find((like: Like) => like.user === user._id);
 
