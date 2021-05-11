@@ -1,0 +1,21 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.router = void 0;
+var express_1 = require("express");
+var middlewares_1 = require("../middlewares");
+var controllers_1 = require("../controllers");
+exports.router = express_1.Router();
+exports.router.get('/', middlewares_1.auth, controllers_1.getAllPosts);
+exports.router.get('/:postId', middlewares_1.auth, controllers_1.getPostById);
+exports.router.post('/', middlewares_1.auth, controllers_1.createPost);
+exports.router.delete('/:postId', middlewares_1.auth, controllers_1.deletePostById);
+exports.router.get('/user/:username', middlewares_1.auth, controllers_1.getUserPosts);
+exports.router.get('/likes/:postId', middlewares_1.auth, controllers_1.getLikesOfAPost);
+exports.router.post('/like/:postId', middlewares_1.auth, controllers_1.likeAPost);
+exports.router.delete('/dislike/:postId', middlewares_1.auth, controllers_1.dislikeAPost);
+exports.router.get('/comments/:postId', middlewares_1.auth, controllers_1.getCommentsOfAPost);
+exports.router.get('/comment/:postId/:commentId', middlewares_1.auth, controllers_1.getCommentOfAPost);
+exports.router.post('/comment/:postId', middlewares_1.auth, controllers_1.commentOnAPost);
+exports.router.delete('/comment/:postId/:commentId', middlewares_1.auth, controllers_1.deleteCommentOnPost);
+exports.router.put('/comment/:postId/:commentId', middlewares_1.auth, controllers_1.editCommentOnPost);
+//# sourceMappingURL=post.route.js.map
