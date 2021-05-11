@@ -7,7 +7,7 @@
     "dev": "nodemon --exec ts-node server/main.ts",
     "build:server": "tsc --project tsconfig.server.json",
     "build:next": "next build",
-    "build": "yarn build:next && yarn build:server",
+    "build": "npm run build:next && npm run build:server",
     "start": "NODE_ENV=production node dist/main.js"
   },
   "keywords": [],
