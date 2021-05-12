@@ -14,6 +14,9 @@ import {
 import { useMediaQuery } from '@chakra-ui/react';
 
 export const Layout = ({ children, user }) => {
+  const [isSmall, setIsSmall] = useState(false);
+  const [isMedium, setIsMedium] = useState(false);
+  const [isLarge, setIsLarge] = useState(false);
   const [isBig, setIsBig] = useState(false);
   const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
   const [isLargerThan1000px] = useMediaQuery('(min-width: 1000px)');
@@ -43,63 +46,50 @@ export const Layout = ({ children, user }) => {
   }, [online]);
 
   useEffect(() => {
+    // small state
+    if (isLargerThan420px) {
+      setIsSmall(false);
+    } else {
+      setIsSmall(true);
+    }
+
+    // medium state
+    if (isLargerThan420px && !isLargerThan1000px) {
+      setIsMedium(true);
+    } else {
+      setIsMedium(false);
+    }
+
+    // big state
+    if (isLargerThan1000px) {
+      setIsLarge(true);
+    } else {
+      setIsLarge(false);
+    }
+
+    // xlarge state
     if (isLargerThan1200px) {
       setIsBig(true);
     } else {
       setIsBig(false);
     }
-  }, [isLargerThan1200px]);
+  }, [isLargerThan420px, isLargerThan1000px, isLargerThan1200px]);
   return (
     <>
       <HeadTags />
 
       {user ? (
         <>
-          {isBig ? (
+          {isSmall ? (
             <>
-              <Container maxW='container.xl'>
-                <Grid
-                  templateColumns={
-                    isLargerThan1200px ? '2.5fr 6fr 4fr' : '60px 5fr 2fr'
-                  }
-                  gap={2}
-                >
-                  <Sticky>
-                    <SideMenu user={user} />
-                  </Sticky>
-                  <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
-                    {children}
-                  </Box>
-                  <Sticky>
-                    <SearchBar />
-                    <Suggestions />
-                  </Sticky>
-                </Grid>
-              </Container>
+              <Container maxW='container.sm'></Container>
+              <SideMenu user={user} />
+              <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
+                <SearchBar />
+                {children}
+              </Box>
             </>
-          ) : isLargerThan1000px ? (
-            <>
-              <Container maxW='container.xl'>
-                <Grid
-                  templateColumns={
-                    isLargerThan1200px ? '2.5fr 6fr 4fr' : '60px 5fr 2fr'
-                  }
-                  gap={2}
-                >
-                  <Sticky>
-                    <SideMenu user={user} />
-                  </Sticky>
-                  <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
-                    {children}
-                  </Box>
-                  <Sticky>
-                    <SearchBar />
-                    <Suggestions />
-                  </Sticky>
-                </Grid>
-              </Container>
-            </>
-          ) : isLargerThan420px ? (
+          ) : isMedium ? (
             <>
               <Container maxW='container.xl'>
                 <Grid templateColumns='50px 1fr' gap={2}>
@@ -113,15 +103,42 @@ export const Layout = ({ children, user }) => {
                 </Grid>
               </Container>
             </>
-          ) : (
+          ) : isLarge ? (
             <>
-              <Container maxW='container.sm'></Container>
-              <SideMenu user={user} />
-              <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
-                <SearchBar />
-                {children}
-              </Box>
+              <Container maxW='container.xl'>
+                <Grid templateColumns='2fr 5fr 2fr' gap={2}>
+                  <Sticky>
+                    <SideMenu user={user} />
+                  </Sticky>
+                  <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
+                    {children}
+                  </Box>
+                  <Sticky>
+                    <SearchBar />
+                    <Suggestions />
+                  </Sticky>
+                </Grid>
+              </Container>
             </>
+          ) : (
+            isBig && (
+              <>
+                <Container maxW='container.xl'>
+                  <Grid templateColumns='2.5fr 6fr 4fr' gap={2}>
+                    <Sticky>
+                      <SideMenu user={user} />
+                    </Sticky>
+                    <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
+                      {children}
+                    </Box>
+                    <Sticky>
+                      <SearchBar />
+                      <Suggestions />
+                    </Sticky>
+                  </Grid>
+                </Container>
+              </>
+            )
           )}
         </>
       ) : (

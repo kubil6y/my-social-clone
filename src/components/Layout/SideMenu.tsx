@@ -49,17 +49,17 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
   ...restProps
 }) => {
   const [isBig, setIsBig] = React.useState(false);
-  const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
+  const [isLargerThan1000px] = useMediaQuery('(min-width: 1000px)');
   const router = useRouter();
   const isActive = (path: string) => router.pathname === path;
 
   React.useEffect(() => {
-    if (isLargerThan1200px) {
+    if (isLargerThan1000px) {
       setIsBig(true);
     } else {
       setIsBig(false);
     }
-  }, [isLargerThan1200px]);
+  }, [isLargerThan1000px]);
 
   return (
     <>
@@ -130,10 +130,10 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
 };
 
 export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
-  const [isBig, setIsBig] = React.useState(false);
+  const [isLarge, setIsLarge] = React.useState(false);
   const [isSmall, setIsSmall] = React.useState(false);
 
-  const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
+  const [isLargerThan1000px] = useMediaQuery('(min-width: 1000px)');
   const [isLargerThan420px] = useMediaQuery('(min-width: 420px)');
   const router = useRouter();
   const { username, email } = user;
@@ -145,12 +145,12 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
   const notificationsColor = 'gray.300';
 
   React.useEffect(() => {
-    if (isLargerThan1200px) {
-      setIsBig(true);
+    if (isLargerThan1000px) {
+      setIsLarge(true);
     } else {
-      setIsBig(false);
+      setIsLarge(false);
     }
-  }, [isLargerThan1200px]);
+  }, [isLargerThan1000px]);
 
   React.useEffect(() => {
     if (isLargerThan420px) {
@@ -158,7 +158,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
     } else {
       setIsSmall(true);
     }
-  }, [isLargerThan1200px]);
+  }, [isLargerThan1000px]);
 
   return (
     <Flex
@@ -233,7 +233,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
         p='12px'
       >
         <Icon as={AiOutlineLogout} h={7} w={7} />
-        {isBig && (
+        {isLarge && (
           <Text fontSize='xl' fontWeight='bold' p={0} mx={5}>
             Logout
           </Text>
