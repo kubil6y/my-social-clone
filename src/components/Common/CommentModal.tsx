@@ -56,7 +56,7 @@ export const CommentModal: React.FC<CommentModalProps> = ({
         size='lg'
       >
         <ModalOverlay />
-        <ModalContent rounded='3xl'>
+        <ModalContent rounded='3xl' m='1rem'>
           <Flex px='12px' py='5px' borderBottom='1px' borderColor='gray.300'>
             <Tooltip label='Close' fontSize='xs' bg='gray.600'>
               <Center

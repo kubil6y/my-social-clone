@@ -172,6 +172,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
           left: '0',
           width: '100%',
           justifyContent: 'space-evenly',
+          boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px;',
         }
       }
     >
