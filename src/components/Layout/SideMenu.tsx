@@ -13,7 +13,14 @@ import {
 } from 'react-icons/ai';
 import { GiDonkey } from 'react-icons/gi';
 import { RiUserFill, RiUserLine } from 'react-icons/ri';
-import { Box, Icon, Text, Tooltip, useMediaQuery } from '@chakra-ui/react';
+import {
+  Box,
+  Icon,
+  Text,
+  Tooltip,
+  useMediaQuery,
+  Flex,
+} from '@chakra-ui/react';
 import { logoutUser } from '../../actions';
 
 interface SideMenuItemProps {
@@ -115,6 +122,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
 
 export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
   const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
+  const [isLargerThan420px] = useMediaQuery('(min-width: 420px)');
   const router = useRouter();
   const { username, email } = user;
 
@@ -125,7 +133,20 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
   const notificationsColor = 'gray.300';
 
   return (
-    <Box>
+    <Flex
+      flexDir={isLargerThan420px ? 'column' : 'row'}
+      sx={
+        !isLargerThan420px && {
+          zIndex: '10',
+          bg: 'white',
+          position: 'fixed',
+          bottom: '0',
+          left: '0',
+          width: '100%',
+          justifyContent: 'space-evenly',
+        }
+      }
+    >
       <Box
         display='inline-flex'
         borderRadius='9999px'
@@ -190,6 +211,6 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
           </Text>
         )}
       </Box>
-    </Box>
+    </Flex>
   );
 };

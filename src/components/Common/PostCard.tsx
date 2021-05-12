@@ -10,6 +10,7 @@ import {
   Icon,
   Tooltip,
   Box,
+  useMediaQuery,
 } from '@chakra-ui/react';
 import { Like, Post, User } from '../../types';
 import {
@@ -29,6 +30,7 @@ interface PostCardProps {
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
+  const [isLargerThan420px] = useMediaQuery('(min-width: 420px)');
   const [likes, setLikes] = useState(post.likes);
   const [comments, setComments] = useState(post.comments);
   const [showAlert, setShowAlert] = useState(false);
@@ -129,7 +131,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
                 {dayjs(post.createdAt).fromNow()}
               </Text>
             </Tooltip>
-            {post?.location && (
+            {isLargerThan420px && post?.location && (
               <>
                 <Text color='gray.500' mx='5px'>
                   ·

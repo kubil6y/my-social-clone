@@ -13,7 +13,6 @@ import {
   Textarea,
   FormControl,
   FormLabel,
-  useToast,
 } from '@chakra-ui/react';
 import {
   SocialSection,
@@ -40,8 +39,6 @@ const initialState = {
 interface registerProps {}
 
 const register: React.FC<registerProps> = () => {
-  const toast = useToast();
-
   const [user, setUser] = useState(initialState);
   const {
     name,
@@ -102,18 +99,6 @@ const register: React.FC<registerProps> = () => {
     }).every((el) => el.length !== 0);
     setDisabled(!isValid);
   }, [name, email, password, bio]);
-
-  useEffect(() => {
-    toast({
-      title: 'Email Confirmation is not required for registering!',
-      description:
-        'Just enter some dummy data and enter the app. Make sure to try out selecting a profile picture with image cropper :)',
-      status: 'info',
-      duration: 9000,
-      position: 'top-right',
-      isClosable: true,
-    });
-  }, []);
 
   return (
     <Container maxW='container.md' p='0'>

@@ -2,15 +2,7 @@ import Link from 'next/link';
 import cookie from 'js-cookie';
 import React, { FormEvent, useState, useEffect } from 'react';
 import { FooterMessage, HeaderMessage, InputWithIcon } from '../components';
-import {
-  Text,
-  Icon,
-  Container,
-  VStack,
-  Button,
-  Alert,
-  useToast,
-} from '@chakra-ui/react';
+import { Text, Icon, Container, VStack, Button, Alert } from '@chakra-ui/react';
 import {
   AiOutlineUser,
   AiOutlineEye,
@@ -31,8 +23,6 @@ const login: React.FC<loginProps> = () => {
   const [state, setState] = useState(initialState);
   const { credentials, password } = state;
   const [errors, setErrors] = useState<any>(null);
-
-  const toast = useToast();
 
   // ui states
   const [passwordType, setPasswordType] = useState('password');
@@ -70,17 +60,6 @@ const login: React.FC<loginProps> = () => {
         credentials: emailAtCookie ? emailAtCookie : '',
       }));
     }
-  }, []);
-
-  useEffect(() => {
-    toast({
-      title: 'Email Confirmation is not required for registering!',
-      description: 'Just enter some dummy data and enter the app.',
-      status: 'info',
-      duration: 9000,
-      position: 'top-right',
-      isClosable: true,
-    });
   }, []);
 
   useEffect(() => {

@@ -14,9 +14,10 @@ import {
 import { useMediaQuery } from '@chakra-ui/react';
 
 export const Layout = ({ children, user }) => {
-  const [isMedium, setIsMedium] = useState(false);
+  const [isBig, setIsBig] = useState(false);
   const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
   const [isLargerThan1000px] = useMediaQuery('(min-width: 1000px)');
+  const [isLargerThan420px] = useMediaQuery('(min-width: 420px)');
 
   // nprogress setup
   Router.events.on('routeChangeStart', () => nprogress.start());
@@ -42,50 +43,85 @@ export const Layout = ({ children, user }) => {
   }, [online]);
 
   useEffect(() => {
-    if (isLargerThan1000px) {
-      setIsMedium(true);
+    if (isLargerThan1200px) {
+      setIsBig(true);
     } else {
-      setIsMedium(false);
+      setIsBig(false);
     }
-  }, [isLargerThan1000px]);
+  }, [isLargerThan1200px]);
   return (
     <>
       <HeadTags />
 
       {user ? (
         <>
-          {isMedium ? (
-            <Container maxW='container.xl'>
-              <Grid
-                templateColumns={
-                  isLargerThan1200px ? '2.5fr 6fr 4fr' : '60px 5fr 2fr'
-                }
-                gap={2}
-              >
-                <Sticky>
-                  <SideMenu user={user} />
-                </Sticky>
-                <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
-                  {children}
-                </Box>
-                <Sticky>
-                  <SearchBar />
-                  <Suggestions />
-                </Sticky>
-              </Grid>
-            </Container>
+          {isBig ? (
+            <>
+              <Container maxW='container.xl'>
+                <Grid
+                  templateColumns={
+                    isLargerThan1200px ? '2.5fr 6fr 4fr' : '60px 5fr 2fr'
+                  }
+                  gap={2}
+                >
+                  <Sticky>
+                    <SideMenu user={user} />
+                  </Sticky>
+                  <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
+                    {children}
+                  </Box>
+                  <Sticky>
+                    <SearchBar />
+                    <Suggestions />
+                  </Sticky>
+                </Grid>
+              </Container>
+            </>
+          ) : isLargerThan1000px ? (
+            <>
+              <Container maxW='container.xl'>
+                <Grid
+                  templateColumns={
+                    isLargerThan1200px ? '2.5fr 6fr 4fr' : '60px 5fr 2fr'
+                  }
+                  gap={2}
+                >
+                  <Sticky>
+                    <SideMenu user={user} />
+                  </Sticky>
+                  <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
+                    {children}
+                  </Box>
+                  <Sticky>
+                    <SearchBar />
+                    <Suggestions />
+                  </Sticky>
+                </Grid>
+              </Container>
+            </>
+          ) : isLargerThan420px ? (
+            <>
+              <Container maxW='container.xl'>
+                <Grid templateColumns='50px 1fr' gap={2}>
+                  <Sticky>
+                    <SideMenu user={user} />
+                  </Sticky>
+                  <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
+                    <SearchBar />
+                    {children}
+                  </Box>
+                </Grid>
+              </Container>
+            </>
           ) : (
-            <Container maxW='container.xl'>
-              <Grid templateColumns='60px 1fr' gap={2}>
-                <Sticky>
-                  <SideMenu user={user} />
-                </Sticky>
-                <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
-                  <SearchBar />
-                  {children}
-                </Box>
-              </Grid>
-            </Container>
+            <>
+              <Container maxW='container.sm'></Container>
+              <SideMenu user={user} />
+              <Box border='1px' borderColor='gray.100' mb='2rem' w='100%'>
+                <SearchBar />
+                {children}
+              </Box>
+            </>
           )}
         </>
       ) : (
