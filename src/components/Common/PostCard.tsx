@@ -30,6 +30,7 @@ interface PostCardProps {
 }
 
 export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
+  const [isSmall, setIsSmall] = useState(false);
   const [isLargerThan420px] = useMediaQuery('(min-width: 420px)');
   const [likes, setLikes] = useState(post.likes);
   const [comments, setComments] = useState(post.comments);
@@ -54,6 +55,14 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
   const pushToUserDetails = () => {
     Router.push(`/${post.user.username}`);
   };
+
+  React.useEffect(() => {
+    if (isLargerThan420px) {
+      setIsSmall(false);
+    } else {
+      setIsSmall(true);
+    }
+  }, [isLargerThan420px]);
 
   return (
     <>
@@ -131,7 +140,7 @@ export const PostCard: React.FC<PostCardProps> = ({ user, post, setPosts }) => {
                 {dayjs(post.createdAt).fromNow()}
               </Text>
             </Tooltip>
-            {isLargerThan420px && post?.location && (
+            {!isSmall && post?.location && (
               <>
                 <Text color='gray.500' mx='5px'>
                   ·

@@ -48,9 +48,18 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
   tooltipLabel,
   ...restProps
 }) => {
+  const [isBig, setIsBig] = React.useState(false);
   const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
   const router = useRouter();
   const isActive = (path: string) => router.pathname === path;
+
+  React.useEffect(() => {
+    if (isLargerThan1200px) {
+      setIsBig(true);
+    } else {
+      setIsBig(false);
+    }
+  }, [isLargerThan1200px]);
 
   return (
     <>
@@ -71,7 +80,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
               h={7}
               w={7}
             />
-            {isLargerThan1200px && (
+            {isBig && (
               <Text
                 fontSize='xl'
                 fontWeight='bold'
@@ -101,7 +110,7 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
               h={7}
               w={7}
             />
-            {isLargerThan1200px && (
+            {isBig && (
               <Text
                 fontSize='xl'
                 fontWeight='bold'
@@ -121,6 +130,9 @@ const SideMenuItem: React.FC<SideMenuItemProps> = ({
 };
 
 export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
+  const [isBig, setIsBig] = React.useState(false);
+  const [isSmall, setIsSmall] = React.useState(false);
+
   const [isLargerThan1200px] = useMediaQuery('(min-width: 1200px)');
   const [isLargerThan420px] = useMediaQuery('(min-width: 420px)');
   const router = useRouter();
@@ -132,11 +144,27 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
   const messagesColor = 'gray.300';
   const notificationsColor = 'gray.300';
 
+  React.useEffect(() => {
+    if (isLargerThan1200px) {
+      setIsBig(true);
+    } else {
+      setIsBig(false);
+    }
+  }, [isLargerThan1200px]);
+
+  React.useEffect(() => {
+    if (isLargerThan420px) {
+      setIsSmall(false);
+    } else {
+      setIsSmall(true);
+    }
+  }, [isLargerThan1200px]);
+
   return (
     <Flex
-      flexDir={isLargerThan420px ? 'column' : 'row'}
+      flexDir={isSmall ? 'row' : 'column'}
       sx={
-        !isLargerThan420px && {
+        isSmall && {
           zIndex: '10',
           bg: 'white',
           position: 'fixed',
@@ -205,7 +233,7 @@ export const SideMenu: React.FC<SideMenuProps> = ({ user }) => {
         p='12px'
       >
         <Icon as={AiOutlineLogout} h={7} w={7} />
-        {isLargerThan1200px && (
+        {isBig && (
           <Text fontSize='xl' fontWeight='bold' p={0} mx={5}>
             Logout
           </Text>
